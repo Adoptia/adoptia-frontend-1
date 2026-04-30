@@ -1,0 +1,18 @@
+<nav class="flex h-[15vh] px-8 text-white bg-gray-800 justify-between items-center">
+  <div class="flex">
+    <img [src]=logo() alt="Logo" class="h-16">
+  </div>
+
+  <div class="flex cursor-default gap-4">
+    <ul class="flex gap-4 items-center">
+      @for (link of links(); track link) {
+        <li class="hover:text-amber-400"
+        >{{ link.label }}</li>
+      }
+    </ul>
+    <p-button
+      [icon]="'pi pi-user'" [label]="'Se connecter'"
+      [rounded]="false" [outlined]="true" [severity]="'primary'"
+    />
+  </div>
+</nav>

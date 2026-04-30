@@ -1,0 +1,10 @@
+<div class="relative rounded-xl overflow-hidden w-full h-full">
+  @if (backgroundImage()) {
+    <div class="absolute z-0 w-full h-fit">
+      <img [src]="backgroundImage()" alt="Card Background" class="h-full w-full">
+    </div>
+  }
+  <div class="relative z-10 w-full h-full">
+    <ng-content></ng-content>
+  </div>
+</div>

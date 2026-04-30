@@ -1,0 +1,18 @@
+<div class="split-card">
+
+  <div class="split-card__image-wrapper">
+    <img [src]="backgroundImage()" alt="Card Background" class="split-card__image" />
+    <div class="split-card__overlay"></div>
+  </div>
+
+  @if (icon()) {
+    <div class="split-card__icon-wrapper">
+      <i [class]="icon()"></i>
+    </div>
+  }
+
+  <div class="split-card__content">
+    <ng-content></ng-content>
+  </div>
+
+</div>
