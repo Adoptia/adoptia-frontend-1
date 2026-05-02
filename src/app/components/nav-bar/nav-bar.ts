@@ -1,4 +1,4 @@
-import {Component, input, signal} from '@angular/core';
+import {Component, HostListener, input, signal} from '@angular/core';
 import {Button} from 'primeng/button';
 
 @Component({
@@ -11,6 +11,8 @@ import {Button} from 'primeng/button';
 })
 export class NavBar {
 
+  isScrolled = signal(false)
+
   logo = signal<string>('app-logo.png')
 
   links = signal<NavBarLink[]>([
@@ -18,6 +20,11 @@ export class NavBar {
     { label: 'Explorer nos partenaires', description: '...' },
     { label: 'Notre objectif', description: '...' },
   ])
+
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.isScrolled.set(window.scrollY > 0)
+  }
 
 }
 

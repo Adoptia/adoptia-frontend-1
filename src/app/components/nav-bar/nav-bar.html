@@ -1,10 +1,11 @@
-<nav class="flex h-[15vh] px-8 text-white bg-gray-800 justify-between items-center">
+<nav [class.bg-gray-800]="isScrolled()" [class.bg-transparent]="!isScrolled()"
+  class="flex fixed top-0 z-50 h-[15vh] w-full px-8 text-white bg-gray-800 justify-between items-center">
   <div class="flex">
     <img [src]=logo() alt="Logo" class="h-16">
   </div>
 
   <div class="flex cursor-default gap-4">
-    <ul class="flex gap-4 items-center">
+    <ul class="flex gap-4 items-center text-base">
       @for (link of links(); track link) {
         <li class="hover:text-amber-400"
         >{{ link.label }}</li>

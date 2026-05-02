@@ -1,8 +1,9 @@
-import {Component, computed, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import {interval} from 'rxjs';
 import {Button} from 'primeng/button';
 import {Card} from '../shared/card/card';
 import {SplitCard} from '../shared/split-card/split-card';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,22 @@ import {SplitCard} from '../shared/split-card/split-card';
 
 })
 export class Home implements OnInit {
+
+  private router = inject(Router);
+
+  protected navigateToQuickQuiz() {
+    this.router.navigate(['/quick-quiz']).then();
+  }
+
+  protected navigateToChoiceAssistance() {
+    this.router.navigate(['/choice-assist']).then();
+  }
+
+  protected navigateToLearning() {
+    this.router.navigate(['/learn']).then();
+  }
+
+
 
   messages = signal<string[]>([
       'Changez une vie',

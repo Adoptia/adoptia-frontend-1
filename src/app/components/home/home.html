@@ -1,13 +1,18 @@
-<section class="flex flex-col justify-between h-[85vh] px-[3%] py-[3%]"
-#homeHeader>
-  <div class="message-container min-h-1/3 flex items-center">
-    <p class="text-5xl"
-      [hidden]="!animateFlag()" [class.enter-animation]="animateFlag()">
+<section class="relative flex flex-col justify-between h-screen py-[3%]"
+         #homeHeader>
+  <div class="absolute z-0 inset-0">
+    <img class="w-full h-full object-cover" src="home-bg-2.jpg">
+    <div class="absolute inset-0 bg-black/50"></div>
+  </div>
+  <div class="message-container relative z-10 pt-[15vh] min-h-1/3 w-1/2 px-[3%] flex items-center"
+  >
+    <p class="text-5xl font-bold"
+       [hidden]="!animateFlag()" [class.enter-animation]="animateFlag()">
       {{ messages()[messageIndex()] }}
     </p>
   </div>
 
-  <div class="flex flex-col justify-between gap-4">
+  <div class="relative z-10 flex flex-col justify-between px-[3%] gap-4">
     @for(b of benefits(); track b) {
       <p class="flex gap-3 items-center">
         <i class="pi pi-check-circle"></i>
@@ -16,7 +21,7 @@
     }
   </div>
 
-  <div class="flex gap-4">
+  <div class="relative z-10 flex px-[3%] gap-4">
     <p-button
       [label]="'Commencer mon parcours'"
       [rounded]="false" [raised]="true" [severity]="'warn'"
@@ -27,43 +32,91 @@
     />
   </div>
 
-  <div class="flex justify-center animate-bounce">
+  <div class="relative z-10 flex justify-center animate-bounce">
     <i class="pi pi-chevron-circle-down"
        style="font-size: 2rem"
     ></i>
   </div>
 </section>
 
-<section class="flex flex-col justify-between bg-amber-50 h-full px-[15%] py-[2%]">
-  <div class="stats-container h-60 w-full p-[3%]">
-    <app-card backgroundImage="hp-stats-card-bg.jpg">
+<section class="flex flex-col justify-between items-center bg-amber-50 h-full p-16 gap-8">
+  <div class="stats-container w-full max-w-286">
+    <app-card [backgroundImage]="'hp-stats-card-bg.jpg'"
+    >
+      <div class="flex justify-between items-center">
+        <div class="flex flex-col items-center gap-2">
+          <img src="icons/decreasing.png" class="h-14 w-14">
+          <p class="text-4xl font-bold">100 000+</p>
+          <p class="text-yellow-50">abandons annuels en France</p>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <img src="icons/awareness.png" class="h-14 w-14">
+          <p class="text-4xl font-bold">80%</p>
+          <p class="text-yellow-50">dûs à un manque de préparation</p>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <img src="icons/certificate.png" class="h-14 w-14">
+          <p class="text-4xl font-bold">100%</p>
+          <p class="text-yellow-50">évitables avec Prêt'Adopte</p>
+        </div>
+      </div>
     </app-card>
   </div>
 
-  <div class="how-it-works flex flex-col h-full items-center justify-between p-[3%]">
+  <div class="how-it-works flex flex-col h-full items-center justify-between">
     <div class="text-4xl text-green-900 font-bold pb-8"
     >Comment ça marche ?</div>
-    <div class="flex h-90 gap-8 w-full justify-between">
-      <app-split-card class="text-black"
-        [backgroundImage]="'beach.jpg'" icon="ph ph-heart"
+    <div class="split-card-container flex gap-8 w-full flex-wrap justify-center"
+    >
+      <app-split-card
+        (click)="navigateToQuickQuiz()"
+        [backgroundImage]="'pet-3.jpg'"
+        class="text-black" icon="pi pi-heart"
       >
+        <div class="flex flex-col justify-center gap-4">
+          <p class="text-green-900 font-bold">Je sais ce que je veux</p>
+          <p class="text-base">Vous connaissez déjà l'animal idéal ?
+            Validez rapidement vos connaissances avec un quiz personnalisé.
+          </p>
+        </div>
       </app-split-card>
-      <app-split-card class="text-black"
-                      [backgroundImage]="'beach.jpg'" icon="ph ph-heart"
-      ></app-split-card>
-      <app-split-card class="text-black"
-                      [backgroundImage]="'beach.jpg'" icon="ph ph-heart"
-      ></app-split-card>
+      <app-split-card
+        (click)="navigateToChoiceAssistance()"
+        [backgroundImage]="'pet-choice.jpg'"
+        class="text-black" icon="pi pi-key"
+      >
+        <div class="flex flex-col justify-center gap-4">
+          <p class="text-green-900 font-bold">Aidez-moi à choisir</p>
+          <p class="text-base">
+            Grâce à des leçons sur les animaux, découvrez l'animal le mieux adapté suivant votre mode de vie.
+          </p>
+        </div>
+      </app-split-card>
+      <app-split-card
+        (click)="navigateToLearning()"
+        [backgroundImage]="'pet-4.jpg'"
+        class="text-black" icon="pi pi-graduation-cap"
+      >
+        <div class="flex flex-col justify-center gap-4">
+          <p class="text-green-900 font-bold">Je souhaite me former</p>
+          <p class="text-base">
+            Suivez notre parcours éducatif immersif et ludique pour garantir une adoption réussie et durable.
+          </p>
+        </div>
+      </app-split-card>
     </div>
   </div>
 
-  <div class="certification h-60 w-full p-[3%]">
-    <app-card backgroundImage="hp-certif-card-bg.jpg">
-      <div class="flex flex-col p-8 gap-4 items-center">
+  <div class="certification w-full max-w-286">
+    <app-card [backgroundImage]="'hp-certif-card-bg.jpg'"
+              [borderColor]="'border-amber-400'"
+              [borderSize]="'border-2'"
+    >
+      <div class="flex flex-col gap-4 items-center">
         <h1 class="text-xl text-green-900 font-bold">Certification Prêt'Adopte</h1>
-        <p class="text-amber-800 text-center">À l'issue de votre parcours, vous obtenez votre certificat
-          d'adoptant responsable reconnu par nos refuges et éleveurs partenaires.
-          Score minimum requis : 80%.
+        <p class="text-base text-amber-800 text-center px-16">
+          À l'issue de chaque parcours, vous obtenez un certificat d'adoptant responsable reconnu
+          par nos refuges et éleveurs partenaires. Score minimum requis : 80%.
         </p>
       </div>
     </app-card>
