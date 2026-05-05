@@ -2,15 +2,15 @@ import {Component, input} from '@angular/core';
 import {NgClass} from '@angular/common';
 
 @Component({
-  selector: 'app-card',
+  selector: 'app-base-card',
   standalone: true,
   imports: [
     NgClass
   ],
-  templateUrl: './card.html',
-  styleUrl: './card.css',
+  templateUrl: './base-card.html',
+  styleUrl: './base-card.css',
 })
-export class Card {
+export class BaseCard {
   borderSize = input<string | undefined>(undefined);
   borderColor = input<string | undefined>(undefined);
   backgroundImage = input<string>('');

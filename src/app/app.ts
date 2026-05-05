@@ -11,4 +11,6 @@ import {Home} from './components/home/home';
 })
 export class App {
   protected readonly title = signal('adoptia-frontend');
+
+
 }

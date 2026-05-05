@@ -1,19 +1,59 @@
-<nav [class.bg-gray-800]="isScrolled()" [class.bg-transparent]="!isScrolled()"
-  class="flex fixed top-0 z-50 h-[15vh] w-full px-8 text-white bg-gray-800 justify-between items-center">
+<nav [ngClass]="{
+       'backdrop-blur-sm': isScrolling(),
+       'backdrop-blur-xl': isScrolledAndStill() && !isBurgerMenuOpen(),
+       'bg-transparent': !isScreenScrolled() || isBurgerMenuOpen()
+     }"
+     class="flex fixed top-0 z-50 h-28 w-full px-6 text-white bg-gray-800/50
+     justify-between items-center duration-1000
+     [@media(max-height:740px)]:h-20"
+>
   <div class="flex">
-    <img [src]=logo() alt="Logo" class="h-16">
+    <img [src]=logo() alt="Logo"
+         class="h-16 w-16 object-contain [@max-width:768px]:h-10 [@max-width:768px]:w-10"
+    >
   </div>
 
-  <div class="flex cursor-default gap-4">
-    <ul class="flex gap-4 items-center text-base">
-      @for (link of links(); track link) {
-        <li class="hover:text-amber-400"
+  <div class="flex cursor-default gap-4 [@media(max-width:768px)]:hidden">
+    <ul class="flex gap-4 items-center text-base"
+    >
+      @for (link of links(); track link.label) {
+        <li class="hover:text-orange-300 active:text-orange-300 transition-colors duration-500"
+            [routerLink]="[link.pathURL]" [fragment]="link.fragment"
         >{{ link.label }}</li>
       }
     </ul>
     <p-button
-      [icon]="'pi pi-user'" [label]="'Se connecter'"
-      [rounded]="false" [outlined]="true" [severity]="'primary'"
+      styleClass="!text-white hover:!text-black !border-2 !border-white hover:!border-black hover:!bg-white/50
+      active:!bg-white/50 !transition-colors !duration-500"
+      [icon]="'pi pi-user'" [label]="'Mon compte'"
+      [rounded]="false" [outlined]="true" [severity]="'secondary'"
     />
   </div>
+
+  <div class="absolute right-6 burger-menu [@media(min-width:769px)]:hidden">
+    <i [class]="burgerMenuIcon()" style="font-size: 32px"
+       class="transition-transform duration-500"
+       [class.rotate-90]="isBurgerMenuOpen()"
+       (click)="toggleBurgerMenu()"
+    ></i>
+  </div>
 </nav>
+
+
+<div [class.opacity-0]="!isBurgerMenuOpen()" [class.opacity-100]="isBurgerMenuOpen()"
+     [class.pointer-events-none]="!isBurgerMenuOpen()"
+     class="burger-menu-content fixed inset-0 z-40 flex flex-col justify-center gap-4
+     h-screen w-full bg-black/70 backdrop-blur-md transition-opacity duration-500"
+>
+  <ul class="flex flex-col gap-16 items-center text-base"
+  >
+    <li class="text-white active:text-orange-300"
+    >Mon compte</li>
+    @for (link of links(); track link.label) {
+      <li class="text-white active:text-orange-300"
+          (click)="toggleBurgerMenu()"
+          [routerLink]="[link.pathURL]" [fragment]="link.fragment"
+      >{{ link.label }}</li>
+    }
+  </ul>
+</div>

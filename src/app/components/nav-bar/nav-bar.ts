@@ -1,34 +1,59 @@
-import {Component, HostListener, input, signal} from '@angular/core';
+import {Component, computed, HostListener, inject, input, signal} from '@angular/core';
 import {Button} from 'primeng/button';
+import {NgClass} from '@angular/common';
+import {NavBarService} from '../../services/nav-bar-service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-nav-bar',
   imports: [
-    Button
+    Button,
+    NgClass,
+    RouterLink
   ],
   templateUrl: './nav-bar.html',
   styleUrl: './nav-bar.css',
 })
 export class NavBar {
 
-  isScrolled = signal(false)
+  scrollTimeout: any;
 
-  logo = signal<string>('app-logo.png')
+  private navBarService = inject(NavBarService);
 
-  links = signal<NavBarLink[]>([
-    { label: 'Nos parcours', description: '...' },
-    { label: 'Explorer nos partenaires', description: '...' },
-    { label: 'Notre objectif', description: '...' },
-  ])
+  isScreenStill = signal(true);
+  isScreenScrolled = signal(false)
+
+  isScrolling = computed(() =>
+    this.isScreenScrolled() && !this.isScreenStill()
+  )
+
+  isScrolledAndStill = computed(() =>
+    this.isScreenScrolled() && this.isScreenStill()
+  )
+
+  logo = this.navBarService.logo;
+  links = this.navBarService.links;
 
   @HostListener('window:scroll')
-  onWindowScroll() {
-    this.isScrolled.set(window.scrollY > 0)
+  onScroll() {
+    this.isScreenScrolled.set(window.scrollY > 25)
+    this.isScreenStill.set(false)
+
+    clearTimeout(this.scrollTimeout)
+    this.scrollTimeout = setTimeout(() => {
+      this.isScreenStill.set(true)
+    }, 1000)
   }
 
-}
+  burgerMenuIcon = this.navBarService.burgerMenuIcon
+  isBurgerMenuOpen = this.navBarService.isBurgerMenuOpen
 
-export type NavBarLink = {
-  label: string;
-  description: string;
+  protected toggleBurgerMenu() {
+
+    this.navBarService.toggleBurgerMenuIcon();
+    this.isBurgerMenuOpen.update(s => !s);
+
+    // Prevents scrolling when the burger menu is open
+    document.body.classList.toggle('overflow-hidden');
+  }
 }

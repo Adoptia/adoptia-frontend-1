@@ -1,1 +1,74 @@
-<p>learn works!</p>
+<header [hidden]="choiceSubmitted()"
+         class="learn-header relative text-white min-h-screen flex flex-col items-center justify-center gap-8"
+>
+  <div class="bg-l-h absolute z-0 inset-0 h-full">
+    <img class="w-full h-full object-center object-cover"
+         [src]="headerBackground"
+    >
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+  </div>
+
+  <div class="relative z-10 flex flex-col justify-center items-center min-h-screen gap-8 px-8 pb-16 pt-28">
+    <p class="text-xl font-bold text-center pb-8 [@media(min-width:750px)]:text-3xl">
+      Pour quel animal souhaitez-vous une formation ?
+    </p>
+    <div class="species-selection flex flex-col items-center gap-2">
+      <p class="text-base sm:text-lg">Choisir une espèce</p>
+      <p-select class="w-56" [options]="species" [(ngModel)]="selectedSpecies"
+                [editable]="true" emptyMessage="Aucune espèce trouvée"
+                (ngModelChange)="selectedBreed.set(undefined)"
+      />
+    </div>
+    <div class="race-selection flex flex-col items-center gap-2">
+      <p>Préciser une race</p>
+      <p-select class="w-56" [options]="breeds()" [(ngModel)]="selectedBreed"
+                [editable]="true" [showClear]="true" [placeholder]="'Peu importe'"
+                emptyMessage="Aucune race trouvée"
+      />
+    </div>
+    <p-button (click)="submitChoice()"
+              class="pt-8" [rounded]="true"
+              styleClass="!text-white !font-bold !px-8 !py-3 !bg-cyan-700 !border-none
+              hover:!bg-cyan-600 active:!bg-cyan-600 !transition-colors !duration-500"
+    >
+      Démarrer la formation
+    </p-button>
+  </div>
+</header>
+
+
+<section [hidden]="!choiceSubmitted()"
+  class="relative flex flex-col justify-between items-center
+bg-amber-50 h-full pt-46 py-18 gap-12">
+
+  <div class="absolute inset-0 z-0 bg-linear-to-b from-black/90 from-0% to-transparent to-80%">
+  </div>
+
+  <div class="auto-change-message-container relative z-10 flex items-center justify-center w-full
+  [@media(max-width:1135px)]:max-w-165
+  [@media(min-width:1136px)]:max-w-184
+  min-h-30"
+  >
+    <p [hidden]="!animateFlag()" [class.enter-animation]="animateFlag()"
+       class="text-center text-shadow-white font-bold text-2xl w-full
+       [@media(max-width:783px)]:whitespace-pre-line
+       [@media(max-width:1135px)]:text-xl"
+  >{{ messages()[messageIndex()] }}
+  </p>
+  </div>
+
+  <div class="split-card-container flex relative z-10 gap-8 w-full flex-wrap justify-center max-w-5xl
+  [@media(max-width:1135px)]:max-w-2xl
+  [@media(max-width:783px)]:max-w-80"
+  >
+    @for (t of topics; track t) {
+      <app-split-card [backgroundImage]="t.background"
+                      [icon]="t.icon"
+      >
+        <div class="flex flex-col justify-center gap-4">
+          <p class="text-green-900 font-bold">{{ t.name }}</p>
+        </div>
+      </app-split-card>
+    }
+  </div>
+</section>

@@ -1,11 +1,82 @@
-<section class="first-step text-black flex flex-col items-center h-screen bg-amber-50">
-  <div class="species-selection pt-[15vh]">
-    <p>Je souhaite adopter</p>
+<header [hidden]="choiceSubmitted()"
+  class="qq-header relative text-white flex flex-col items-center justify-center gap-8 min-h-screen"
+>
+  <div class="bg-qq-h absolute z-0 inset-0 h-full pointer-events-none">
+    <img class="w-full h-full object-center object-cover" [src]="headerBackground">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
   </div>
-  <div class="race-selection">
-    <p>Préciser une race</p>
+
+  <div class="relative z-10 flex flex-col justify-center items-center min-h-screen gap-8 px-8 pb-16 pt-28">
+    <p class="text-xl font-bold text-center pb-8 [@media(min-width:750px)]:text-3xl">
+      Que souhaitez-vous adopter ?
+    </p>
+    <div class="species-selection flex flex-col items-center gap-2">
+      <p class="text-base sm:text-lg">Choisir une espèce</p>
+      <p-select class="w-56" [options]="species" [(ngModel)]="selectedSpecies"
+                [editable]="true" emptyMessage="Aucune espèce trouvée"
+                (ngModelChange)="selectedBreed.set(undefined)"
+      />
+    </div>
+    <div class="race-selection flex flex-col items-center gap-2">
+      <p>Préciser une race</p>
+      <p-select class="w-56" [options]="breeds()" [(ngModel)]="selectedBreed"
+                [editable]="true" [showClear]="true" [placeholder]="'Peu importe'"
+                emptyMessage="Aucune race trouvée"
+      />
+    </div>
+    <p-button (click)="startQuiz()"
+              class="pt-8" [rounded]="true"
+              styleClass="!text-white !font-bold !px-8 !py-3 !bg-cyan-700 !border-none
+              hover:!bg-cyan-600 active:!bg-cyan-600 !transition-colors !duration-500"
+    >
+      Démarrer le quiz
+    </p-button>
   </div>
-  <p-button>
-    Commencer le quiz
-  </p-button>
+</header>
+
+<section [hidden]="!choiceSubmitted()"
+         class="quiz-card-container relative min-h-screen flex"
+>
+  <div class="bg-qc-c absolute z-0 inset-0 pointer-events-none">
+    <img class="w-full h-full object-cover" [src]="headerBackground">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+  </div>
+
+  <div class="z-10 min-h-screen w-full flex justify-center text-white
+  items-center pt-28 px-8 pb-8">
+    <app-quick-quiz-card [hidden]="isQuizDone()"
+      [data]="quizData()" (cardSubmitted)="submitSelectedAnswers($event)"
+      class="w-full flex justify-center items-center"
+    />
+
+    <div [hidden]="!isQuizDone()"
+         class="flex flex-col items-center w-full pb-8"
+    >
+      <app-split-card [backgroundImage]="quizBackground()"
+                      [icon]="quizIcon()"
+      >
+        <div class="flex flex-col justify-center gap-4 text-black">
+          <p class="text-green-900 font-bold">
+            {{ infoQuiz().title }}
+          </p>
+          <p class="text-base">{{ infoQuiz().infoScore }}</p>
+          <p class="text-base">{{ infoQuiz().outcome }}</p>
+
+        </div>
+      </app-split-card>
+      <div class="flex justify-center items-center gap-8 pt-8 [@media(max-width:783px)]:flex-col">
+        <p-button [label]="quizDoneButtons().left.label" [icon]="quizDoneButtons().left.icon"
+                  [severity]="'secondary'" [outlined]="true"
+                  styleClass="!text-white hover:!text-black !border-2 !border-white hover:!border-black
+                  hover:!bg-white/50 active:!bg-white/50 !transition-colors !duration-500"
+        />
+        <p-button [label]="quizDoneButtons().right.label" [icon]="quizDoneButtons().right.icon"
+                  [severity]="'secondary'" [outlined]="true"
+                  styleClass="!text-black !bg-white/50 hover:!text-white !border-2 !border-black
+                  hover:!border-white hover:!bg-transparent active:!bg-transparent
+                  !transition-colors !duration-500"
+        />
+      </div>
+    </div>
+  </div>
 </section>
