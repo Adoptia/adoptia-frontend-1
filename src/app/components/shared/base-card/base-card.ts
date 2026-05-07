@@ -13,6 +13,8 @@ import {NgClass} from '@angular/common';
 export class BaseCard {
   borderSize = input<string | undefined>(undefined);
   borderColor = input<string | undefined>(undefined);
-  backgroundImage = input<string>('');
-  backgroundBlur = input<number>(0);
+  backgroundImage = input<string | undefined>(undefined);
+  backgroundBlur = input<boolean>(false);
+  backgroundImageHaze = input<boolean>(false);
+  backgroundColor = input<string | undefined>(undefined);
 }

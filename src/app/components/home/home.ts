@@ -4,7 +4,7 @@ import {Button} from 'primeng/button';
 import {BaseCard} from '../shared/base-card/base-card';
 import {SplitCard} from '../shared/split-card/split-card';
 import {Router, RouterLink} from '@angular/router';
-import {NavBarService} from '../../services/nav-bar-service';
+import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
 
 @Component({
   selector: 'app-home',
@@ -24,12 +24,13 @@ export class Home implements OnInit {
   private navBarService = inject(NavBarService);
 
   protected headerBackground = 'images/hp-header-bg.jpg';
+  protected partnersBackground = 'images/partners-bg.jpg';
+  protected statsCardBackground = 'images/hp-stats-card-bg.jpg';
+  protected goalCardBackground = 'images/goal-card-bg.jpg';
 
   protected navigateToOption(optionPathURL: string) {
     this.router.navigate(['/' + optionPathURL]).then();
   }
-
-  statsCardBackground = 'images/hp-stats-card-bg.jpg'
 
   protected readonly benefits = BENEFITS
 
@@ -47,9 +48,9 @@ export class Home implements OnInit {
 
   constructor() {
     this.navBarService.links.set([
-      { label: 'Contact', fragment: 'contact' },
-      { label: 'Notre objectif', fragment: 'goal' },
-      { label: 'Nous rejoindre', fragment: 'joinUs' },
+      navBarLinks['contact']!,
+      navBarLinks['goal']!,
+      navBarLinks['join-us']!,
     ])
   }
 

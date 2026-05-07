@@ -23,11 +23,25 @@ export class NavBarService {
     );
   }
 
-
 }
 
-export type NavBarLink = {
+
+type NavBarKey = 'quick-quiz' | 'learn'
+  | 'choice-assist' | 'contact' | 'goal' | 'join-us';
+
+
+type NavBarLink = {
   label: string,
   pathURL?: string,
   fragment?: string
+}
+
+
+export const navBarLinks: Partial<Record<NavBarKey, NavBarLink>> = {
+  'learn': { label: 'Se former', pathURL: 'learn' },
+  'quick-quiz': { label: 'Quiz rapide', pathURL: 'quick-quiz' },
+  'choice-assist': { label: 'Aide au choix', pathURL: 'choice-assist' },
+  'join-us': { label: 'Nous rejoindre', pathURL: 'join-us' },
+  'goal': { label: 'Notre objectif', fragment: 'goal' },
+  'contact': { label: 'Contact', fragment: 'contact' },
 }

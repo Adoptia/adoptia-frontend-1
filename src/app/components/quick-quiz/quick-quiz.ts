@@ -5,10 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {QuickQuizCard} from '../shared/quick-quiz-card/quick-quiz-card';
 import {NavBarService} from '../../services/nav-bar-service';
 import {Answer, QuickQuizService} from '../../services/quick-quiz-service';
-import {BaseCard} from '../shared/base-card/base-card';
 import {SplitCard} from '../shared/split-card/split-card';
-import {TagTokenSections} from '@primeuix/themes/types/tag';
-import Info = TagTokenSections.Info;
 
 @Component({
   selector: 'app-quick-quiz',
@@ -17,7 +14,6 @@ import Info = TagTokenSections.Info;
     Select,
     FormsModule,
     QuickQuizCard,
-    BaseCard,
     SplitCard
   ],
   templateUrl: './quick-quiz.html',

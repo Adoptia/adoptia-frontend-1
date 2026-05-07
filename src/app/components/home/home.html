@@ -55,21 +55,20 @@
   <div class="relative z-10 flex justify-center animate-bounce w-full
   [@media(max-height:450px)]:hidden"
   >
-    <i class="pi pi-chevron-circle-down"
+    <i [routerLink] = "[]" [fragment]="'trainingPaths'"
+      class="pi pi-chevron-circle-down hover:scale-110 duration-300"
        style="font-size: 2rem"
     ></i>
   </div>
 </header>
 
-<section
-  class="flex justify-center bg-amber-50
-  h-full w-full p-12 gap-12"
+<section id="trainingPaths"
+  class="flex justify-center bg-amber-50 h-full w-full py-28 px-12 gap-12"
 >
-  <div
-    class="flex flex-col items-center gap-8 max-w-5xl
+  <div class="flex flex-col items-center gap-8 max-w-5xl
     [@media(max-width:783px)]:max-w-80 [@media(max-width:1135px)]:max-w-2xl"
   >
-    <div id="trainingPaths"
+    <div
       class="stats-container w-full"
     >
       <app-base-card [backgroundImage]="statsCardBackground"
@@ -145,3 +144,145 @@
   </div>
 
 </section>
+
+<section id="partners"
+         class="relative flex min-h-screen w-full">
+  <div class="bg-prtn absolute z-0 h-full w-full pointer-events-none">
+    <img [src]="partnersBackground"
+         class="h-full w-full object-cover"
+    >
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-xs"></div>
+  </div>
+
+  <div class="relative z-10 py-32 gap-16 px-8 flex flex-col w-full items-center justify-between">
+    <p class="text-amber-600 font-bold w-full text-left text-lg
+    md:text-xl lg:text-2xl">
+      NOS PARTENAIRES
+    </p>
+
+    <div class="w-full">
+      <p class="font-bold w-65 md:w-full text-left text-2xl md:text-3xl lg:text-4xl">
+        Explorer notre réseau de partenaires
+      </p>
+    </div>
+
+
+    <div class="flex flex-col gap-4 w-full text-sm md:text-base lg:text-lg">
+      <p class="flex gap-3 items-center">
+        <i class="pi pi-check-circle"></i>
+        <label> Eleveurs certifiés et responsables</label>
+      </p>
+      <p class="flex gap-3 items-center">
+        <i class="pi pi-check-circle"></i>
+        <label> Refuges approuvés par notre équipe</label>
+      </p>
+      <p class="flex gap-3 items-center">
+        <i class="pi pi-check-circle"></i>
+        <label> Processus d'adoption sûr et transparent</label>
+      </p>
+    </div>
+
+    <div class="cards-container flex flex-col justify-center w-full items-center gap-8
+    sm:flex-row"
+    >
+      <app-base-card
+        class="h-50 w-full"
+        [backgroundBlur]="true"
+        [borderSize]="'border-2'" [borderColor]="'border-white/30'"
+      >
+      </app-base-card>
+
+      <app-base-card class="h-50 w-full"
+                     backgroundColor="bg-black/50"
+                     [backgroundBlur]="true"
+      ></app-base-card>
+    </div>
+
+    <div class="w-full">
+      <p-button [label]="'Rejoindre notre réseau'" [variant]="'outlined'" [severity]="'contrast'"
+                [routerLink]="['/join-us']"
+
+      />
+    </div>
+
+
+  </div>
+</section>
+
+<section id="goal"
+         class="flex justify-center items-center bg-amber-50 h-full w-full py-28 px-12 gap-12"
+>
+  <div class="h-full w-full max-w-180 flex flex-col gap-12 justify-between">
+    <app-base-card [backgroundImage]="goalCardBackground"
+                   [backgroundImageHaze]="true" class="w-full"
+    >
+      <div class="absolute inset-0 z-0 bg-black/30 backdrop-blur-xs pointer-events-none"></div>
+
+      <div class="relative h-full flex flex-col gap-8  py-8 items-center z-10">
+        <div class="icon-container rounded-4xl bg-amber-500 flex justify-center items-center w-15 h-15"
+        ><i class="pi pi-heart" style="font-size: 2rem"></i>
+        </div>
+
+        <div class="flex flex-col items-center gap-8 w-full">
+          <p class="font-bold text-left text-2xl md:text-3xl lg:text-4xl">
+            Notre objectif</p>
+
+          <div class="flex flex-col items-center gap-4 w-55 md:w-70 lg:w-80 px-2
+          text-xs md:text-base lg:text-lg">
+            <p class="flex w-full gap-3 items-center">
+              <i class="pi pi-check-circle"></i>
+              <label> Réduire les abandons</label>
+            </p>
+            <p class="flex w-full gap-3 items-center">
+              <i class="pi pi-check-circle"></i>
+              <label> Responsabiliser les adoptants</label>
+            </p>
+            <p class="flex w-full gap-3 items-center">
+              <i class="pi pi-check-circle"></i>
+              <label> Garantir des adoptions durables</label>
+            </p>
+          </div>
+
+          <p class="italic text-center text-sm md:text-base lg:text-lg w-48 md:w-full">
+            "On ne choisit plus un animal au hasard, on adopte en connaissance."
+          </p>
+        </div>
+      </div>
+
+    </app-base-card>
+
+    <div class="flex flex-col items-center gap-8 w-full text-black">
+      <p class="text-center text-2xl md:text-3xl lg:text-4xl font-bold w-full [@media(max-width:420px)]:w-50 "
+      >Prêt à changer une vie ?</p>
+      <p class="w-full text-center text-base md:text-lg lg:text-xl"
+      >Commencez votre parcours d'adoption responsable dès aujourd'hui</p>
+
+      <div>
+        <p-button [label]="'Se connecter'" [severity]="'contrast'" [variant]="'outlined'"
+                  styleClass ="!text-white !bg-amber-500 hover:!bg-amber-600 active:!bg-amber-300
+                  !border-2 !border-black/50 hover:!border-black active:!border-black
+                  !transition-colors !duration-500 !px-6 !py-3 !rounded-4xl"
+                  [routerLink]="['/auth']"
+        />
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<footer
+  class="flex flex-col items-center bg-amber-50/90 gap-8 justify-between
+  min-h-50 h-full w-full p-12 ">
+  <div id="contact"
+    class="flex justify-center gap-16 text-black pb-4 px-8 border-b border-black/20">
+    <i class="pi pi-facebook" style="font-size: 2rem"></i>
+    <i class="pi pi-instagram" style="font-size: 2rem"></i>
+    <i class="pi pi-comments" style="font-size: 2rem"></i>
+  </div>
+
+  <div class="flex flex-col items-center text-sm text-black/70 gap-4 w-full md:flex-row justify-center">
+    <p class="text-center">Confidentialité</p>
+    <p class="text-center">Conditions générales</p>
+    <p class="text-center">© 2026 Prêt'Adopte, Inc.</p>
+  </div>
+</footer>

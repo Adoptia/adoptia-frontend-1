@@ -23,7 +23,26 @@ export const routes: Routes = [
   {
     path: 'learn',
     component: Learn,
-    title: 'Je me forme pour mieux adopter',
+    title: 'Se former pour mieux adopter',
+  },
+  {
+    path: 'dashboard',
+    title: 'Tableau de bord',
+    loadComponent: () =>
+      import('./components/dashboard/dashboard').then(m => m.Dashboard),
+  },
+  {
+    path: 'join-us',
+    title: 'Nous rejoindre',
+    loadComponent: () =>
+      import('./components/join-forms/join-forms').then(m => m.JoinForms),
+  },
+  {
+    path: 'auth',
+    title: 'Authentification',
+    data: { showNavBar: false },
+    loadComponent: () =>
+      import('./components/auth/auth').then(m => m.Auth)
   },
   {
     path:'**',

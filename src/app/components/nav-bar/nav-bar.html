@@ -7,8 +7,8 @@
      justify-between items-center duration-1000
      [@media(max-height:740px)]:h-20"
 >
-  <div class="flex">
-    <img [src]=logo() alt="Logo"
+  <div class="flex cursor-pointer hover:scale-110 duration-500">
+    <img [src]=logo() alt="Logo" [routerLink]="['/']"
          class="h-16 w-16 object-contain [@max-width:768px]:h-10 [@max-width:768px]:w-10"
     >
   </div>
@@ -27,6 +27,7 @@
       active:!bg-white/50 !transition-colors !duration-500"
       [icon]="'pi pi-user'" [label]="'Mon compte'"
       [rounded]="false" [outlined]="true" [severity]="'secondary'"
+      [routerLink]="['/dashboard']"
     />
   </div>
 
@@ -48,6 +49,8 @@
   <ul class="flex flex-col gap-16 items-center text-base"
   >
     <li class="text-white active:text-orange-300"
+        [routerLink]="['/dashboard']"
+        (click)="toggleBurgerMenu()"
     >Mon compte</li>
     @for (link of links(); track link.label) {
       <li class="text-white active:text-orange-300"
