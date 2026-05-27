@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {NavBarService} from '../../services/nav-bar-service';
+import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
 
 @Component({
   selector: 'app-choice-assist',
@@ -13,9 +13,9 @@ export class ChoiceAssist {
 
   constructor() {
     this.navBarService.links.set([
-      { label: 'Contact', fragment: 'contact' },
-      { label: 'Se former', pathURL: 'learn' },
-      { label: 'Quiz rapide', pathURL: 'quick-quiz' },
+      navBarLinks['contact']!,
+      navBarLinks['learn']!,
+      navBarLinks['quick-quiz']!
     ])
   }
 

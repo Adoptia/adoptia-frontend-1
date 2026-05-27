@@ -68,7 +68,6 @@ export class Home implements OnInit {
 export const OPTIONS = [
   {
     icon: 'pi pi-heart',
-    label: 'Quiz rapide',
     pathURL: 'quick-quiz',
     title : 'Je sais ce que je veux',
     backgroundImage: 'images/qq-split-card-bg.jpg',
@@ -77,7 +76,6 @@ export const OPTIONS = [
   },
   {
     icon: 'pi pi-key',
-    label: 'Aide au choix',
     pathURL: 'choice-assist',
     title : 'Aidez-moi à choisir',
     backgroundImage: 'images/choice-split-card-bg.jpg',
@@ -86,7 +84,6 @@ export const OPTIONS = [
   },
   {
     icon: 'pi pi-graduation-cap',
-    label: 'Se former',
     pathURL: 'learn',
     title : 'Je souhaite me former',
     backgroundImage: 'images/learn-split-card-bg.jpg',
