@@ -19,9 +19,8 @@
   </div>
 
   <div class="benefits-container relative z-10 flex flex-col justify-between
-  w-full px-6 gap-4 [@media(max-width:440px)]:whitespace-pre-line
-  [@media(max-width:350px)]:text-base
-  [@media(min-width:351px)]:text-lg"
+  w-full px-6 gap-4 whitespace-pre-line sm:whitespace-normal
+  text-sm sm:text-lg"
   >
     @for(b of benefits; track b) {
       <p class="flex gap-3 items-center">
@@ -38,22 +37,23 @@
   >
     <p-button
       styleClass ="!text-white !bg-amber-700/70 hover:!bg-amber-700 active:!bg-amber-700
-      !border-2 !border-white/50 !transition-colors !duration-500"
-      [label]="'Commencer mon parcours'"
+      !border-2 !border-white/50 !transition-colors !duration-500
+      !text-xs sm:!text-base
+"
+      [label]="'Commencer un parcours'"
       [rounded]="false" [raised]="true" [severity]="'warn'"
       [routerLink]="[]" [fragment]="'trainingPaths'"
     />
     <p-button
       styleClass ="!text-white !bg-transparent hover:!bg-gray-500/50 active:!bg-gray-500/50 !border-2
-      !transition-colors !duration-500"
+      !transition-colors !duration-500 !text-xs sm:!text-base"
       [label]="'Explorer nos partenaires'"
       [rounded]="false" [outlined]="true" [severity]="'contrast'"
       [routerLink]="[]" [fragment]="'partners'"
     />
   </div>
 
-  <div class="relative z-10 flex justify-center animate-bounce w-full
-  [@media(max-height:450px)]:hidden"
+  <div class="relative z-10 hidden justify-center animate-bounce w-full sm:flex"
   >
     <i [routerLink] = "[]" [fragment]="'trainingPaths'"
       class="pi pi-chevron-circle-down hover:scale-110 duration-300"
@@ -88,8 +88,8 @@
               <p class="font-bold text-3xl
               [@media(max-width:783px)]:text-2xl"
               >{{ s.figure }}</p>
-              <p class="text-yellow-50 text-lg
-              [@media(max-width:1135px)]:text-sm"
+              <p class="text-yellow-50 text-xs
+              [@media(min-width:1135px)]:text-base"
               >{{ s.details }}</p>
             </div>
           }
@@ -167,7 +167,7 @@
     </div>
 
 
-    <div class="flex flex-col gap-4 w-full text-sm md:text-base lg:text-lg">
+    <div class="flex flex-col gap-4 w-full text-sm sm:text-lg">
       <p class="flex gap-3 items-center">
         <i class="pi pi-check-circle"></i>
         <label> Eleveurs certifiés et responsables</label>
@@ -199,9 +199,10 @@
     </div>
 
     <div class="w-full">
-      <p-button [label]="'Rejoindre notre réseau'" [variant]="'outlined'" [severity]="'contrast'"
+      <p-button styleClass="!text-xs sm:!text-base"
+                [label]="'Rejoindre notre réseau'"
+                [variant]="'outlined'" [severity]="'contrast'"
                 [routerLink]="['/join-us']"
-
       />
     </div>
 
@@ -259,8 +260,8 @@
 
       <div>
         <p-button [label]="'Se connecter'" [severity]="'contrast'" [variant]="'outlined'"
-                  styleClass ="!text-white !bg-amber-500 hover:!bg-amber-600 active:!bg-amber-300
-                  !border-2 !border-black/50 hover:!border-black active:!border-black
+                  styleClass ="!text-xs sm:!text-base !text-white !bg-amber-500 hover:!bg-amber-600
+                  active:!bg-amber-300 !border-2 !border-black/50 hover:!border-black active:!border-black
                   !transition-colors !duration-500 !px-6 !py-3 !rounded-4xl"
                   [routerLink]="['/auth']"
         />
