@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import {Unavailable} from "../unavailable/unavailable";
 
 @Component({
   selector: 'app-auth',
-  imports: [],
+    imports: [
+        Unavailable
+    ],
   templateUrl: './auth.html',
   styleUrl: './auth.css',
 })

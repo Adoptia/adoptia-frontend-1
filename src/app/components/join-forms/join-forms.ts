@@ -1,9 +1,12 @@
 import {Component, inject} from '@angular/core';
 import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
+import {Unavailable} from '../unavailable/unavailable';
 
 @Component({
   selector: 'app-join-forms',
-  imports: [],
+  imports: [
+    Unavailable
+  ],
   templateUrl: './join-forms.html',
   styleUrl: './join-forms.css',
 })
@@ -14,7 +17,7 @@ export class JoinForms {
   constructor() {
     this.navBarService.links.set([
       navBarLinks['contact']!,
-      navBarLinks['goal']!,
+      navBarLinks['goals']!,
     ])
   }
 

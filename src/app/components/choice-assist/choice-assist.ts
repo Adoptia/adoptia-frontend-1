@@ -1,9 +1,12 @@
 import {Component, inject} from '@angular/core';
 import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
+import {Unavailable} from '../unavailable/unavailable';
 
 @Component({
   selector: 'app-choice-assist',
-  imports: [],
+  imports: [
+    Unavailable
+  ],
   templateUrl: './choice-assist.html',
   styleUrl: './choice-assist.css',
 })

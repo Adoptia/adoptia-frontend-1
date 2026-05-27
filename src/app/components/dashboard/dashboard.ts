@@ -1,9 +1,12 @@
 import { Component, inject } from '@angular/core';
 import {navBarLinks, NavBarService} from "../../services/nav-bar-service";
+import {Unavailable} from "../unavailable/unavailable";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+    imports: [
+        Unavailable
+    ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })

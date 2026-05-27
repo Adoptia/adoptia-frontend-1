@@ -49,7 +49,7 @@ export class Home implements OnInit {
   constructor() {
     this.navBarService.links.set([
       navBarLinks['contact']!,
-      navBarLinks['goal']!,
+      navBarLinks['goals']!,
       navBarLinks['join-us']!,
     ])
   }
@@ -72,7 +72,7 @@ export const OPTIONS = [
     title : 'Je sais ce que je veux',
     backgroundImage: 'images/qq-split-card-bg.jpg',
     description: "Vous connaissez l'animal idéal ? " +
-      "Validez vos connaissances avec notre petit quiz personnalisé."
+      "Validez vos connaissances avec notre petit quiz personnalisé"
   },
   {
     icon: 'pi pi-key',
@@ -80,7 +80,7 @@ export const OPTIONS = [
     title : 'Aidez-moi à choisir',
     backgroundImage: 'images/choice-split-card-bg.jpg',
     description: "Grâce à des leçons sur les animaux, découvrez l'animal " +
-      "le mieux adapté suivant votre mode de vie."
+      "le mieux adapté suivant votre mode de vie"
   },
   {
     icon: 'pi pi-graduation-cap',
@@ -88,7 +88,7 @@ export const OPTIONS = [
     title : 'Je souhaite me former',
     backgroundImage: 'images/learn-split-card-bg.jpg',
     description: "Suivez notre parcours éducatif immersif et ludique pour " +
-      "garantir une adoption réussie et durable."
+      "garantir une adoption réussie et durable"
   }
 ]
 
@@ -127,6 +127,6 @@ const CERTIF_CARD_DATA = {
   backgroundImage: 'images/hp-certif-card-bg.jpg',
   title: "Certification Prêt'Adopte",
   body: "À l'issue de chaque parcours, vous obtenez un certificat d'adoptant " +
-    "responsable reconnu par nos refuges et éleveurs partenaires.",
+    "responsable reconnu par nos refuges et éleveurs partenaires",
   footer: 'Score minimum requis : 80%'
 }

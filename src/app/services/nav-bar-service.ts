@@ -27,7 +27,7 @@ export class NavBarService {
 
 
 type NavBarKey = 'quick-quiz' | 'learn'
-  | 'choice-assist' | 'contact' | 'goal' | 'join-us';
+  | 'choice-assist' | 'contact' | 'goals' | 'join-us';
 
 
 type NavBarLink = {
@@ -42,6 +42,6 @@ export const navBarLinks: Partial<Record<NavBarKey, NavBarLink>> = {
   'quick-quiz': { label: 'Quiz rapide', pathURL: 'quick-quiz' },
   'choice-assist': { label: 'Aide au choix', pathURL: 'choice-assist' },
   'join-us': { label: 'Nous rejoindre', pathURL: 'join-us' },
-  'goal': { label: 'Notre objectif', fragment: 'goal' },
+  'goals': { label: 'Objectifs', fragment: 'goals' },
   'contact': { label: 'Contact', fragment: 'contact' },
 }
