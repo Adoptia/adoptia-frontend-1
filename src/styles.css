@@ -14,7 +14,7 @@ html {
 
 html, body {
   min-height: 100dvh;
-  background-color: white;
+  background-color: gray;
   margin: 0;
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
