@@ -1,10 +1,11 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import {interval} from 'rxjs';
+import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {distinctUntilChanged, filter, interval, map, startWith, take} from 'rxjs';
 import {Button} from 'primeng/button';
 import {BaseCard} from '../shared/base-card/base-card';
 import {SplitCard} from '../shared/split-card/split-card';
-import {Router, RouterLink} from '@angular/router';
+import {NavigationEnd, NavigationStart, Router, RouterLink} from '@angular/router';
 import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-home',
@@ -18,8 +19,9 @@ import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
   styleUrl: './home.css',
 
 })
-export class Home implements OnInit {
+export class Home implements OnInit, OnDestroy {
 
+  private observer!: IntersectionObserver;
   private router = inject(Router);
   private navBarService = inject(NavBarService);
 
@@ -55,11 +57,31 @@ export class Home implements OnInit {
   }
 
   ngOnInit() {
+
+    const sections = document.querySelectorAll('section[id], header[id]')
+
+    this.observer = new IntersectionObserver((entries) => {
+
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const fragment = entry.target.id === 'home' ? undefined : entry.target.id
+          this.router.navigate([], { fragment, replaceUrl: true })
+        }
+      })
+    }, { threshold: 0.5 })
+
+    sections.forEach(section => this.observer.observe(section));
+
     interval(4000).subscribe(() => {
       this.animateFlag.update(v => !v);
       setTimeout(() => this.animateFlag.update(v => !v), 200);
       setTimeout(() => this.messageIndex.update(i => (i + 1) % this.messages().length));
-    });
+    })
+
+  }
+
+  ngOnDestroy() {
+
   }
 
 }

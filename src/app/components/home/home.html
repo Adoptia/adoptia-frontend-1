@@ -1,4 +1,4 @@
-<header
+<header id="home"
   class="home-header relative flex flex-col justify-evenly items-center h-screen pb-16 px-8 sm:px-12
   pt-[10vh] [@media(max-height:500px)]:pt-10 text-white" #homeHeader>
   <div class="bg-h-h absolute z-0 inset-0 pointer-events-none">
@@ -49,14 +49,6 @@
       [rounded]="false" [outlined]="true" [severity]="'contrast'"
       [routerLink]="[]" [fragment]="'partners'"
     />
-  </div>
-
-  <div class="relative z-10 hidden justify-center animate-bounce w-full sm:flex"
-  >
-    <i [routerLink] = "[]" [fragment]="'trainingPaths'"
-      class="pi pi-chevron-circle-down hover:scale-110 duration-300"
-       style="font-size: 2rem"
-    ></i>
   </div>
 </header>
 

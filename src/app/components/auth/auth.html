@@ -1,2 +1,110 @@
-<app-unavailable
-></app-unavailable>
+<section class="h-screen bg-gray-500 sm:flex sm:flex-col justify-center items-center">
+
+
+    @if (mode() === 'login') {
+      <div class="flex flex-col h-full items-center justify-start sm:justify-center sm:h-120 sm:w-120
+      text-black bg-white w-full gap-8 px-6 sm:px-12 py-16 sm:py-0 shadow-2xl"
+      >
+        <div class="w-full flex flex-col gap-4">
+          <div class="flex gap-2">
+            <img src="images/app-logo.png" class="h-10 w-10">
+            <p class="self-center text-base font-bold text-gray-500">Prêt'Adopte</p>
+          </div>
+          <p class="w-full text-2xl font-bold text-left"
+          >Se connecter</p>
+        </div>
+        <div class="flex flex-col w-full gap-8">
+          <div class="flex flex-col gap-2">
+            <input class="border-b text-base border-b-gray-700 w-full outline-none py-2 pr-3"
+                   [formField]="loginForm.email"
+                   type="email" placeholder="Adresse email ou téléphone"
+            />
+            <p class="text-red-500 text-xs h-4">
+              @if (loginForm.email().touched() && loginForm.email().invalid()) {
+                {{ loginForm.email().errors()[0].message }}
+              }
+            </p>
+            <input type="password" placeholder="Mot de passe"
+                   [formField]="loginForm.password"
+                   class="text-base border-b border-b-gray-700 w-full outline-none py-2 pr-3"
+            />
+            <p class="text-red-500 text-xs h-4">
+              @if (loginForm.password().touched() && loginForm.password().invalid()) {
+                {{ loginForm.password().errors()[0].message }}
+              }
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <p class="text-sm">Première visite ?
+              <a class="cursor-pointer text-sky-700"
+                 (click)="toggleMode()"
+              >Créer un compte</a>
+            </p>
+
+            <p class="text-sm cursor-pointer text-sky-700">
+              <a>Mot de passe oublié ?</a>
+            </p>
+          </div>
+        </div>
+        <div class="w-full flex gap-2 justify-end"
+        >
+          <p-button styleClass="!bg-gray-300 !border-0 !px-8 !rounded-none"
+                    [label]="'Retour'"/>
+          <p-button [label]="'Connexion'" (click)="submitLoginForm()" [disabled]="loginFormInvalid()"
+                    styleClass="!text-white !bg-sky-700 !border-0 !px-8 !rounded-none"/>
+        </div>
+      </div>
+    } @else {
+      <div class="flex flex-col h-full items-center justify-start sm:justify-center sm:h-160 sm:w-120
+      text-black bg-white w-full gap-8 px-6 sm:px-12 py-16 sm:py-0 shadow-2xl"
+      >
+        <div class="w-full flex flex-col gap-4">
+          <div class="flex gap-2">
+            <img src="images/app-logo.png" class="h-10 w-10">
+            <p class="self-center text-base font-bold text-gray-500">Prêt'Adopte</p>
+          </div>
+          <p class="w-full text-2xl font-bold text-left"
+          >Créer un compte</p>
+        </div>
+        <div class="flex flex-col w-full gap-8">
+          <div class="flex flex-col gap-4">
+            <input class="border-b text-base border-b-gray-700 w-full outline-none py-2 pr-3"
+                   type="text" placeholder="Nom de famille et prénom(s)"
+                   [formField]="registrationForm.name"
+            />
+
+            <input class="border-b text-base border-b-gray-700 w-full outline-none py-2 pr-3"
+                   type="text" placeholder="Numéro de téléphone"
+                   [formField]="registrationForm.phoneNumber"
+            />
+
+            <input class="border-b text-base border-b-gray-700 w-full outline-none py-2 pr-3"
+                   [formField]="registrationForm.email"
+                   type="email" placeholder="Adresse email"
+            />
+            <input type="password" placeholder="Choisissez un mot de passe"
+                   [formField]="registrationForm.password"
+                   class="text-base border-b border-b-gray-700 w-full outline-none py-2 pr-3"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <p class="text-sm">Vous avez déjà un compte ?
+              <a class="cursor-pointer text-sky-700"
+                 (click)="toggleMode()"
+              >Se connecter</a>
+            </p>
+          </div>
+        </div>
+        <div class="w-full flex gap-2 justify-end"
+        >
+          <p-button styleClass="!bg-gray-300 !border-0 !px-8 !rounded-none"
+                    [label]="'Retour'"/>
+          <p-button styleClass="!text-white !bg-sky-700 !border-0 !px-8 !rounded-none"
+                    [label]="'Soumettre'"/>
+        </div>
+      </div>
+    }
+
+</section>
