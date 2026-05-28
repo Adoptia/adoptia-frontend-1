@@ -1,5 +1,5 @@
 <header [hidden]="choiceSubmitted()"
-  class="qq-header relative text-white flex flex-col items-center justify-center gap-8 min-h-screen"
+  class="qq-header relative text-white flex flex-col h-dvh w-dvw overflow-hidden items-center justify-center gap-8"
 >
   <div class="bg-qq-h absolute z-0 inset-0 h-full pointer-events-none">
     <img class="w-full h-full object-center object-cover" [src]="headerBackground">
@@ -18,7 +18,7 @@
       />
     </div>
     <div class="race-selection flex flex-col items-center gap-2">
-      <p>Préciser une race</p>
+      <p class="text-base sm:text-lg">Préciser une race</p>
       <p-select class="w-56" [options]="breeds()" [(ngModel)]="selectedBreed"
                 [editable]="true" [showClear]="true" [placeholder]="'Peu importe'"
                 emptyMessage="Aucune race trouvée"
@@ -26,8 +26,8 @@
     </div>
     <p-button (click)="startQuiz()"
               class="pt-8" [rounded]="true"
-              styleClass="!text-white !font-bold !px-8 !py-3 !bg-cyan-700 !border-none
-              hover:!bg-cyan-600 active:!bg-cyan-600 !transition-colors !duration-500"
+              styleClass="!text-white !text-xs sm:!text-base !font-bold !px-8 !py-3
+              !bg-sky-700 !border-none hover:!bg-sky-600 active:!bg-sky-600 !transition-colors !duration-500"
     >
       Démarrer le quiz
     </p-button>

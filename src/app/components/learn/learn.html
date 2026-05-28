@@ -1,14 +1,16 @@
 <header [hidden]="choiceSubmitted()"
-         class="learn-header relative text-white min-h-screen flex flex-col items-center justify-center gap-8"
+         class="learn-header relative h-dvh w-dvw text-white flex flex-col items-center justify-center gap-8"
 >
-  <div class="bg-l-h absolute z-0 inset-0 h-full">
+  <div class="bg-l-h absolute z-0 inset-0 h-full w-full">
     <img class="w-full h-full object-center object-cover"
          [src]="headerBackground"
     >
     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
   </div>
 
-  <div class="relative z-10 flex flex-col justify-center items-center min-h-screen gap-8 px-8 pb-16 pt-28">
+  <div class="relative z-10 flex flex-col justify-center items-center overflow-hidden
+              h-full w-full gap-8 px-8 pb-16 pt-28 "
+  >
     <p class="text-xl font-bold text-center pb-8 [@media(min-width:750px)]:text-3xl">
       Pour quel animal souhaitez-vous une formation ?
     </p>
@@ -20,7 +22,7 @@
       />
     </div>
     <div class="race-selection flex flex-col items-center gap-2">
-      <p>Préciser une race</p>
+      <p class="text-base sm:text-lg">Préciser une race</p>
       <p-select class="w-56" [options]="breeds()" [(ngModel)]="selectedBreed"
                 [editable]="true" [showClear]="true" [placeholder]="'Peu importe'"
                 emptyMessage="Aucune race trouvée"
@@ -28,8 +30,8 @@
     </div>
     <p-button (click)="submitChoice()"
               class="pt-8" [rounded]="true"
-              styleClass="!text-white !font-bold !px-8 !py-3 !bg-cyan-700 !border-none
-              hover:!bg-cyan-600 active:!bg-cyan-600 !transition-colors !duration-500"
+              styleClass="!text-white !text-xs sm:!text-base !font-bold !px-8 !py-3 !bg-sky-700 !border-none
+              hover:!bg-sky-600 active:!bg-sky-600 !transition-colors !duration-500"
     >
       Démarrer la formation
     </p-button>

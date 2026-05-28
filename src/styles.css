@@ -12,9 +12,8 @@ html {
   font-style: normal;
 }
 
-html, body {
-  min-height: 100dvh;
-  margin: 0;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
+body {
+
 }
+
+

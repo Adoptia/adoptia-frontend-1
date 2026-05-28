@@ -3,17 +3,16 @@
        'backdrop-blur-xl': isScrolledAndStill() && !isBurgerMenuOpen(),
        'bg-transparent': !isScreenScrolled() || isBurgerMenuOpen()
      }"
-     class="flex fixed top-0 z-50 h-28 w-full px-6 text-white bg-gray-800/50
-     justify-between items-center duration-1000
-     [@media(max-height:740px)]:h-20"
+     class="flex fixed top-0 z-50 h-15 lg:h-20 w-full px-safe-or-4 lg:px-safe-or-6 text-white
+     bg-gray-800/50 justify-between items-center duration-1000"
 >
   <div class="flex cursor-pointer hover:scale-110 duration-500">
     <img [src]=logo() alt="Logo" [routerLink]="['/']"
-         class="h-16 w-16 object-contain [@max-width:768px]:h-10 [@max-width:768px]:w-10"
+         class="h-10 lg:h-16 w-10 lg:w-16 object-contain"
     >
   </div>
 
-  <div class="flex cursor-default gap-4 [@media(max-width:768px)]:hidden">
+  <div class="cursor-default gap-4 hidden lg:flex">
     <ul class="flex gap-4 items-center text-base"
     >
       @for (link of links(); track link.label) {
@@ -25,14 +24,14 @@
     <p-button
       styleClass="!text-white hover:!text-black !border-2 !border-white hover:!border-black hover:!bg-white/50
       active:!bg-white/50 !transition-colors !duration-500"
-      [icon]="'pi pi-user'" [label]="'Mon compte'"
+      [icon]="'pi pi-user'" [label]="'Mon espace'"
       [rounded]="false" [outlined]="true" [severity]="'secondary'"
       [routerLink]="['/dashboard']"
     />
   </div>
 
-  <div class="absolute right-6 burger-menu [@media(min-width:769px)]:hidden">
-    <i [class]="burgerMenuIcon()" style="font-size: 32px"
+  <div class="absolute right-safe-or-4 burger-menu lg:hidden">
+    <i [class]="burgerMenuIcon()" style="font-size:24px"
        class="transition-transform duration-500"
        [class.rotate-90]="isBurgerMenuOpen()"
        (click)="toggleBurgerMenu()"
@@ -40,18 +39,17 @@
   </div>
 </nav>
 
-
 <div [class.opacity-0]="!isBurgerMenuOpen()" [class.opacity-100]="isBurgerMenuOpen()"
      [class.pointer-events-none]="!isBurgerMenuOpen()"
-     class="burger-menu-content fixed inset-0 z-40 flex flex-col justify-center gap-4
-     h-screen w-full bg-black/70 backdrop-blur-md transition-opacity duration-500"
+     class="burger-menu-content fixed inset-0 z-40 flex flex-col justify-center overflow-y-scroll
+     w-full bg-black/70 backdrop-blur-md transition-opacity duration-500"
 >
-  <ul class="flex flex-col gap-16 items-center text-base"
+  <ul class="flex flex-col py-16 gap-12 items-center text-base"
   >
     <li class="text-white active:text-orange-300"
         [routerLink]="['/dashboard']"
         (click)="toggleBurgerMenu()"
-    >Mon compte</li>
+    >Mon espace</li>
     @for (link of links(); track link.label) {
       <li class="text-white active:text-orange-300"
           (click)="toggleBurgerMenu()"

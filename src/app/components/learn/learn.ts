@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {SplitCard} from '../shared/split-card/split-card';
 import {Button} from 'primeng/button';
 import {Select} from 'primeng/select';
