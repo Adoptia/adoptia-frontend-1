@@ -51,8 +51,10 @@
         >
           <p-button styleClass="!bg-gray-300 !border-0 !px-8 !rounded-none"
                     (click)="goBack()" [label]="'Retour'"/>
-          <p-button [label]="'Connexion'" (click)="submitLoginForm()" [disabled]="loginFormInvalid()"
-                    styleClass="!text-white !bg-sky-700 !border-0 !px-8 !rounded-none"/>
+          <p-button styleClass="!text-white !bg-sky-700 !border-0 !px-8 !rounded-none"
+                    [label]="'Connexion'"
+                    (click)="submitLoginForm()"
+                    [disabled]="invalidLoginForm()"/>
         </div>
       </div>
     } @else {
@@ -71,22 +73,49 @@
           <div class="flex flex-col gap-4">
             <input class="border-b text-base border-b-gray-700 w-full outline-none py-2 pr-3"
                    type="text" placeholder="Prénom et nom de famille"
+                   (keydown)="filterBlockDigits($event)"
                    [formField]="registrationForm.name"
             />
+            <p class="text-red-500 text-xs h-4">
+              @if (registrationForm.name().touched() && registrationForm.name().invalid()) {
+                {{ registrationForm.name().errors()[0].message }}
+              }
+            </p>
 
             <input class="border-b text-base border-b-gray-700 w-full outline-none py-2 pr-3"
                    type="text" placeholder="Numéro de téléphone"
                    [formField]="registrationForm.phoneNumber"
+                   (keydown)="filterAllowDigits($event)"
+                   (input)="formatPhone($event)"
             />
+            <p class="text-red-500 text-xs h-4">
+              @if (registrationForm.phoneNumber().touched() && registrationForm.phoneNumber().invalid()) {
+                {{ registrationForm.phoneNumber().errors()[0].message }}
+              }
+            </p>
 
             <input class="border-b text-base border-b-gray-700 w-full outline-none py-2 pr-3"
                    [formField]="registrationForm.email"
                    type="email" placeholder="Adresse email"
             />
+            <p class="text-red-500 text-xs h-4">
+              @if (registrationForm.email().touched() && registrationForm.email().invalid()) {
+                {{ registrationForm.email().errors()[0].message }}
+              }
+            </p>
+
             <input type="password" placeholder="Choisissez un mot de passe"
                    [formField]="registrationForm.password"
                    class="text-base border-b border-b-gray-700 w-full outline-none py-2 pr-3"
             />
+            <div class="text-xs h-4">
+              @if (registrationForm.password().touched() && registrationForm.password().invalid()) {
+                <p class="text-red-500">{{ registrationForm.password().errors()[0].message }}</p>
+              } @else if (registrationForm.password().valid()) {
+                <p class="text-green-500">Mot de passe conforme</p>
+              }
+            </div>
+
           </div>
 
           <div class="flex flex-col gap-2">
@@ -103,6 +132,8 @@
                     (click)="goBack()"
                     [label]="'Retour'"/>
           <p-button styleClass="!text-white !bg-sky-700 !border-0 !px-8 !rounded-none"
+                    [disabled]="invalidRegistrationForm()"
+                    (click)="submitRegistrationForm()"
                     [label]="'Soumettre'"/>
         </div>
       </div>

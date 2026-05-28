@@ -1,4 +1,4 @@
-import {Component, computed, HostListener, inject, input, signal} from '@angular/core';
+import {Component, computed, HostListener, inject, input, signal, ChangeDetectionStrategy} from '@angular/core';
 import {Button} from 'primeng/button';
 import {NgClass} from '@angular/common';
 import {NavBarService} from '../../services/nav-bar-service';
@@ -12,6 +12,7 @@ import {RouterLink} from '@angular/router';
     RouterLink
   ],
   templateUrl: './nav-bar.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './nav-bar.css',
 })
 export class NavBar {

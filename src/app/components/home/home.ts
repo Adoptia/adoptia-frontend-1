@@ -1,11 +1,10 @@
-import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {distinctUntilChanged, filter, interval, map, startWith, take} from 'rxjs';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {interval} from 'rxjs';
 import {Button} from 'primeng/button';
 import {BaseCard} from '../shared/base-card/base-card';
 import {SplitCard} from '../shared/split-card/split-card';
-import {NavigationEnd, NavigationStart, Router, RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Location} from '@angular/common';
 
 @Component({
@@ -17,6 +16,7 @@ import {Location} from '@angular/common';
     RouterLink,
   ],
   templateUrl: './home.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './home.css',
 
 })

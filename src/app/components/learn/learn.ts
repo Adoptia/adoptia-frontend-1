@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {Component, computed, inject, signal, ChangeDetectionStrategy} from '@angular/core';
 import {SplitCard} from '../shared/split-card/split-card';
 import {Button} from 'primeng/button';
 import {Select} from 'primeng/select';
@@ -16,6 +16,7 @@ import {NavBarService} from '../../services/nav-bar-service';
     FormsModule
   ],
   templateUrl: './learn.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './learn.css',
 })
 export class Learn {

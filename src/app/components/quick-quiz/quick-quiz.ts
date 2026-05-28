@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {Component, computed, inject, signal, ChangeDetectionStrategy} from '@angular/core';
 import {Button} from 'primeng/button';
 import {Select} from 'primeng/select';
 import {FormsModule} from '@angular/forms';
@@ -17,6 +17,7 @@ import {SplitCard} from '../shared/split-card/split-card';
     SplitCard
   ],
   templateUrl: './quick-quiz.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './quick-quiz.css',
 })
 export class QuickQuiz {

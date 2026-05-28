@@ -1,2 +1,5 @@
-<app-unavailable
-></app-unavailable>
+<div class="flex h-screen items-center justify-center flex-col text-black bg-gray-500">
+  @if (user()) {
+    <div class=" text-white sm:text-2xl xl:text-3xl"> Bienvenue {{ user()!.firstName }} {{ user()!.lastName }} !</div>
+  }
+</div>

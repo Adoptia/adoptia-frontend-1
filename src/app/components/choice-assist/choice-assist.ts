@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
 import {Unavailable} from '../unavailable/unavailable';
 
@@ -8,6 +8,7 @@ import {Unavailable} from '../unavailable/unavailable';
     Unavailable
   ],
   templateUrl: './choice-assist.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './choice-assist.css',
 })
 export class ChoiceAssist {

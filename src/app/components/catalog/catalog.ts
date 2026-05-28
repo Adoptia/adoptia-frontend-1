@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {Unavailable} from "../unavailable/unavailable";
 
 @Component({
@@ -7,6 +7,7 @@ import {Unavailable} from "../unavailable/unavailable";
         Unavailable
     ],
   templateUrl: './catalog.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './catalog.css',
 })
 export class Catalog {

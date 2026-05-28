@@ -1,4 +1,4 @@
-import {Component, computed, input, output, signal} from '@angular/core';
+import {Component, computed, input, output, signal, ChangeDetectionStrategy} from '@angular/core';
 import {Answer, QuickQuizData} from '../../../services/quick-quiz-service';
 import {Button} from 'primeng/button';
 import {NgClass} from '@angular/common';
@@ -10,6 +10,7 @@ import {NgClass} from '@angular/common';
     NgClass
   ],
   templateUrl: './quick-quiz-card.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './quick-quiz-card.css',
 })
 export class QuickQuizCard {

@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {navBarLinks, NavBarService} from "../../services/nav-bar-service";
 import {Unavailable} from "../unavailable/unavailable";
+import {AuthService} from '../../services/auth-service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,12 +9,15 @@ import {Unavailable} from "../unavailable/unavailable";
         Unavailable
     ],
   templateUrl: './dashboard.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
 
-  private navBarService = inject(NavBarService);
+  private authService = inject(AuthService)
+  private navBarService = inject(NavBarService)
 
+  protected user = this.authService.currentUser;
 
   constructor() {
     this.navBarService.links.set([

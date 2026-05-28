@@ -1,8 +1,9 @@
-import {Component, computed, effect, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
 import {Button} from 'primeng/button';
-import {email, form, FormField, required, schema} from '@angular/forms/signals';
+import {email, form, FormField, required, schema, SchemaPath, validate} from '@angular/forms/signals';
 import {NavigationHistoryService} from '../../services/navigation-history-service';
 import {FormControl} from '@angular/forms';
+import {AuthService} from '../../services/auth-service';
 
 @Component({
   selector: 'app-auth',
@@ -11,59 +12,23 @@ import {FormControl} from '@angular/forms';
     FormField
   ],
   templateUrl: './auth.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './auth.css',
 })
 export class Auth {
 
+  private authService = inject(AuthService)
   private navigationHistoryService = inject(NavigationHistoryService)
+
   protected mode = signal<'login' | 'register'>('login')
 
   private loginData = signal<LoginData>(initialLoginData)
-  private registrationData = signal<RegistrationData>(initialRegistrationData)
-
   protected loginForm = form(this.loginData, loginSchema)
+  protected invalidLoginForm = computed(() => this.loginForm().invalid())
+
+  private registrationData = signal<RegistrationData>(initialRegistrationData)
   protected registrationForm = form(this.registrationData, registrationSchema)
-
-  protected loginFormInvalid = computed(() => this.loginForm().invalid())
-
-  private firstAndLastNames = computed(() => {
-    const names = this.registrationForm().name().split(' ')
-    return { firstName: names.at(0), lastName: names.at(1) }
-  })
-
-  private namesValidator(field: FormControl<string>): { [key: string]: any } | null {
-
-    const value = field.value
-
-    if ( !value ) return null
-
-    if (/\d/.test(value)) {
-      return {
-        nameInvalid: {
-          message: 'Le nom ne peut pas contenir de chiffres'
-        }
-      };
-    }
-
-    if (/[^a-zA-ZÀ-ÿ\s-]/.test(value)) {
-      return {
-        nameInvalid: {
-          message: 'Le nom ne peut pas contenir de caractères spéciaux, sauf un tiret'
-        }
-      };
-    }
-
-    if ( !/^[a-zA-ZÀ-ÿ-]+\s[a-zA-ZÀ-ÿ-]+$/.test(value) ) {
-      return {
-        nameInvalid: {
-          message: 'Assurez-vous de laisser un espace entre votre prénom et votre nom'
-        }
-      }
-    }
-
-    return null
-
-  }
+  protected invalidRegistrationForm = computed(() => this.registrationForm().invalid())
 
   protected toggleMode() {
     this.mode.update(
@@ -76,12 +41,36 @@ export class Auth {
   }
 
   protected submitLoginForm() {
-
+    if (this.loginForm().valid()) this.authService.loginUser(this.loginData())
   }
 
   protected submitRegistrationForm() {
+    if (this.registrationForm().valid()) this.authService.registerNewUser(this.registrationData())
+  }
+
+  protected filterBlockDigits(event: KeyboardEvent) {
+    if ( /\d/.test(event.key) )
+      event.preventDefault()
+  }
+
+  protected filterAllowDigits(event: KeyboardEvent) {
+      if ( /\d/.test(event.key ) || ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab']
+        .includes(event.key) )
+        return;
+      event.preventDefault();
+  }
+
+  protected formatPhone(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    const digits = input.value
+      .replace(/\D/g, '').slice(0, 10)
+
+    input.value = digits.match(/.{1,2}/g)?.join(' ') ?? ''
+    this.registrationData.update(prev => ({ ...prev, phoneNumber: digits }))
 
   }
+
 
 }
 
@@ -120,9 +109,74 @@ export const loginSchema = schema<LoginData>((schema) => {
 export const registrationSchema = schema<RegistrationData>((schema) => {
   required(schema.email, { message: 'Adresse email requise' });
   required(schema.password, { message: 'Mot de passe requis' });
-  required(schema.phoneNumber, { message: 'Mot de passe requis' });
-  required(schema.name, { message: 'Nom de famille et prénom(s) requis' });
+  required(schema.phoneNumber, { message: 'Numéro de téléphone requis' });
+  required(schema.name, { message: 'Prénom et nom de famille requis' });
 
+  email(schema.email, { message: 'Adresse email invalide' })
 
+  validate(schema.name, ({ value }) => {
+
+    if (/[^a-zA-ZÀ-ÿ\s-]/.test(value())) {
+      return {
+        kind: 'nameContainsSpecialChars',
+        message: 'Caractères spéciaux interdits, sauf le tiret (-)'
+
+      }
+    }
+
+    if ( !/^[a-zA-ZÀ-ÿ-]+\s[a-zA-ZÀ-ÿ-]+$/.test(value()) ) {
+      return {
+        kind: 'missingWhitespaceBetweenNames',
+        message: 'Laissez un espace entre votre prénom et votre nom'
+      }
+    }
+
+    if (!/^[a-zA-ZÀ-ÿ]+(-[a-zA-ZÀ-ÿ]+)*(\s[a-zA-ZÀ-ÿ]+(-[a-zA-ZÀ-ÿ]+)*)$/.test(value())) {
+      return {
+        kind: 'hyphenMustBeUsedBetweenLetters',
+        message: 'Tiret autorisé entre des lettres, pas au début ou à la fin d\'un nom'
+      }
+    }
+
+    return null
+
+  });
+  validate(schema.phoneNumber, ({ value }) => {
+
+    if ((value().match(/\d/g)?.length ?? 0) !== 10) {
+      return {
+        kind: 'wrongPhoneNumberLength',
+        message: 'Le numéro de téléphone doit avoir 10 chiffres'
+      }
+    }
+
+    return null;
+  })
+  validate(schema.password, ({ value }) => {
+
+    if (value().length < 8) {
+      return {
+        kind: 'passwordTooShort',
+        message: 'Le mot de passe doit contenir au moins 8 caractères'
+      }
+    }
+
+    if (!/\d/.test(value())) {
+      return {
+        kind: 'missingDigits',
+        message: 'Le mot de passe doit contenir au moins un chiffre'
+      }
+    }
+
+    if (!/[^a-zA-ZÀ-ÿ0-9\s]/.test(value())) {
+      return {
+        kind: 'missingSpecialCharacter',
+        message: 'Le mot de passe doit contenir au moins un caractère spécial'
+      }
+    }
+
+    return null
+
+  })
 
 })

@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {Component, input, ChangeDetectionStrategy} from '@angular/core';
 import {NgClass} from '@angular/common';
 
 @Component({
@@ -8,6 +8,7 @@ import {NgClass} from '@angular/common';
     NgClass
   ],
   templateUrl: './base-card.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './base-card.css',
 })
 export class BaseCard {
