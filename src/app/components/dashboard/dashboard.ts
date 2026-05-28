@@ -1,13 +1,10 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {navBarLinks, NavBarService} from "../../services/nav-bar-service";
-import {Unavailable} from "../unavailable/unavailable";
 import {AuthService} from '../../services/auth-service';
 
 @Component({
   selector: 'app-dashboard',
-    imports: [
-        Unavailable
-    ],
+  imports: [],
   templateUrl: './dashboard.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dashboard.css',
