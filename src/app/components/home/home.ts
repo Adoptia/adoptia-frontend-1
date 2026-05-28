@@ -6,6 +6,7 @@ import {SplitCard} from '../shared/split-card/split-card';
 import {NavigationEnd, NavigationStart, Router, RouterLink} from '@angular/router';
 import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -23,6 +24,7 @@ export class Home implements OnInit, OnDestroy {
 
   private observer!: IntersectionObserver;
   private router = inject(Router);
+  private location = inject(Location);
   private navBarService = inject(NavBarService);
 
   protected headerBackground = 'images/hp-header-bg.jpg';
@@ -58,25 +60,26 @@ export class Home implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    interval(4000).subscribe(() => {
+      this.animateFlag.update(v => !v);
+      setTimeout(() => this.animateFlag.update(v => !v), 200);
+      setTimeout(() => this.messageIndex.update(i => (i + 1) % this.messages().length));
+    })
+
+
     const sections = document.querySelectorAll('section[id], header[id]')
 
     this.observer = new IntersectionObserver((entries) => {
 
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const fragment = entry.target.id === 'home' ? undefined : entry.target.id
-          this.router.navigate([], { fragment, replaceUrl: true })
+          const fragment = entry.target.id === 'home' ? '' : `#${entry.target.id}`;
+          this.location.replaceState(this.location.path().split('#')[0] + fragment);
         }
       })
     }, { threshold: 0.5 })
 
     sections.forEach(section => this.observer.observe(section));
-
-    interval(4000).subscribe(() => {
-      this.animateFlag.update(v => !v);
-      setTimeout(() => this.animateFlag.update(v => !v), 200);
-      setTimeout(() => this.messageIndex.update(i => (i + 1) % this.messages().length));
-    })
 
   }
 

@@ -1,6 +1,8 @@
-import {Component, computed, effect, signal} from '@angular/core';
+import {Component, computed, effect, inject, signal} from '@angular/core';
 import {Button} from 'primeng/button';
 import {email, form, FormField, required, schema} from '@angular/forms/signals';
+import {NavigationHistoryService} from '../../services/navigation-history-service';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-auth',
@@ -13,7 +15,8 @@ import {email, form, FormField, required, schema} from '@angular/forms/signals';
 })
 export class Auth {
 
-  protected mode = signal<'login' | 'register'>('login');
+  private navigationHistoryService = inject(NavigationHistoryService)
+  protected mode = signal<'login' | 'register'>('login')
 
   private loginData = signal<LoginData>(initialLoginData)
   private registrationData = signal<RegistrationData>(initialRegistrationData)
@@ -23,13 +26,60 @@ export class Auth {
 
   protected loginFormInvalid = computed(() => this.loginForm().invalid())
 
+  private firstAndLastNames = computed(() => {
+    const names = this.registrationForm().name().split(' ')
+    return { firstName: names.at(0), lastName: names.at(1) }
+  })
+
+  private namesValidator(field: FormControl<string>): { [key: string]: any } | null {
+
+    const value = field.value
+
+    if ( !value ) return null
+
+    if (/\d/.test(value)) {
+      return {
+        nameInvalid: {
+          message: 'Le nom ne peut pas contenir de chiffres'
+        }
+      };
+    }
+
+    if (/[^a-zA-ZÀ-ÿ\s-]/.test(value)) {
+      return {
+        nameInvalid: {
+          message: 'Le nom ne peut pas contenir de caractères spéciaux, sauf un tiret'
+        }
+      };
+    }
+
+    if ( !/^[a-zA-ZÀ-ÿ-]+\s[a-zA-ZÀ-ÿ-]+$/.test(value) ) {
+      return {
+        nameInvalid: {
+          message: 'Assurez-vous de laisser un espace entre votre prénom et votre nom'
+        }
+      }
+    }
+
+    return null
+
+  }
+
   protected toggleMode() {
     this.mode.update(
       v => v === 'login' ? 'register' : 'login'
     )
   }
 
+  protected goBack() {
+    this.navigationHistoryService.goBack()
+  }
+
   protected submitLoginForm() {
+
+  }
+
+  protected submitRegistrationForm() {
 
   }
 
@@ -68,5 +118,11 @@ export const loginSchema = schema<LoginData>((schema) => {
 })
 
 export const registrationSchema = schema<RegistrationData>((schema) => {
+  required(schema.email, { message: 'Adresse email requise' });
+  required(schema.password, { message: 'Mot de passe requis' });
+  required(schema.phoneNumber, { message: 'Mot de passe requis' });
+  required(schema.name, { message: 'Nom de famille et prénom(s) requis' });
+
+
 
 })

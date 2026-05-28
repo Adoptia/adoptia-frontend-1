@@ -17,7 +17,7 @@
           <div class="flex flex-col gap-2">
             <input class="border-b text-base border-b-gray-700 w-full outline-none py-2 pr-3"
                    [formField]="loginForm.email"
-                   type="email" placeholder="Adresse email ou téléphone"
+                   type="email" placeholder="Adresse email"
             />
             <p class="text-red-500 text-xs h-4">
               @if (loginForm.email().touched() && loginForm.email().invalid()) {
@@ -50,7 +50,7 @@
         <div class="w-full flex gap-2 justify-end"
         >
           <p-button styleClass="!bg-gray-300 !border-0 !px-8 !rounded-none"
-                    [label]="'Retour'"/>
+                    (click)="goBack()" [label]="'Retour'"/>
           <p-button [label]="'Connexion'" (click)="submitLoginForm()" [disabled]="loginFormInvalid()"
                     styleClass="!text-white !bg-sky-700 !border-0 !px-8 !rounded-none"/>
         </div>
@@ -70,7 +70,7 @@
         <div class="flex flex-col w-full gap-8">
           <div class="flex flex-col gap-4">
             <input class="border-b text-base border-b-gray-700 w-full outline-none py-2 pr-3"
-                   type="text" placeholder="Nom de famille et prénom(s)"
+                   type="text" placeholder="Prénom et nom de famille"
                    [formField]="registrationForm.name"
             />
 
@@ -100,6 +100,7 @@
         <div class="w-full flex gap-2 justify-end"
         >
           <p-button styleClass="!bg-gray-300 !border-0 !px-8 !rounded-none"
+                    (click)="goBack()"
                     [label]="'Retour'"/>
           <p-button styleClass="!text-white !bg-sky-700 !border-0 !px-8 !rounded-none"
                     [label]="'Soumettre'"/>
