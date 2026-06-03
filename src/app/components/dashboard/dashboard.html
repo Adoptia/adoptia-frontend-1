@@ -1,5 +1,147 @@
-<div class="flex h-screen items-center justify-center flex-col text-black bg-gray-500">
-  @if (user()) {
-    <div class=" text-white sm:text-2xl xl:text-3xl"> Bienvenue {{ user()!.firstName }} {{ user()!.lastName }} !</div>
-  }
+<div class="bg-gray-50 min-h-dvh py-24 text-black flex items-center justify-center lg:pl-20">
+  <div class="mes-parcours text-base"
+       [class.hidden]="activeTab() !== 'parcours'"
+  >
+    Aucun parcours commencé pour le moment
+  </div>
+
+  <div class="mes-adoptions text-base"
+        [class.hidden]="activeTab() !== 'adoptions'"
+  >
+    Aucun animal adopté pour le moment
+  </div>
+
+  <div class="mon-profil w-full sm:w-120 text-base flex flex-col px-safe-or-4"
+        [class.hidden]="activeTab() !== 'profil'"
+  >
+
+    <label class="text-xs text-gray-500 italic mb-2">Informations personnelles</label>
+    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
+      <div>
+        <label>Prénom et nom de famille</label>
+        <input type="text" class="border border-gray-300 px-2 py-1 w-full"
+               placeholder="Entrez votre prénom et nom"
+        >
+      </div>
+
+      <div>
+        <label>Date de naissance</label>
+        <div class="border border-gray-300 px-2 w-full flex">
+          <input type="date" class="w-full outline-none bg-transparent">
+        </div>
+      </div>
+
+      <div>
+        <label>Adresse e-mail</label>
+        <input type="email" class="border border-gray-300 px-2 py-1 w-full"
+               placeholder="Entrez votre adresse e-mail"
+        >
+      </div>
+
+      <div>
+        <label>Téléphone</label>
+        <input type="tel" class="border border-gray-300 px-2 py-1 w-full"
+               placeholder="Entrez votre numéro de téléphone"
+        >
+      </div>
+    </div>
+
+    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre domicile</label>
+    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
+      <div>
+        <label>Type de logement</label>
+      </div>
+
+      <div>
+        <label>Superficie totale</label>
+        <input type="number" class="border border-gray-300 px-2 py-1 w-full"
+               placeholder="Entrez la superficie en m²"
+        >
+      </div>
+
+      <div>
+        <label>Adresse postale</label>
+        <input type="text" class="border border-gray-300 px-2 py-1 w-full"
+               placeholder="Entrez votre adresse postale"
+        >
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label>Avec balcon</label>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="balcon" [value]="true" [(ngModel)]="avecBalcon"/>
+          <label>Oui</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="balcon" [value]="false" [(ngModel)]="avecBalcon"/>
+          <label>Non</label>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label>Avec jardin</label>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="jardin" [value]="true" [(ngModel)]="avecJardin"/>
+          <label>Oui</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="jardin" [value]="false" [(ngModel)]="avecJardin"/>
+          <label>Non</label>
+        </div>
+      </div>
+    </div>
+
+    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre foyer</label>
+    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4">
+      <div class="flex items-center gap-4">
+        <label>En couple</label>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="couple" [value]="true" [(ngModel)]="enCouple"/>
+          <label>Oui</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="couple" [value]="false" [(ngModel)]="enCouple"/>
+          <label>Non</label>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label>Vous habitez ensemble</label>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="true" [(ngModel)]="habitantEnsemble"/>
+          <label>Oui</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="false" [(ngModel)]="habitantEnsemble"/>
+          <label>Non</label>
+        </div>
+      </div>
+
+      <div>
+        <label>Enfants dans votre foyer</label>
+        <input type="number" class="border border-gray-300 px-2 py-1 w-full mb-2"
+               placeholder="Nombre d'enfants"
+        >
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="bg-amber-50 text-black text-sm h-15 w-full fixed bottom-0
+              xl:h-full xl:w-50 xl:top-20 xl:flex-col xl:justify-center
+              flex items-center justify-between sm:justify-center sm:gap-12 px-safe-or-4 border-t border-gray-300"
+>
+  <p class=""
+     [class.text-amber-500]="activeTab() === 'parcours'"
+     (click)="activeTab.set('parcours')"
+  >Mes parcours</p>
+  <p class=""
+     [class.text-amber-500]="activeTab() === 'adoptions'"
+     (click)="activeTab.set('adoptions')"
+  >Mes adoptions</p>
+  <p class=""
+     [class.text-amber-500]="activeTab() === 'profil'"
+     (click)="activeTab.set('profil')"
+  >Mon profil</p>
 </div>

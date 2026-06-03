@@ -11,28 +11,21 @@ export class AuthService {
 
   private _currentUser = signal<UserData | undefined>(undefined);
 
-  currentUser = this._currentUser.asReadonly();
+  protected isLoginSuccessful = signal(true)
 
-  knownUsers = signal<RegistrationData[]>([
-    {
-      email: 'admin@admin.com',
-      password: 'admin',
-      name: 'Blaste Mulamba',
-      phoneNumber: '0752064923'
-    }
-  ])
+  currentUser = this._currentUser.asReadonly()
+
+  users = signal<RegistrationData[]>([])
 
   saveUsersToLocalStorage() {
-    this.fetchKnownUsersFromLocalStorage()
-
-    localStorage.setItem('knownUsers', JSON.stringify(this.knownUsers()))
+    localStorage.setItem('knownUsers', JSON.stringify(this.users()))
   }
 
-  saveCurrentUserToLocalStorage() {
+  setCurrentUserInLocalStorage() {
     localStorage.setItem('currentUser', JSON.stringify(this.currentUser()))
   }
 
-  fetchCurrentUserFromLocalStorage() {
+  getCurrentUserFromLocalStorage() {
     const value = localStorage.getItem('currentUser')
 
     if (value) {
@@ -41,19 +34,21 @@ export class AuthService {
     }
   }
 
-  fetchKnownUsersFromLocalStorage() {
+  fetchUsersFromLocalStorage() {
     let users: RegistrationData[] = []
-    const value = localStorage.getItem('knownUsers')
+    const value = localStorage.getItem('users')
 
-    if (value) users = JSON.parse(value);
-    this.knownUsers.set(users);
+    if (value) {
+      users = JSON.parse(value);
+      this.users.set(users);
+    }
   }
 
   loginUser(data: LoginData) {
 
-    this.fetchKnownUsersFromLocalStorage()
+    this.fetchUsersFromLocalStorage()
 
-    const user = this.knownUsers().find(
+    const user = this.users().find(
       user => user.email === data.email && user.password === data.password
     );
 
@@ -65,7 +60,9 @@ export class AuthService {
         { firstName: firstName, lastName: lastName, email: user.email, phoneNumber: user.phoneNumber }
       )
 
-      this.saveCurrentUserToLocalStorage()
+      this.isLoginSuccessful.set(true)
+
+      this.setCurrentUserInLocalStorage()
 
       this.router.navigate(['/dashboard'])
 
@@ -73,9 +70,8 @@ export class AuthService {
   }
 
   registerNewUser(data: RegistrationData) {
-    console.log('creating new user')
-    this.knownUsers.update(users => [...users, data])
-    localStorage.setItem('knownUsers', JSON.stringify(this.knownUsers()))
+    this.users.update(users => [...users, data])
+    this.saveUsersToLocalStorage()
     this.loginUser(data)
   }
 

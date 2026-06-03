@@ -29,8 +29,7 @@ export class App implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.fetchCurrentUserFromLocalStorage()
-    this.authService.saveUsersToLocalStorage()
+    this.authService.getCurrentUserFromLocalStorage()
   }
 
 }
