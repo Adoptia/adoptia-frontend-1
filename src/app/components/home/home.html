@@ -92,21 +92,7 @@
         text-4xl [@media(max-width:783px)]:text-2xl [@media(max-width:1135px)]:text-3xl"
       >Comment ça marche ?
       </div>
-      <div class="split-card-container flex gap-8 w-full flex-wrap justify-center"
-      >
-        @for (opt of options; track opt) {
-          <app-split-card
-            (click)="navigateToOption(opt.pathURL)"
-            [backgroundImage]="opt.backgroundImage"
-            class="text-black" [icon]="opt.icon"
-          >
-            <div class="flex flex-col justify-center gap-4">
-              <p class="text-green-900 font-bold">{{ opt.title }}</p>
-              <p class="text-[15px]">{{ opt.description }}</p>
-            </div>
-          </app-split-card>
-        }
-      </div>
+      <app-training-paths/>
     </div>
 
     <div class="certification w-full flex flex-col h-full items-center gap-8">

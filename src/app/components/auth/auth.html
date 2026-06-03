@@ -38,7 +38,9 @@
               }
             </p>
           </div>
-          <div class="status-err-msg h-8 text-sm text-red-500">Identifiants incorrects</div>
+          @if( !isLoginSuccessful() ) {
+            <div class="status-err-msg h-8 text-sm text-red-500">Identifiants incorrects</div>
+          }
           <div class="flex flex-col gap-2">
             <p class="text-sm">Première visite ?
               <a class="cursor-pointer text-sky-700"

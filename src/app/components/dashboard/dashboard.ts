@@ -1,14 +1,18 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {navBarLinks, NavBarService} from "../../services/nav-bar-service";
 import {AuthService} from '../../services/auth-service';
-import {RadioButton} from 'primeng/radiobutton';
 import {FormsModule} from '@angular/forms';
+import {UserProfile} from '../user-profile/user-profile';
+import {Button} from 'primeng/button';
+import {TrainingPaths} from '../training-paths/training-paths';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
-    RadioButton,
-    FormsModule
+    FormsModule,
+    UserProfile,
+    Button,
+    TrainingPaths
   ],
   templateUrl: './dashboard.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -22,10 +26,11 @@ export class Dashboard {
 
   protected user = this.authService.currentUser;
 
-  protected avecBalcon = false;
-  protected avecJardin = false;
-  protected enCouple = false;
-  protected habitantEnsemble = false;
+  protected showTrainingPaths = signal(false);
+
+  toggleShowTrainingPaths = () => {
+    this.showTrainingPaths.update(v => !v);
+  }
 
 
   constructor() {

@@ -1,8 +1,7 @@
-import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {Button} from 'primeng/button';
-import {email, form, FormField, required, schema, SchemaPath, validate} from '@angular/forms/signals';
+import {email, form, FormField, required, schema, validate} from '@angular/forms/signals';
 import {NavigationHistoryService} from '../../services/navigation-history-service';
-import {FormControl} from '@angular/forms';
 import {AuthService} from '../../services/auth-service';
 
 @Component({
@@ -21,6 +20,8 @@ export class Auth {
   private navigationHistoryService = inject(NavigationHistoryService)
 
   protected mode = signal<'login' | 'register'>('login')
+
+  protected isLoginSuccessful = this.authService.isLoginSuccessful
 
   private loginData = signal<LoginData>(initialLoginData)
   protected loginForm = form(this.loginData, loginSchema)

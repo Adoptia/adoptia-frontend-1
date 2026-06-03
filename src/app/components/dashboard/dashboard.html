@@ -1,8 +1,35 @@
 <div class="bg-gray-50 min-h-dvh py-24 text-black flex items-center justify-center lg:pl-20">
-  <div class="mes-parcours text-base"
+  <div class="mes-parcours text-base h-full w-full"
        [class.hidden]="activeTab() !== 'parcours'"
   >
-    Aucun parcours commencé pour le moment
+    <div id="startedTrainings" class="flex justify-center"
+         [hidden]="showTrainingPaths()"
+    >
+      <p> Aucun parcours commencé pour le moment </p>
+    </div>
+
+    <div class="flex justify-center p-8">
+      <p-button [hidden]="showTrainingPaths()" (click)="toggleShowTrainingPaths()"
+        styleClass="!text-black hover:!text-white active:!text-white !border-2 !border-black
+        hover:!bg-black active:!bg-black !transition-colors !duration-500"
+        [icon]="'pi pi-plus'" [label]="'Nouveau parcours'"
+        [rounded]="false" [outlined]="true"
+      />
+
+      <p-button [hidden]="!showTrainingPaths()" (click)="toggleShowTrainingPaths()"
+                styleClass="!text-red-500 hover:!text-white active:!text-white !border-2 !border-red-500
+                hover:!bg-red-500 active:!bg-red-500 !transition-colors !duration-500"
+                [icon]="'pi pi-times'" [label]="'Annuler'"
+                [rounded]="false" [outlined]="true"
+      />
+    </div>
+
+    <div [hidden]="!showTrainingPaths()">
+      <app-training-paths/>
+    </div>
+
+
+
   </div>
 
   <div class="mes-adoptions text-base"
@@ -14,117 +41,7 @@
   <div class="mon-profil w-full sm:w-120 text-base flex flex-col px-safe-or-4"
         [class.hidden]="activeTab() !== 'profil'"
   >
-
-    <label class="text-xs text-gray-500 italic mb-2">Informations personnelles</label>
-    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
-      <div>
-        <label>Prénom et nom de famille</label>
-        <input type="text" class="border border-gray-300 px-2 py-1 w-full"
-               placeholder="Entrez votre prénom et nom"
-        >
-      </div>
-
-      <div>
-        <label>Date de naissance</label>
-        <div class="border border-gray-300 px-2 w-full flex">
-          <input type="date" class="w-full outline-none bg-transparent">
-        </div>
-      </div>
-
-      <div>
-        <label>Adresse e-mail</label>
-        <input type="email" class="border border-gray-300 px-2 py-1 w-full"
-               placeholder="Entrez votre adresse e-mail"
-        >
-      </div>
-
-      <div>
-        <label>Téléphone</label>
-        <input type="tel" class="border border-gray-300 px-2 py-1 w-full"
-               placeholder="Entrez votre numéro de téléphone"
-        >
-      </div>
-    </div>
-
-    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre domicile</label>
-    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
-      <div>
-        <label>Type de logement</label>
-      </div>
-
-      <div>
-        <label>Superficie totale</label>
-        <input type="number" class="border border-gray-300 px-2 py-1 w-full"
-               placeholder="Entrez la superficie en m²"
-        >
-      </div>
-
-      <div>
-        <label>Adresse postale</label>
-        <input type="text" class="border border-gray-300 px-2 py-1 w-full"
-               placeholder="Entrez votre adresse postale"
-        >
-      </div>
-
-      <div class="flex items-center gap-4">
-        <label>Avec balcon</label>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="balcon" [value]="true" [(ngModel)]="avecBalcon"/>
-          <label>Oui</label>
-        </div>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="balcon" [value]="false" [(ngModel)]="avecBalcon"/>
-          <label>Non</label>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <label>Avec jardin</label>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="jardin" [value]="true" [(ngModel)]="avecJardin"/>
-          <label>Oui</label>
-        </div>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="jardin" [value]="false" [(ngModel)]="avecJardin"/>
-          <label>Non</label>
-        </div>
-      </div>
-    </div>
-
-    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre foyer</label>
-    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4">
-      <div class="flex items-center gap-4">
-        <label>En couple</label>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="couple" [value]="true" [(ngModel)]="enCouple"/>
-          <label>Oui</label>
-        </div>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="couple" [value]="false" [(ngModel)]="enCouple"/>
-          <label>Non</label>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <label>Vous habitez ensemble</label>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="true" [(ngModel)]="habitantEnsemble"/>
-          <label>Oui</label>
-        </div>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="false" [(ngModel)]="habitantEnsemble"/>
-          <label>Non</label>
-        </div>
-      </div>
-
-      <div>
-        <label>Enfants dans votre foyer</label>
-        <input type="number" class="border border-gray-300 px-2 py-1 w-full mb-2"
-               placeholder="Nombre d'enfants"
-        >
-      </div>
-    </div>
-
+    <app-user-profile [user]="user()"/>
   </div>
 </div>
 

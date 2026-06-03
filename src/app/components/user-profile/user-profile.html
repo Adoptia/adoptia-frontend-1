@@ -1,1 +1,233 @@
-<app-unavailable/>
+@if ( user() ) {
+
+  @if ( mode() === 'display' ) {
+
+    <div class="flex mb-4 justify-between">
+      <h1 class="text-xl">Mode affichage</h1>
+      <div class="flex self-center gap-2 p-1 rounded cursor-pointer **:cursor-pointer
+      hover:scale-110 hover:text-orange-600 transition-transform duration-500"
+           (click)="toggleMode()"
+      >
+        <label class="text-xs">Modifier</label>
+        <i class="pi pi-pencil"></i>
+      </div>
+    </div>
+
+
+    <label class="text-xs text-gray-500 italic mb-2">Informations personnelles</label>
+    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
+      <div>
+        <label>Prénom et nom de famille</label>
+        <p>{{ user()!.base.firstName }} {{ user()!.base.lastName }}</p>
+      </div>
+
+      <div>
+        <label>Date de naissance</label>
+        <p>{{ user()!.base.birthDate ?? 'Information non fournie' }}</p>
+      </div>
+
+      <div>
+        <label>Adresse e-mail</label>
+        <p>{{ user()!.base.email }}</p>
+      </div>
+
+      <div>
+        <label>Téléphone</label>
+        <p>{{ user()!.base.phoneNumber }}</p>
+      </div>
+    </div>
+
+    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre domicile</label>
+    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
+      <div>
+        <label>Type de logement</label>
+        <p>{{ user()!.context?.residence?.type ?? 'Information non fournie' }}</p>
+      </div>
+
+      <div>
+        <label>Superficie totale</label>
+        <p>{{ user()!.context?.residence?.surface ?
+          user()!.context!.residence.surface + ' m²'
+          : 'Information non fournie' }}
+        </p>
+      </div>
+
+      <div>
+        <label>Adresse postale</label>
+        <p>{{ user()!.context?.residence?.address ?? 'Information non fournie' }}</p>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label>Avec balcon : </label>
+        <p>{{ user()!.context?.residence?.balcony === undefined ? 'Information non fournie'
+          : user()!.context!.residence.balcony ? 'Oui' : 'Non' }}</p>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label>Avec jardin : </label>
+        <p>{{ user()!.context?.residence?.garden === undefined ? 'Information non fournie'
+          : user()!.context!.residence.garden ? 'Oui' : 'Non' }}</p>
+      </div>
+    </div>
+
+    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre foyer</label>
+    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4">
+      <div class="flex items-center gap-4">
+        <label>En couple : </label>
+        <p>{{ user()!.context?.household?.hasPartner === undefined ? 'Information non fournie'
+          : user()!.context!.household.hasPartner ? 'Oui' : 'Non' }}</p>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label>Vous habitez ensemble : </label>
+        <p>{{ user()!.context?.household?.liveTogether === undefined ? 'Information non fournie'
+          : user()!.context!.household.liveTogether ? 'Oui' : 'Non' }}</p>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label>Enfants dans votre foyer : </label>
+        <p>{{  user()!.context?.household?.childrenCount ?? 'Information non fournie' }}</p>
+      </div>
+    </div>
+
+  } @else {
+
+    <div class="flex mb-4 justify-between">
+      <h1 class="text-xl">Mode édition</h1>
+    </div>
+
+    <label class="text-xs text-gray-500 italic mb-2">Informations personnelles</label>
+    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
+      <div>
+        <label>Prénom et nom de famille</label>
+        <input type="text" class="border border-gray-300 px-2 py-1 w-full"
+               placeholder="Entrez votre prénom et nom"
+               [ngModel]="user()!.base.firstName + ' ' + user()!.base.lastName"
+        >
+      </div>
+
+      <div>
+        <label>Date de naissance</label>
+        <div class="border border-gray-300 px-2 w-full flex">
+          <input type="date" class="w-full outline-none bg-transparent">
+        </div>
+      </div>
+
+      <div>
+        <label>Adresse e-mail</label>
+        <input [hidden]="true" type="email" class="border border-gray-300 px-2 py-1 w-full"
+               placeholder="Entrez votre adresse e-mail"
+               [ngModel]="user()!.base.email"
+        >
+        <p>{{ user()!.base.email }}</p>
+      </div>
+
+      <div>
+        <label>Téléphone</label>
+        <input type="tel" class="border border-gray-300 px-2 py-1 w-full"
+               placeholder="Entrez votre numéro de téléphone"
+               [ngModel]="user()!.base.phoneNumber"
+        >
+      </div>
+    </div>
+
+    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre domicile</label>
+    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
+      <div>
+        <label>Type de logement</label>
+      </div>
+
+      <div>
+        <label>Superficie totale</label>
+        <input type="number" class="border border-gray-300 px-2 py-1 w-full"
+               placeholder="Entrez la superficie en m²"
+        >
+      </div>
+
+      <div>
+        <label>Adresse postale</label>
+        <input type="text" class="border border-gray-300 px-2 py-1 w-full"
+               placeholder="Entrez votre adresse postale"
+        >
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label>Avec balcon</label>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="balcon" [value]="true" [(ngModel)]="avecBalcon"/>
+          <label>Oui</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="balcon" [value]="false" [(ngModel)]="avecBalcon"/>
+          <label>Non</label>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label>Avec jardin</label>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="jardin" [value]="true" [(ngModel)]="avecJardin"/>
+          <label>Oui</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="jardin" [value]="false" [(ngModel)]="avecJardin"/>
+          <label>Non</label>
+        </div>
+      </div>
+    </div>
+
+    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre foyer</label>
+    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
+      <div class="flex items-center gap-4">
+        <label>En couple</label>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="couple" [value]="true" [(ngModel)]="enCouple"/>
+          <label>Oui</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="couple" [value]="false" [(ngModel)]="enCouple"/>
+          <label>Non</label>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label>Vous habitez ensemble</label>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="true" [(ngModel)]="habitantEnsemble"/>
+          <label>Oui</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="false" [(ngModel)]="habitantEnsemble"/>
+          <label>Non</label>
+        </div>
+      </div>
+
+      <div>
+        <label>Enfants dans votre foyer</label>
+        <input type="number" class="border border-gray-300 px-2 py-1 w-full mb-2"
+               placeholder="Nombre d'enfants"
+        >
+      </div>
+    </div>
+
+    <div class="flex justify-evenly w-full">
+      <p-button
+        (click)="toggleMode()"
+        styleClass="!text-black hover:!text-white active:!text-white !border-2 !border-black
+        hover:!bg-black active:!bg-black !transition-colors !duration-500"
+        [icon]="'pi pi-check'" [label]="'Valider'"
+        [rounded]="false" [outlined]="true" [severity]="'secondary'"
+      />
+
+      <p-button
+        (click)="toggleMode()"
+        styleClass="!text-red-600 hover:!text-white active:!text-white !border-2 !border-red-600
+        hover:!bg-red-600 active:!bg-red-600 !transition-colors !duration-500"
+        [icon]="'pi pi-times'" [label]="'Annuler'"
+        [rounded]="false" [outlined]="true"
+      />
+    </div>
+
+  }
+
+}

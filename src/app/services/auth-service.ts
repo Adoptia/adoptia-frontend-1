@@ -11,7 +11,9 @@ export class AuthService {
 
   private _currentUser = signal<UserData | undefined>(undefined);
 
-  protected isLoginSuccessful = signal(true)
+  private _isLoginSuccessful = signal(true)
+
+  isLoginSuccessful = this._isLoginSuccessful.asReadonly()
 
   currentUser = this._currentUser.asReadonly()
 
@@ -56,17 +58,19 @@ export class AuthService {
       const firstName = user.name.split(' ')[0];
       const lastName = user.name.split(' ')[1];
 
-      this._currentUser.set(
-        { firstName: firstName, lastName: lastName, email: user.email, phoneNumber: user.phoneNumber }
-      )
-
-      this.isLoginSuccessful.set(true)
+      this._currentUser.update( u => ({
+        ...u,
+        base: { firstName: firstName, lastName: lastName, email: user.email, phoneNumber: user.phoneNumber }
+      }))
 
       this.setCurrentUserInLocalStorage()
 
       this.router.navigate(['/dashboard'])
 
     }
+
+    else this._isLoginSuccessful.set(false)
+
   }
 
   registerNewUser(data: RegistrationData) {
@@ -78,9 +82,30 @@ export class AuthService {
 }
 
 export interface UserData {
+  base: UserBasicData,
+  context?: UserContextData
+}
+
+export interface UserBasicData {
   firstName: string;
   lastName: string;
   email: string;
   phoneNumber: string;
+  birthDate?: string;
+}
 
+export interface UserContextData {
+  residence: {
+    type: 'maison'
+      | 'appartement',
+    address: string,
+    surface: number,
+    garden: boolean,
+    balcony: boolean
+  },
+  household: {
+    hasPartner: boolean,
+    liveTogether: boolean,
+    childrenCount: number
+  }
 }
