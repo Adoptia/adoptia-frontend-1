@@ -11,11 +11,27 @@ export class AuthService {
 
   private _currentUser = signal<UserData | undefined>(undefined);
 
-  private _isLoginSuccessful = signal(true)
+  duplicateUserError = signal<boolean>(false);
+
+  showDuplicateUserError() {
+    if (this.duplicateUserError()) {
+      setTimeout(() => {
+        this.duplicateUserError.set(false)
+      }, 3000)
+    }
+  }
+
+  badCredentialsError = signal(false)
+
+  showBadCredentialsError() {
+    if (this.badCredentialsError()) {
+      setTimeout(() => {
+        this.badCredentialsError.set(false)
+      }, 3000)
+    }
+  }
 
   isAuthenticated = computed(() => this._currentUser() !== undefined)
-
-  isLoginSuccessful = this._isLoginSuccessful.asReadonly()
 
   currentUser = this._currentUser.asReadonly()
 
@@ -34,29 +50,42 @@ export class AuthService {
       user => user.email === userData.email && user.password === userData.password
     );
 
-    if (user) {
-      const firstName = user.name.split(' ')[0];
-      const lastName = user.name.split(' ')[1];
-
-      this._currentUser.update( u => ({
-        ...u,
-        base: { firstName: firstName, lastName: lastName, email: user.email, phoneNumber: user.phoneNumber }
-      }))
-
-      this.setCurrentUserInLocalStorage()
-
-      this.router.navigate(['/dashboard'])
-
+    if (!user) {
+      this.badCredentialsError.set(true)
+      this.showBadCredentialsError()
+      return
     }
 
-    else this._isLoginSuccessful.set(false)
+    const firstName = user.name.split(' ')[0];
+    const lastName = user.name.split(' ')[1];
+
+    this._currentUser.update( u => ({
+      ...u,
+      base: { firstName: firstName, lastName: lastName, email: user.email, phoneNumber: user.phoneNumber }
+    }))
+
+    this.setCurrentUserInLocalStorage()
+
+    this.router.navigate(['/dashboard'])
 
   }
 
   register(user: RegistrationData) {
+    if (this.checkDuplicateUser(user)) {
+      this.duplicateUserError.set(true)
+      this.showDuplicateUserError()
+      return;
+    }
+
     this.users.update(users => [...users, user])
     this.saveUsersToLocalStorage()
     this.login(user)
+  }
+
+  checkDuplicateUser(user: RegistrationData): boolean {
+    const email = user.email;
+    this.fetchUsersFromLocalStorage()
+    return this.users().some(u => u.email === email);
   }
 
   saveUsersToLocalStorage() {

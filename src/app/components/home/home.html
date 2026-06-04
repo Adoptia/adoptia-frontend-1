@@ -42,7 +42,7 @@
     />
     <p-button
       styleClass ="!text-white !bg-transparent hover:!bg-gray-500/50 active:!bg-gray-500/50 !border-2
-      !transition-colors !duration-500 !text-xs sm:!text-base"
+      !transition-colors !duration-500 !text-xs sm:!text-base hover:scale-110 transition-transform duration-300"
       [label]="'Explorer nos partenaires'"
       [rounded]="false" [outlined]="true" [severity]="'contrast'"
       (click)="scrollTo('partners')"
@@ -192,7 +192,7 @@
           </p>
 
           <a class="flex items-center gap-2 text-amber-500 hover:text-amber-600
-                    transition-colors duration-300 text-sm font-medium mt-auto cursor-pointer"
+          hover:scale-105 origin-left transition-all duration-300 text-sm font-medium mt-auto cursor-pointer"
              [routerLink]="['/choice-assist']"
           >
             Explorer les refuges
@@ -311,7 +311,7 @@
 
       <div>
         @if ( isAuthenticated() ) {
-          <p-button [label]="'Aller au dashboard'" [severity]="'contrast'" [variant]="'outlined'"
+          <p-button [label]="'Accéder au dashboard'" [severity]="'contrast'" [variant]="'outlined'"
                     styleClass ="!text-xs sm:!text-base !text-white !bg-amber-500 hover:!bg-amber-600
                   active:!bg-amber-300 !border-2 !border-black/50 hover:!border-black active:!border-black
                   !transition-colors !duration-500 !px-6 !py-3 !rounded-4xl"
