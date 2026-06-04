@@ -12,7 +12,7 @@
     <ul class="flex gap-4 items-center text-base"
     >
       @for (link of links(); track link.label) {
-        <li class="hover:text-orange-300 active:text-orange-300 transition-colors duration-500"
+        <li class="hover:text-amber-500 active:text-amber-500 transition-colors duration-500"
             [routerLink]="[link.pathURL]" [fragment]="link.fragment"
         >{{ link.label }}</li>
       }
@@ -50,12 +50,12 @@
 >
   <ul class="flex flex-col py-16 gap-12 items-center text-base"
   >
-    <li class="text-white active:text-orange-300"
+    <li class="text-white active:text-amber-500"
         [routerLink]="['/dashboard']"
         (click)="toggleBurgerMenu()"
     >Mon espace</li>
     @for (link of links(); track link.label) {
-      <li class="text-white active:text-orange-300"
+      <li class="text-white active:text-amber-500"
           (click)="toggleBurgerMenu()"
           [routerLink]="[link.pathURL]" [fragment]="link.fragment"
       >{{ link.label }}</li>

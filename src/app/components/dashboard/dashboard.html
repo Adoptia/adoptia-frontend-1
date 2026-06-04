@@ -50,9 +50,10 @@
   </div>
 </div>
 
-<div class="bg-gray-800 text-sm py-4 w-full fixed bottom-0 z-10
-              xl:h-full xl:w-50 xl:top-20 xl:flex-col xl:justify-center
-              flex items-center justify-between sm:justify-center sm:gap-12 px-safe-or-4 border-gray-300"
+<div class="flex items-center justify-between sm:justify-center sm:gap-12 px-safe-or-4 border-gray-300
+   bg-gray-800 text-sm py-4 xl:h-full xl:w-50 xl:top-20 xl:flex-col xl:justify-center
+   [&_div]:cursor-pointer [&_div]:hover:text-amber-500 [&_div]:transition-colors [&_div]:duration-500
+   w-full fixed bottom-0 z-10 "
 >
   <div [class.text-amber-500]="activeTab() === 'parcours'"
        class="flex flex-col items-center gap-2"

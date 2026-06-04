@@ -255,20 +255,29 @@
       </div>
     </div>
   </div>
-
 </section>
 
 <footer
   class="flex flex-col items-center bg-amber-50/90 gap-8 justify-between
+  [&_i]:transition-colors [&_i]:duration-500 [&_i]:cursor-pointer
   min-h-50 h-full w-full p-12">
   <div id="contact"
     class="flex justify-center gap-16 text-black pb-4 px-8 border-b border-black/20">
-    <i class="pi pi-facebook" style="font-size: 2rem"></i>
-    <i class="pi pi-instagram" style="font-size: 2rem"></i>
-    <i class="pi pi-comments" style="font-size: 2rem"></i>
+    <a href="https://www.facebook.com/profile.php?id=61582115951977" target="_blank" rel="noopener">
+      <i class="pi pi-facebook hover:text-sky-600" style="font-size: 2rem"></i>
+    </a>
+    <a href="https://www.instagram.com/pret_adopt/" target="_blank" rel="noopener">
+      <i class="pi pi-instagram hover:text-red-700" style="font-size: 2rem"></i>
+    </a>
+    <a href="mailto:sudo.blaste@gmail.com">
+      <i class="pi pi-comments hover:text-emerald-700" style="font-size: 2rem"></i>
+    </a>
   </div>
 
-  <div class="flex flex-col items-center text-xs sm:text-sm text-black/70 gap-4 w-full md:flex-row justify-center">
+  <div class="flex flex-col items-center text-xs sm:text-sm text-black/70
+  [&_p]:transition-colors [&_p]:duration-500 [&_p]:hover:text-amber-500 [&_p]:cursor-pointer
+  gap-4 w-full md:flex-row justify-center"
+  >
     <p class="text-center">Confidentialité</p>
     <p class="text-center">Conditions générales</p>
     <p class="text-center">© 2026 Prêt'Adopte, Inc.</p>
