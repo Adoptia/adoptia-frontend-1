@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {interval} from 'rxjs';
 import {Button} from 'primeng/button';
 import {BaseCard} from '../shared/base-card/base-card';
@@ -48,7 +48,13 @@ export class Home implements OnInit, OnDestroy {
 
   protected isAuthenticated = this.authService.isAuthenticated
 
-  constructor() {
+  @HostListener('window:pagehide')
+  onPageHide() {
+    sessionStorage.setItem('home-scroll', String(window.scrollY));
+  }
+
+  scrollTo(fragment: string) {
+    document.getElementById(fragment)?.scrollIntoView({behavior: 'smooth'});
   }
 
   ngOnInit() {
@@ -59,25 +65,18 @@ export class Home implements OnInit, OnDestroy {
       setTimeout(() => this.messageIndex.update(i => (i + 1) % this.messages().length));
     })
 
-
-    const sections = document.querySelectorAll('section[id], header[id]')
-
-    this.observer = new IntersectionObserver((entries) => {
-
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const fragment = entry.target.id === 'home' ? '' : `#${entry.target.id}`;
-          this.location.replaceState(this.location.path().split('#')[0] + fragment);
-        }
-      })
-    }, { threshold: 0.5 })
-
-    sections.forEach(section => this.observer.observe(section));
+    const savedY = sessionStorage.getItem('home-scroll');
+    if (savedY) {
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: +savedY, behavior: 'instant' });
+      });
+      sessionStorage.removeItem('home-scroll');
+    }
 
   }
 
   ngOnDestroy() {
-
+    document.documentElement.style.scrollBehavior = '';
   }
 
 }

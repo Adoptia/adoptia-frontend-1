@@ -22,11 +22,16 @@ export class Dashboard {
 
   private authService = inject(AuthService)
   private navBarService = inject(NavBarService)
-  protected activeTab = signal<'parcours' | 'adoptions' | 'profil'>('parcours');
+  protected activeTab = signal<TabEnum>('parcours');
 
   protected user = this.authService.currentUser;
 
   protected showTrainingPaths = signal(false);
+
+  setTab(tab: TabEnum) {
+    this.activeTab.set(tab);
+    window.scrollTo({ top: 0 });
+  }
 
   toggleShowTrainingPaths = () => {
     this.showTrainingPaths.update(v => !v);
@@ -37,3 +42,5 @@ export class Dashboard {
   }
 
 }
+
+type TabEnum = 'parcours' | 'adoptions' | 'profil'

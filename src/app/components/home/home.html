@@ -38,14 +38,14 @@
 "
       [label]="'Commencer un parcours'"
       [rounded]="false" [raised]="true" [severity]="'warn'"
-      [routerLink]="[]" [fragment]="'trainingPaths'"
+      (click)="scrollTo('trainingPaths')"
     />
     <p-button
       styleClass ="!text-white !bg-transparent hover:!bg-gray-500/50 active:!bg-gray-500/50 !border-2
       !transition-colors !duration-500 !text-xs sm:!text-base"
       [label]="'Explorer nos partenaires'"
       [rounded]="false" [outlined]="true" [severity]="'contrast'"
-      [routerLink]="[]" [fragment]="'partners'"
+      (click)="scrollTo('partners')"
     />
   </div>
 </header>
@@ -163,16 +163,89 @@
     sm:flex-row"
     >
       <app-base-card
-        class="h-50 w-full"
+        class="w-full"
         [backgroundBlur]="true"
         [borderSize]="'border-2'" [borderColor]="'border-white/30'"
       >
+        <div class="flex flex-col gap-5 h-full">
+
+          <div class="flex items-center gap-4">
+            <div class="bg-amber-600 rounded-xl p-3 flex items-center justify-center shrink-0">
+              <i class="pi pi-home text-white" style="font-size: 22px"></i>
+            </div>
+            <div>
+              <p class="font-bold text-white text-xl">Refuges</p>
+              <p class="text-amber-500 text-sm"
+              >Certifié <span class="font-bold">Refuge Responsable</span>
+            </div>
+          </div>
+
+          <div class="w-full h-px bg-white/20"></div>
+
+          <p class="text-white/80 text-sm leading-relaxed">
+            Découvrez nos refuges partenaires et leurs processus d'adoption.
+            Chaque adoption est accompagnée d'une garantie de bien-être.
+          </p>
+
+          <p class="text-white/80 text-sm leading-relaxed">
+            Pas encore partenaire ? Rejoignez-nous !
+          </p>
+
+          <a class="flex items-center gap-2 text-amber-500 hover:text-amber-600
+                    transition-colors duration-300 text-sm font-medium mt-auto cursor-pointer"
+             [routerLink]="['/choice-assist']"
+          >
+            Explorer les refuges
+            <i class="pi pi-arrow-right"></i>
+          </a>
+        </div>
       </app-base-card>
 
-      <app-base-card class="h-50 w-full"
+      <app-base-card class="w-full"
                      backgroundColor="bg-black/50"
                      [backgroundBlur]="true"
-      ></app-base-card>
+      >
+        <div class="flex flex-col gap-5 h-full">
+
+          <div class="flex justify-end">
+            <span class="flex items-center gap-1.5 text-amber-500 border border-amber-500
+                         rounded-full px-3 py-1 text-xs font-semibold">
+              <i class="pi pi-verified"></i>
+              Badge Premium
+            </span>
+          </div>
+
+
+          <div class="flex items-center gap-4">
+            <div class="bg-amber-600 rounded-xl p-3 flex items-center justify-center shrink-0">
+              <i class="pi pi-shield text-white" style="font-size: 22px"></i>
+            </div>
+            <div>
+              <p class="font-bold text-white text-xl">Éleveurs</p>
+              <p class="text-amber-500 text-sm"
+              >Certifié <span class="font-bold">Éleveur Responsable</span>
+              </p>
+            </div>
+          </div>
+
+
+          <div class="bg-amber-600/20 border border-amber-600/40 rounded-lg px-4 py-3 flex flex-col gap-1">
+            <p class="text-white font-semibold text-sm flex items-center gap-2">
+              <i class="pi pi-star-fill text-amber-500"></i>
+              Obtenez votre certification
+            </p>
+            <p class="text-white/70 text-xs">
+              Orientez vos adoptants vers notre plateforme
+            </p>
+          </div>
+
+
+          <p class="text-white/80 text-sm leading-relaxed">
+            Rejoignez notre réseau d'éleveurs certifiés pour garantir le bien-être de votre animal.
+          </p>
+
+        </div>
+      </app-base-card>
     </div>
 
     <div class="w-full">

@@ -3,7 +3,7 @@
      justify-between items-center duration-1000"
 >
   <div class="flex cursor-pointer hover:scale-110 duration-500">
-    <img [src]=logo() alt="Logo" [routerLink]="['/']"
+    <img [src]=logo() alt="Logo" (click)="goBackToHomePage()"
          class="h-10 lg:h-16 w-10 lg:w-16 object-contain"
     >
   </div>
@@ -13,7 +13,7 @@
     >
       @for (link of links(); track link.label) {
         <li class="hover:text-amber-500 active:text-amber-500 transition-colors duration-500"
-            [routerLink]="[link.pathURL]" [fragment]="link.fragment"
+            (click)="navigateToLink(link)"
         >{{ link.label }}</li>
       }
     </ul>
@@ -51,13 +51,17 @@
   <ul class="flex flex-col py-16 gap-12 items-center text-base"
   >
     <li class="text-white active:text-amber-500"
+        [hidden]="!activeConfig().showDashboardButton"
         [routerLink]="['/dashboard']"
         (click)="toggleBurgerMenu()"
     >Mon espace</li>
+    <li class="text-white active:text-amber-500"
+        [hidden]="!activeConfig().showLogoutButton"
+        (click)="toggleBurgerMenu(); logout()"
+    >Déconnexion</li>
     @for (link of links(); track link.label) {
       <li class="text-white active:text-amber-500"
-          (click)="toggleBurgerMenu()"
-          [routerLink]="[link.pathURL]" [fragment]="link.fragment"
+          (click)="toggleBurgerMenu(); navigateToLink(link)"
       >{{ link.label }}</li>
     }
   </ul>

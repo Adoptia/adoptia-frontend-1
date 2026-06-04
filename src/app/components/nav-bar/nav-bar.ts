@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, computed, HostListener, inject, signal} from '@angular/core';
 import {Button} from 'primeng/button';
 import {NgClass} from '@angular/common';
-import {NavBarService} from '../../services/nav-bar-service';
+import {NavBarLink, NavBarService} from '../../services/nav-bar-service';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../services/auth-service';
 
@@ -27,6 +27,35 @@ export class NavBar {
   protected logout = () => {
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  protected goBackToHomePage() {
+    if (this.router.url === '/') {
+      document.getElementById('home')
+        ?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      this.router.navigate(['/']);
+    }
+  }
+
+  protected navigateToLink(link: NavBarLink) {
+    if (link.fragmentId) {
+      const targetUrl = '/' + (link.pathURL ?? '');
+
+      if (this.router.url === targetUrl) {
+        document.getElementById(link.fragmentId)
+          ?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        this.router.navigate([link.pathURL ?? '']).then(() => {
+          setTimeout(() => {
+            document.getElementById(link.fragmentId!)
+              ?.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        });
+      }
+    } else {
+      this.router.navigate([link.pathURL ?? '']);
+    }
   }
 
   activeConfig = this.navBarService.activeConfig;

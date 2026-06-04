@@ -4,6 +4,7 @@ import {NavBar} from './components/nav-bar/nav-bar';
 import {Home} from './components/home/home';
 import {filter} from 'rxjs';
 import {AuthService} from './services/auth-service';
+import {ScrollService} from './services/scroll-service';
 
 @Component({
   selector: 'app-root',
