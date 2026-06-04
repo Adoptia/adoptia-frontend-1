@@ -53,11 +53,6 @@ export class QuickQuiz {
   infoQuiz = signal<InfoQuiz>({ ...infoQuizFailed, infoScore: '' });
 
   constructor() {
-    this.navBarService.links.set([
-      { label: 'Contact', fragment: 'contact' },
-      { label: 'Se former', pathURL: 'learn' },
-      { label: 'Aide au choix', pathURL: 'choice-assist' },
-    ])
   }
 
   species: string[] = animals.map(a => a.species)

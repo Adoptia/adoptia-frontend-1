@@ -3,19 +3,20 @@
   @if ( mode() === 'display' ) {
 
     <div class="flex mb-4 justify-between">
-      <h1 class="text-xl">Mode affichage</h1>
+      <h1 class="text-lg">Mode affichage</h1>
       <div class="flex self-center gap-2 p-1 rounded cursor-pointer **:cursor-pointer
       hover:scale-110 hover:text-orange-600 transition-transform duration-500"
            (click)="toggleMode()"
       >
         <label class="text-xs">Modifier</label>
-        <i class="pi pi-pencil"></i>
+        <i class="pi pi-pen-to-square"></i>
       </div>
     </div>
 
 
     <label class="text-xs text-gray-500 italic mb-2">Informations personnelles</label>
-    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
+    <div class="flex flex-col gap-3 border border-gray-300 p-2 pb-4 mb-8
+    [&_label]:text-sm [&_p]:text-sm [&_p]:font-bold">
       <div>
         <label>Prénom et nom de famille</label>
         <p>{{ user()!.base.firstName }} {{ user()!.base.lastName }}</p>
@@ -38,7 +39,8 @@
     </div>
 
     <label class="text-xs italic text-gray-500 mb-2">Informations sur votre domicile</label>
-    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
+    <div class="flex flex-col gap-3 border border-gray-300 p-2 pb-4 mb-8
+    [&_p]:text-sm [&_label]:text-sm [&_p]:font-bold">
       <div>
         <label>Type de logement</label>
         <p>{{ user()!.context?.residence?.type ?? 'Information non fournie' }}</p>
@@ -59,34 +61,35 @@
 
       <div class="flex items-center gap-4">
         <label>Avec balcon : </label>
-        <p>{{ user()!.context?.residence?.balcony === undefined ? 'Information non fournie'
+        <p>{{ user()!.context?.residence?.balcony === undefined ? '-'
           : user()!.context!.residence.balcony ? 'Oui' : 'Non' }}</p>
       </div>
 
       <div class="flex items-center gap-4">
         <label>Avec jardin : </label>
-        <p>{{ user()!.context?.residence?.garden === undefined ? 'Information non fournie'
+        <p>{{ user()!.context?.residence?.garden === undefined ? '-'
           : user()!.context!.residence.garden ? 'Oui' : 'Non' }}</p>
       </div>
     </div>
 
     <label class="text-xs italic text-gray-500 mb-2">Informations sur votre foyer</label>
-    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4">
+    <div class="flex flex-col gap-3 border border-gray-300 p-2 pb-4
+    [&_p]:text-sm [&_label]:text-sm [&_p]:font-bold">
       <div class="flex items-center gap-4">
         <label>En couple : </label>
-        <p>{{ user()!.context?.household?.hasPartner === undefined ? 'Information non fournie'
+        <p>{{ user()!.context?.household?.hasPartner === undefined ? '-'
           : user()!.context!.household.hasPartner ? 'Oui' : 'Non' }}</p>
       </div>
 
       <div class="flex items-center gap-4">
         <label>Vous habitez ensemble : </label>
-        <p>{{ user()!.context?.household?.liveTogether === undefined ? 'Information non fournie'
+        <p>{{ user()!.context?.household?.liveTogether === undefined ? '-'
           : user()!.context!.household.liveTogether ? 'Oui' : 'Non' }}</p>
       </div>
 
       <div class="flex items-center gap-4">
         <label>Enfants dans votre foyer : </label>
-        <p>{{  user()!.context?.household?.childrenCount ?? 'Information non fournie' }}</p>
+        <p>{{  user()!.context?.household?.childrenCount ?? 0 }}</p>
       </div>
     </div>
 

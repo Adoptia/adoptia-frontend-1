@@ -42,11 +42,11 @@ export class Auth {
   }
 
   protected submitLoginForm() {
-    if (this.loginForm().valid()) this.authService.loginUser(this.loginData())
+    if (this.loginForm().valid()) this.authService.login(this.loginData())
   }
 
   protected submitRegistrationForm() {
-    if (this.registrationForm().valid()) this.authService.registerNewUser(this.registrationData())
+    if (this.registrationForm().valid()) this.authService.register(this.registrationData())
   }
 
   protected filterBlockDigits(event: KeyboardEvent) {

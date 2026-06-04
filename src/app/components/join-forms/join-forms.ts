@@ -1,5 +1,5 @@
-import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
-import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {NavBarService} from '../../services/nav-bar-service';
 import {Unavailable} from '../unavailable/unavailable';
 
 @Component({
@@ -16,10 +16,6 @@ export class JoinForms {
   private navBarService = inject(NavBarService)
 
   constructor() {
-    this.navBarService.links.set([
-      navBarLinks['contact']!,
-      navBarLinks['goals']!,
-    ])
   }
 
 }

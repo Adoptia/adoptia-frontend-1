@@ -3,9 +3,10 @@ import {interval} from 'rxjs';
 import {Button} from 'primeng/button';
 import {BaseCard} from '../shared/base-card/base-card';
 import {Router, RouterLink} from '@angular/router';
-import {navBarLinks, NavBarService} from '../../services/nav-bar-service';
+import {NavBarService} from '../../services/nav-bar-service';
 import {Location} from '@angular/common';
 import {TrainingPaths} from '../training-paths/training-paths';
+import {AuthService} from '../../services/auth-service';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +27,7 @@ export class Home implements OnInit, OnDestroy {
   private router = inject(Router);
   private location = inject(Location);
   private navBarService = inject(NavBarService);
+  private authService = inject(AuthService)
 
   protected headerBackground = 'images/hp-header-bg.jpg';
   protected partnersBackground = 'images/partners-bg.jpg';
@@ -44,12 +46,9 @@ export class Home implements OnInit, OnDestroy {
 
   messageIndex = signal<number>(0);
 
+  protected isAuthenticated = this.authService.isAuthenticated
+
   constructor() {
-    this.navBarService.links.set([
-      navBarLinks['contact']!,
-      navBarLinks['goals']!,
-      navBarLinks['join-us']!,
-    ])
   }
 
   ngOnInit() {

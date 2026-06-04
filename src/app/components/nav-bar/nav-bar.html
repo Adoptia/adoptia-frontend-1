@@ -1,10 +1,6 @@
-<nav [ngClass]="{
-       'backdrop-blur-sm': isScrolling(),
-       'backdrop-blur-xl': isScrolledAndStill() && !isBurgerMenuOpen(),
-       'bg-transparent': !isScreenScrolled() || isBurgerMenuOpen()
-     }"
+<nav [ngClass]="navClasses()"
      class="flex fixed top-0 z-50 h-15 lg:h-20 w-full px-safe-or-4 lg:px-safe-or-6 text-white
-     bg-gray-800/50 justify-between items-center duration-1000"
+     justify-between items-center duration-1000"
 >
   <div class="flex cursor-pointer hover:scale-110 duration-500">
     <img [src]=logo() alt="Logo" [routerLink]="['/']"
@@ -21,7 +17,15 @@
         >{{ link.label }}</li>
       }
     </ul>
-    <p-button
+
+    <p-button [hidden]="!activeConfig().showLogoutButton" (click)="logout()"
+              styleClass="!text-red-500 hover:!text-white active:!text-white !border-2 !border-red-500
+              hover:!bg-red-500 active:!bg-red-500 !transition-colors !duration-500"
+              [icon]="'pi pi-sign-out'" [label]="'Déconnexion'"
+              [rounded]="false" [outlined]="true"
+    />
+
+    <p-button [hidden]="!activeConfig().showDashboardButton"
       styleClass="!text-white hover:!text-black !border-2 !border-white hover:!border-black hover:!bg-white/50
       active:!bg-white/50 !transition-colors !duration-500"
       [icon]="'pi pi-user'" [label]="'Mon espace'"

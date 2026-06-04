@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
-import {navBarLinks, NavBarService} from "../../services/nav-bar-service";
+import {NavBarService} from "../../services/nav-bar-service";
 import {AuthService} from '../../services/auth-service';
 import {FormsModule} from '@angular/forms';
 import {UserProfile} from '../user-profile/user-profile';
@@ -22,7 +22,7 @@ export class Dashboard {
 
   private authService = inject(AuthService)
   private navBarService = inject(NavBarService)
-  protected activeTab = signal<'parcours' | 'adoptions' | 'profil'>('profil');
+  protected activeTab = signal<'parcours' | 'adoptions' | 'profil'>('parcours');
 
   protected user = this.authService.currentUser;
 
@@ -34,11 +34,6 @@ export class Dashboard {
 
 
   constructor() {
-    this.navBarService.links.set([
-      navBarLinks['quick-quiz']!,
-      navBarLinks['learn']!,
-      navBarLinks["choice-assist"]!
-    ])
   }
 
 }

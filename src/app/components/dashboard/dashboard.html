@@ -1,10 +1,11 @@
-<div class="bg-gray-50 min-h-dvh py-24 text-black flex items-center justify-center lg:pl-20">
+<div class="min-h-dvh py-24 text-black flex items-center justify-center lg:pl-20">
   <div class="mes-parcours text-base h-full w-full"
        [class.hidden]="activeTab() !== 'parcours'"
   >
-    <div id="startedTrainings" class="flex justify-center"
+    <div id="startedTrainings" class="flex flex-col items-center justify-center gap-4"
          [hidden]="showTrainingPaths()"
     >
+      <i class="pi pi-exclamation-circle" style="font-size: 48px;"></i>
       <p> Aucun parcours commencé pour le moment </p>
     </div>
 
@@ -24,7 +25,7 @@
       />
     </div>
 
-    <div [hidden]="!showTrainingPaths()">
+    <div class="z-0" [hidden]="!showTrainingPaths()">
       <app-training-paths/>
     </div>
 
@@ -32,10 +33,14 @@
 
   </div>
 
-  <div class="mes-adoptions text-base"
+  <div class="mes-adoptions text-base h-full w-full"
         [class.hidden]="activeTab() !== 'adoptions'"
   >
-    Aucun animal adopté pour le moment
+    <div id="startedTrainings" class="flex flex-col items-center justify-center gap-4"
+    >
+      <i class="pi pi-exclamation-circle" style="font-size: 48px;"></i>
+      <p>Aucun animal adopté pour le moment</p>
+    </div>
   </div>
 
   <div class="mon-profil w-full sm:w-120 text-base flex flex-col px-safe-or-4"
@@ -45,20 +50,30 @@
   </div>
 </div>
 
-<div class="bg-amber-50 text-black text-sm h-15 w-full fixed bottom-0
+<div class="bg-gray-800 text-sm py-4 w-full fixed bottom-0 z-10
               xl:h-full xl:w-50 xl:top-20 xl:flex-col xl:justify-center
-              flex items-center justify-between sm:justify-center sm:gap-12 px-safe-or-4 border-t border-gray-300"
+              flex items-center justify-between sm:justify-center sm:gap-12 px-safe-or-4 border-gray-300"
 >
-  <p class=""
-     [class.text-amber-500]="activeTab() === 'parcours'"
-     (click)="activeTab.set('parcours')"
-  >Mes parcours</p>
-  <p class=""
-     [class.text-amber-500]="activeTab() === 'adoptions'"
-     (click)="activeTab.set('adoptions')"
-  >Mes adoptions</p>
-  <p class=""
-     [class.text-amber-500]="activeTab() === 'profil'"
-     (click)="activeTab.set('profil')"
-  >Mon profil</p>
+  <div [class.text-amber-500]="activeTab() === 'parcours'"
+       class="flex flex-col items-center gap-2"
+       (click)="activeTab.set('parcours')"
+  >
+    <i class="pi pi-book" style="font-size: 24px"></i>
+    <p>Mes parcours</p>
+  </div>
+
+  <div  [class.text-amber-500]="activeTab() === 'adoptions'"
+        class="flex flex-col items-center gap-2"
+        (click)="activeTab.set('adoptions')">
+    <i class="pi pi-verified" style="font-size: 24px"></i>
+    <p>Mes adoptions</p>
+  </div>
+
+  <div [class.text-amber-500]="activeTab() === 'profil'"
+       class="flex flex-col items-center gap-2"
+       (click)="activeTab.set('profil')">
+    <i class="pi pi-user" style="font-size: 24px"></i>
+    <p>Mon profil</p>
+  </div>
+
 </div>

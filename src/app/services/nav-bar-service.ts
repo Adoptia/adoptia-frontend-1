@@ -1,43 +1,85 @@
-import {Injectable, signal} from '@angular/core';
+import {computed, inject, Injectable, signal} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
+import {filter} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NavBarService {
 
-  links = signal<NavBarLink[]>([])
+  private router = inject(Router)
+
+  _activeConfig = signal<NavBarConfig>(defaultConfig);
+  activeConfig = this._activeConfig.asReadonly();
+
+  constructor() {
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe((e: NavigationEnd) => {
+      const config = routeConfigs[e.urlAfterRedirects] ?? defaultConfig;
+      this._activeConfig.set(config);
+    });
+  }
+
+  links = computed(() => (this._activeConfig().links ?? [])
+      .map(key => navBarLinks[key])
+      .filter(Boolean) as NavBarLink[]
+  );
 
   logo = signal<string>('images/app-logo.png')
 
-  iconWhenClosed = 'pi pi-bars'
-  iconWhenOpen = 'pi pi-times'
-
-  burgerMenuIcon = signal<string>(this.iconWhenClosed);
-
+  iconMenuOpen = 'pi pi-times'
+  iconMenuClosed = 'pi pi-bars'
   isBurgerMenuOpen = signal(false);
+  burgerMenuIcon = signal<string>(this.iconMenuClosed);
 
   toggleBurgerMenuIcon() {
     this.burgerMenuIcon.set(
-      this.burgerMenuIcon() === this.iconWhenClosed ?
-        this.iconWhenOpen : this.iconWhenClosed
+      this.burgerMenuIcon() === this.iconMenuClosed ?
+        this.iconMenuOpen : this.iconMenuClosed
     );
   }
 
 }
 
 
-type NavBarKey = 'quick-quiz' | 'learn'
-  | 'choice-assist' | 'contact' | 'goals' | 'join-us';
+type NavBarLink = { label: string, pathURL?: string, fragment?: string }
 
+type NavBarKey = 'quick-quiz' | 'learn' | 'choice-assist' | 'contact' | 'goals' | 'join-us';
 
-type NavBarLink = {
-  label: string,
-  pathURL?: string,
-  fragment?: string
+export type NavBarConfig = {
+  links?: NavBarKey[];
+  onScrolled?: string;
+  onScrolling?: string;
+  onNotScrolled?: string;
+  onBurgerMenuOpen?: string;
+  showLogoutButton?: boolean;
+  showDashboardButton?: boolean;
 }
 
+const defaultConfig: NavBarConfig = {
+  showDashboardButton: true,
+  showLogoutButton: false,
+  onBurgerMenuOpen: '',
+  onNotScrolled: 'bg-transparent',
+  onScrolling: 'bg-gray-700/50 backdrop-blur-sm',
+  onScrolled: 'bg-gray-800/50 backdrop-blur-xl',
+  links: ['contact', 'goals', 'join-us'],
+};
 
-export const navBarLinks: Partial<Record<NavBarKey, NavBarLink>> = {
+const routeConfigs: Partial<Record<string, NavBarConfig>> = {
+  '/dashboard': {
+    ...defaultConfig,
+    onNotScrolled: 'bg-gray-800',
+    onScrolled: 'bg-gray-800',
+    onScrolling: 'bg-gray-800',
+    showDashboardButton: false,
+    showLogoutButton: true,
+    links: ['join-us']
+  }
+};
+
+const navBarLinks: Partial<Record<NavBarKey, NavBarLink>> = {
   'learn': { label: 'Se former', pathURL: 'learn' },
   'quick-quiz': { label: 'Quiz rapide', pathURL: 'quick-quiz' },
   'choice-assist': { label: 'Aide au choix', pathURL: 'choice-assist' },

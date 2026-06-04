@@ -1,8 +1,9 @@
-import {Component, computed, HostListener, inject, input, signal, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, HostListener, inject, signal} from '@angular/core';
 import {Button} from 'primeng/button';
 import {NgClass} from '@angular/common';
 import {NavBarService} from '../../services/nav-bar-service';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
+import {AuthService} from '../../services/auth-service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -19,30 +20,50 @@ export class NavBar {
 
   scrollTimeout: any;
 
+  private router = inject(Router);
+  private authService = inject(AuthService);
   private navBarService = inject(NavBarService);
 
-  isScreenStill = signal(true);
-  isScreenScrolled = signal(false)
+  protected logout = () => {
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
+
+  activeConfig = this.navBarService.activeConfig;
+
+  isStill = signal(true);
+  isScrolled = signal(false)
 
   isScrolling = computed(() =>
-    this.isScreenScrolled() && !this.isScreenStill()
-  )
-
-  isScrolledAndStill = computed(() =>
-    this.isScreenScrolled() && this.isScreenStill()
+    this.isScrolled() && !this.isStill()
   )
 
   logo = this.navBarService.logo;
   links = this.navBarService.links;
 
+  navClasses = computed(() => {
+    const config = this.activeConfig();
+
+    if (this.isBurgerMenuOpen()) {
+      return config.onBurgerMenuOpen ?? '';
+    }
+    if (this.isScrolling()) {
+      return config.onScrolling ?? '';
+    }
+    if (this.isScrolled()) {
+      return config.onScrolled ?? '';
+    }
+    return config.onNotScrolled ?? '';
+  });
+
   @HostListener('window:scroll')
   onScroll() {
-    this.isScreenScrolled.set(window.scrollY > 25)
-    this.isScreenStill.set(false)
+    this.isScrolled.set(window.scrollY > 25)
+    this.isStill.set(false)
 
     clearTimeout(this.scrollTimeout)
     this.scrollTimeout = setTimeout(() => {
-      this.isScreenStill.set(true)
+      this.isStill.set(true)
     }, 1000)
   }
 

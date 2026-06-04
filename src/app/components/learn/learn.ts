@@ -32,7 +32,7 @@ export class Learn {
   messageIndex = signal<number>(0);
 
   constructor() {
-    this.navBarService.links.set(LEARN_NAV_LINKS);
+
   }
 
   protected readonly topics = TOPICS;

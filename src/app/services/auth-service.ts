@@ -1,4 +1,4 @@
-import {inject, Injectable, signal} from '@angular/core';
+import {computed, inject, Injectable, signal} from '@angular/core';
 import {LoginData, RegistrationData} from '../components/auth/auth';
 import {Router} from '@angular/router';
 
@@ -13,45 +13,25 @@ export class AuthService {
 
   private _isLoginSuccessful = signal(true)
 
+  isAuthenticated = computed(() => this._currentUser() !== undefined)
+
   isLoginSuccessful = this._isLoginSuccessful.asReadonly()
 
   currentUser = this._currentUser.asReadonly()
 
   users = signal<RegistrationData[]>([])
 
-  saveUsersToLocalStorage() {
-    localStorage.setItem('knownUsers', JSON.stringify(this.users()))
+  logout() {
+    this._currentUser.set(undefined);
+    localStorage.removeItem('currentUser');
   }
 
-  setCurrentUserInLocalStorage() {
-    localStorage.setItem('currentUser', JSON.stringify(this.currentUser()))
-  }
-
-  getCurrentUserFromLocalStorage() {
-    const value = localStorage.getItem('currentUser')
-
-    if (value) {
-      const user: UserData = JSON.parse(value);
-      this._currentUser.set(user);
-    }
-  }
-
-  fetchUsersFromLocalStorage() {
-    let users: RegistrationData[] = []
-    const value = localStorage.getItem('users')
-
-    if (value) {
-      users = JSON.parse(value);
-      this.users.set(users);
-    }
-  }
-
-  loginUser(data: LoginData) {
+  login(userData: LoginData) {
 
     this.fetchUsersFromLocalStorage()
 
     const user = this.users().find(
-      user => user.email === data.email && user.password === data.password
+      user => user.email === userData.email && user.password === userData.password
     );
 
     if (user) {
@@ -73,10 +53,37 @@ export class AuthService {
 
   }
 
-  registerNewUser(data: RegistrationData) {
-    this.users.update(users => [...users, data])
+  register(user: RegistrationData) {
+    this.users.update(users => [...users, user])
     this.saveUsersToLocalStorage()
-    this.loginUser(data)
+    this.login(user)
+  }
+
+  saveUsersToLocalStorage() {
+    localStorage.setItem('knownUsers', JSON.stringify(this.users()))
+  }
+
+  setCurrentUserInLocalStorage() {
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUser()))
+  }
+
+  getCurrentUserFromLocalStorage() {
+    const value = localStorage.getItem('currentUser')
+
+    if (value) {
+      const user: UserData = JSON.parse(value);
+      this._currentUser.set(user);
+    }
+  }
+
+  fetchUsersFromLocalStorage() {
+    let users: RegistrationData[] = []
+    const value = localStorage.getItem('knownUsers')
+
+    if (value) {
+      users = JSON.parse(value);
+      this.users.set(users);
+    }
   }
 
 }
