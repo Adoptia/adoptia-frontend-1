@@ -6,9 +6,9 @@
       [backgroundImage]="opt.backgroundImage"
       class="text-black" [icon]="opt.icon"
     >
-      <div class="flex flex-col justify-center gap-4">
-        <p class="text-green-900 font-bold">{{ opt.title }}</p>
-        <p class="text-[15px]">{{ opt.description }}</p>
+      <div class="flex flex-col h-full pt-4 gap-4">
+        <p class="text-lg md:text-xl text-green-900 font-bold">{{ opt.title }}</p>
+        <p class="text-sm px-10 md:px-6 md:text-base">{{ opt.description }}</p>
       </div>
     </app-split-card>
   }

@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal, ChangeDetectionStrategy} from '@angular/core';
+import {Component, computed, inject, signal, ChangeDetectionStrategy, effect} from '@angular/core';
 import {Button} from 'primeng/button';
 import {Select} from 'primeng/select';
 import {FormsModule} from '@angular/forms';
@@ -6,6 +6,7 @@ import {QuickQuizCard} from '../shared/quick-quiz-card/quick-quiz-card';
 import {NavBarService} from '../../services/nav-bar-service';
 import {Answer, QuickQuizService} from '../../services/quick-quiz-service';
 import {SplitCard} from '../shared/split-card/split-card';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-quick-quiz',
@@ -14,7 +15,8 @@ import {SplitCard} from '../shared/split-card/split-card';
     Select,
     FormsModule,
     QuickQuizCard,
-    SplitCard
+    SplitCard,
+    RouterLink
   ],
   templateUrl: './quick-quiz.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -22,6 +24,7 @@ import {SplitCard} from '../shared/split-card/split-card';
 })
 export class QuickQuiz {
 
+  private router = inject(Router)
   private navBarService = inject(NavBarService);
   private quickQuizService = inject(QuickQuizService);
 
@@ -62,6 +65,10 @@ export class QuickQuiz {
   );
 
   selectedSpecies = signal<string>(animals[0].species)
+
+  validChoice = computed(() =>
+    !(this.selectedSpecies() === null || !this.species.includes(this.selectedSpecies()))
+  )
 
   selectedBreed = signal<string | undefined>(undefined)
 

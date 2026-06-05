@@ -1,6 +1,6 @@
 <header id="home"
-  class="home-header relative flex flex-col justify-evenly min-h-dvh
-  gap-16 pt-20 pb-16 px-safe-or-8 sm:px-safe-or-12 text-white" #homeHeader
+        class="home-header relative flex flex-col justify-evenly min-h-svh
+gap-16 pt-20 pb-16 px-safe-or-8 sm:px-safe-or-12 text-white" #homeHeader
 >
   <div class="bg-h-h absolute z-0 inset-0 pointer-events-none">
     <img class="w-full h-full object-cover" [src]="headerBackground">
@@ -9,15 +9,15 @@
   <div class="auto-change-message-container relative z-10 flex items-center h-24 w-full"
   >
     <p class="font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl
-    [@media(max-width:440px)]:whitespace-pre-line"
+  [@media(max-width:440px)]:whitespace-pre-line"
        [hidden]="!animateFlag()" [class.enter-animation]="animateFlag()">
       {{ messages()[messageIndex()] }}
     </p>
   </div>
 
   <div class="benefits-container relative z-10 flex flex-col justify-between
-  w-full gap-4 whitespace-pre-line sm:whitespace-normal
-  text-sm sm:text-lg"
+w-full gap-4 whitespace-pre-line sm:whitespace-normal
+text-sm sm:text-lg"
   >
     @for(b of benefits; track b) {
       <p class="flex gap-3 items-center">
@@ -28,13 +28,13 @@
   </div>
 
   <div class="relative z-10 flex
-  items-center w-full gap-8
-  [@media(max-width:490px)]:flex-col"
+items-center w-full gap-8
+[@media(max-width:490px)]:flex-col"
   >
     <p-button
       styleClass ="!text-white !bg-amber-700/70 hover:!bg-amber-700 active:!bg-amber-700
-      !border-2 !border-white/50 !transition-colors !duration-500
-      !text-xs sm:!text-base
+    !border-2 !border-white/50 !transition-colors !duration-500
+    !text-xs sm:!text-base
 "
       [label]="'Commencer un parcours'"
       [rounded]="false" [raised]="true" [severity]="'warn'"
@@ -42,7 +42,7 @@
     />
     <p-button
       styleClass ="!text-white !bg-transparent hover:!bg-gray-500/50 active:!bg-gray-500/50 !border-2
-      !transition-colors !duration-500 !text-xs sm:!text-base"
+    !transition-colors !duration-500 !text-xs sm:!text-base"
       [label]="'Explorer nos partenaires'"
       [rounded]="false" [outlined]="true" [severity]="'contrast'"
       (click)="scrollTo('partners')"
@@ -51,10 +51,10 @@
 </header>
 
 <section id="trainingPaths"
-  class="flex justify-center bg-amber-50 h-full w-full py-28 gap-12"
+         class="flex justify-center bg-amber-50 h-full w-full py-28 gap-12"
 >
   <div class="flex flex-col items-center gap-16 max-w-5xl
-    [@media(max-width:783px)]:max-w-80 [@media(max-width:1135px)]:max-w-2xl"
+  [@media(max-width:783px)]:max-w-80 [@media(max-width:1135px)]:max-w-2xl"
   >
     <div
       class="stats-container w-full"
@@ -63,21 +63,21 @@
       >
         <div
           class="flex flex-row justify-between items-center gap-8
-          [@media(max-width:783px)]:flex-col"
+        [@media(max-width:783px)]:flex-col"
         >
           @for(s of stats; track s) {
             <div class="flex flex-col items-center
-            gap-2"
+          gap-2"
             >
               <img [src]="s.icon" class="h-12 w-12
-              [@media(max-width:783px)]:h-10
-              [@media(max-width:783px)]:w-10"
+            [@media(max-width:783px)]:h-10
+            [@media(max-width:783px)]:w-10"
               >
               <p class="font-bold text-3xl
-              [@media(max-width:783px)]:text-2xl"
+            [@media(max-width:783px)]:text-2xl"
               >{{ s.figure }}</p>
               <p class="text-yellow-50 text-xs
-              [@media(min-width:1135px)]:text-base"
+            [@media(min-width:1135px)]:text-base"
               >{{ s.details }}</p>
             </div>
           }
@@ -89,7 +89,7 @@
     >
       <div
         class="text-green-900 font-bold
-        text-4xl [@media(max-width:783px)]:text-2xl [@media(max-width:1135px)]:text-3xl"
+      text-4xl [@media(max-width:783px)]:text-2xl [@media(max-width:1135px)]:text-3xl"
       >Comment ça marche ?
       </div>
       <app-training-paths/>
@@ -98,13 +98,13 @@
     <div class="certification w-full flex flex-col h-full items-center gap-8">
       <div
         class="text-green-900 font-bold
-        text-4xl [@media(max-width:783px)]:text-2xl [@media(max-width:1135px)]:text-3xl"
+      text-4xl [@media(max-width:783px)]:text-2xl [@media(max-width:1135px)]:text-3xl"
       >Et après ?
       </div>
 
       <app-base-card [backgroundImage]="certifCardData.backgroundImage"
-                [borderColor]="'border-amber-400'"
-                [borderSize]="'border-2'"
+                     [borderColor]="'border-amber-400'"
+                     [borderSize]="'border-2'"
       >
         <div class="flex flex-col items-center px-4 gap-4">
           <p class="text-green-900 font-bold text-center text-xl lg:text-2xl"
@@ -117,13 +117,11 @@
         </div>
       </app-base-card>
     </div>
-
   </div>
-
 </section>
 
 <section id="partners"
-         class="relative flex min-h-screen w-full">
+         class="relative flex w-full">
   <div class="bg-prtn absolute z-0 h-full w-full pointer-events-none">
     <img [src]="partnersBackground"
          class="h-full w-full object-cover"
@@ -133,7 +131,7 @@
 
   <div class="relative z-10 py-32 gap-16 px-safe-or-8 sm:px-safe-or-12 flex flex-col w-full items-center justify-between">
     <p class="text-amber-600 font-bold w-full text-left text-lg
-    md:text-xl lg:text-2xl">
+  md:text-xl lg:text-2xl">
       NOS PARTENAIRES
     </p>
 
@@ -159,9 +157,7 @@
       </p>
     </div>
 
-    <div class="cards-container flex flex-col justify-center w-full items-center gap-8
-    sm:flex-row"
-    >
+    <div class="cards-container flex flex-col justify-center w-full items-center gap-8 sm:flex-row">
       <app-base-card
         class="w-full"
         [backgroundBlur]="true"
@@ -174,26 +170,27 @@
               <i class="pi pi-home text-white" style="font-size: 22px"></i>
             </div>
             <div>
-              <p class="font-bold text-white text-xl">Refuges</p>
-              <p class="text-amber-500 text-sm"
+              <p class="font-bold text-white md:text-xl">Refuges</p>
+              <p class="text-amber-500 text-sm md:text-base"
               >Certifié <span class="font-bold">Refuge Responsable</span>
             </div>
           </div>
 
           <div class="w-full h-px bg-white/20"></div>
 
-          <p class="text-white/80 text-sm leading-relaxed">
+          <p class="text-white/80 text-sm md:text-base leading-relaxed">
             Découvrez nos refuges partenaires et leurs processus d'adoption.
             Chaque adoption est accompagnée d'une garantie de bien-être.
           </p>
 
-          <p class="text-white/80 text-sm leading-relaxed">
-            Pas encore partenaire ? Rejoignez-nous !
+          <p class="text-white/80 text-sm md:text-base leading-relaxed">
+            Rejoignez aussi l'aventure !
           </p>
 
           <a class="flex items-center gap-2 text-amber-500 hover:text-amber-600
-          hover:scale-105 origin-left transition-all duration-300 text-sm font-medium mt-auto cursor-pointer"
-             [routerLink]="['/choice-assist']"
+             hover:scale-105 origin-left transition-all duration-300 text-sm md:text-base
+             font-medium mt-auto cursor-pointer"
+             [routerLink]="['/partner-shields']"
           >
             Explorer les refuges
             <i class="pi pi-arrow-right"></i>
@@ -208,11 +205,11 @@
         <div class="flex flex-col gap-5 h-full">
 
           <div class="flex justify-end">
-            <span class="flex items-center gap-1.5 text-amber-500 border border-amber-500
-                         rounded-full px-3 py-1 text-xs font-semibold">
-              <i class="pi pi-verified"></i>
-              Badge Premium
-            </span>
+          <span class="flex items-center gap-1.5 text-amber-500 border border-amber-500
+                       rounded-full px-3 py-1 text-xs font-semibold">
+            <i class="pi pi-verified"></i>
+            Badge Premium
+          </span>
           </div>
 
 
@@ -221,8 +218,8 @@
               <i class="pi pi-shield text-white" style="font-size: 22px"></i>
             </div>
             <div>
-              <p class="font-bold text-white text-xl">Éleveurs</p>
-              <p class="text-amber-500 text-sm"
+              <p class="font-bold text-white md:text-xl">Éleveurs</p>
+              <p class="text-amber-500 text-sm md:text-base"
               >Certifié <span class="font-bold">Éleveur Responsable</span>
               </p>
             </div>
@@ -230,18 +227,18 @@
 
 
           <div class="bg-amber-600/20 border border-amber-600/40 rounded-lg px-4 py-3 flex flex-col gap-1">
-            <p class="text-white font-semibold text-sm flex items-center gap-2">
+            <p class="text-white font-semibold text-sm md:text-base flex items-center gap-2">
               <i class="pi pi-star-fill text-amber-500"></i>
               Obtenez votre certification
             </p>
-            <p class="text-white/70 text-xs">
+            <p class="text-white/70 text-xs md:text-sm">
               Orientez vos adoptants vers notre plateforme
             </p>
           </div>
 
 
-          <p class="text-white/80 text-sm leading-relaxed">
-            Rejoignez notre réseau d'éleveurs certifiés pour garantir le bien-être de votre animal.
+          <p class="text-white/80 text-sm md:text-base leading-relaxed">
+            Devenir un éleveur certifié, c'est garantir le bien-être de votre animal.
           </p>
 
         </div>
@@ -261,7 +258,7 @@
 </section>
 
 <section id="goals"
-         class="flex justify-center items-center bg-amber-50 h-full w-full py-16 px-8 sm:px-12 gap-12"
+         class="flex justify-center items-center bg-amber-50 h-full w-full pt-16 px-8 sm:px-12 gap-12"
 >
   <div class="h-full w-full max-w-200 flex flex-col gap-16 justify-between">
     <app-base-card [backgroundImage]="goalCardBackground"
@@ -279,7 +276,7 @@
             Objectifs</p>
 
           <div class="flex flex-col items-center gap-4
-          text-xs md:text-base lg:text-lg">
+        text-xs md:text-base lg:text-lg">
             <p class="flex w-full gap-3 items-center">
               <i class="pi pi-check-circle"></i>
               <label> Réduire les abandons</label>
@@ -304,7 +301,7 @@
 
     <div class="flex flex-col items-center gap-8 w-full p-2 text-black">
       <p class="text-center text-xl sm:text-2xl lg:text-3xl font-bold w-full
-      [@media(max-width:360px)]:w-40"
+    [@media(max-width:360px)]:w-40"
       >Prêt à changer une vie ?</p>
       <p class="w-full text-center text-sm sm:text-base lg:text-xl"
       >Commencez votre parcours d'adoption responsable dès aujourd'hui</p>
@@ -313,18 +310,18 @@
         @if ( isAuthenticated() ) {
           <p-button [label]="'Accéder au dashboard'" [severity]="'contrast'" [variant]="'outlined'"
                     styleClass ="!text-xs sm:!text-base !text-white !bg-amber-500 hover:!bg-amber-600
-                  active:!bg-amber-300 !border-2 !border-black/50 hover:!border-black active:!border-black
-                  !transition-colors !duration-500 !px-6 !py-3 !rounded-4xl"
+                    active:!bg-amber-300 !border-none
+                    hover:!scale-105 !transition-all !duration-500 !px-6 !py-3 !rounded-4xl"
                     [routerLink]="['/dashboard']"
           />
         } @else {
-        <p-button [label]="'Se connecter'" [severity]="'contrast'" [variant]="'outlined'"
-                  styleClass ="!text-xs sm:!text-base !text-white !bg-amber-500 hover:!bg-amber-600
-                  active:!bg-amber-300 !border-2 !border-black/50 hover:!border-black active:!border-black
-                  !transition-colors !duration-500 !px-6 !py-3 !rounded-4xl"
-                  [routerLink]="['/auth']"
-        />
-      }
+          <p-button [label]="'Se connecter'" [severity]="'contrast'" [variant]="'outlined'"
+                    styleClass ="!text-xs sm:!text-base !text-white !bg-amber-500 hover:!bg-amber-600
+                    active:!bg-amber-300 !border-none
+                    hover:!scale-105 !transition-all !duration-500 !px-6 !py-3 !rounded-4xl"
+                    [routerLink]="['/auth']"
+          />
+        }
       </div>
     </div>
   </div>
@@ -332,10 +329,10 @@
 
 <footer
   class="flex flex-col items-center bg-amber-50/90 gap-8 justify-between
-  [&_i]:transition-colors [&_i]:duration-500 [&_i]:cursor-pointer
-  min-h-50 h-full w-full p-12">
+[&_i]:transition-colors [&_i]:duration-500 [&_i]:cursor-pointer
+h-full w-full px-8 py-16">
   <div id="contact"
-    class="flex justify-center gap-16 text-black pb-4 px-8 border-b border-black/20">
+       class="flex justify-center gap-16 text-black pb-4 px-8 border-b border-black/20">
     <a href="https://www.facebook.com/profile.php?id=61582115951977" target="_blank" rel="noopener">
       <i class="pi pi-facebook hover:text-sky-600" style="font-size: 2rem"></i>
     </a>
@@ -348,8 +345,8 @@
   </div>
 
   <div class="flex flex-col items-center text-xs sm:text-sm text-black/70
-  [&_p]:transition-colors [&_p]:duration-500 [&_p]:hover:text-amber-500 [&_p]:cursor-pointer
-  gap-4 w-full md:flex-row justify-center"
+[&_p]:transition-colors [&_p]:duration-500 [&_p]:hover:text-amber-500 [&_p]:cursor-pointer
+gap-4 w-full md:flex-row justify-center"
   >
     <p class="text-center">Confidentialité</p>
     <p class="text-center">Conditions générales</p>

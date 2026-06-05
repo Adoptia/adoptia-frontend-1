@@ -1,28 +1,28 @@
 <div class="min-h-dvh pt-15 lg:py-20 xl:pl-30 text-black flex items-center justify-center
      [&>div]:pt-safe-offset-10 xl:[&>div]:pb-safe [&>div]:pb-safe-offset-30"
 >
-  <div class="mes-parcours text-base h-full w-full"
+  <div class="mes-parcours h-full w-full"
        [class.hidden]="activeTab() !== 'parcours'"
   >
     <div id="startedTrainings" class="flex flex-col items-center justify-center gap-4"
          [hidden]="showTrainingPaths()"
     >
-      <i class="pi pi-exclamation-circle" style="font-size: 48px;"></i>
-      <p> Aucun parcours commencé pour le moment </p>
+      <i class="pi pi-exclamation-circle text-3xl! md:text-5xl!"></i>
+      <p class="text-sm md:text-base"> Aucun parcours commencé pour le moment </p>
     </div>
 
     <div class="flex justify-center p-8">
       <p-button [hidden]="showTrainingPaths()" (click)="toggleShowTrainingPaths()"
-        styleClass="!text-black hover:!text-white active:!text-white !border-2 !border-black
+        styleClass="!text-sm md:!text-base !text-black hover:!text-white active:!text-white !border-2 !border-black
         hover:!bg-black active:!bg-black !transition-colors !duration-500"
         [icon]="'pi pi-plus'" [label]="'Nouveau parcours'"
         [rounded]="false" [outlined]="true"
       />
 
       <p-button [hidden]="!showTrainingPaths()" (click)="toggleShowTrainingPaths()"
-                styleClass="!text-red-500 hover:!text-white active:!text-white !border-2 !border-red-500
+                styleClass="!text-sm md:!text-base !text-red-500 hover:!text-white active:!text-white !border-2 !border-red-500
                 hover:!bg-red-500 active:!bg-red-500 !transition-colors !duration-500"
-                [icon]="'pi pi-times'" [label]="'Annuler'"
+                [icon]="'pi pi-arrow-left'" [label]="'Retour'"
                 [rounded]="false" [outlined]="true"
       />
     </div>
@@ -31,8 +31,6 @@
       <app-training-paths/>
     </div>
 
-
-
   </div>
 
   <div class="mes-adoptions text-base h-full w-full"
@@ -40,7 +38,7 @@
   >
     <div id="startedTrainings" class="flex flex-col items-center justify-center gap-4"
     >
-      <i class="pi pi-exclamation-circle" style="font-size: 48px;"></i>
+      <i class="pi pi-exclamation-circle text-3xl! md:text-5xl!"></i>
       <p>Aucun animal adopté pour le moment</p>
     </div>
   </div>
@@ -52,7 +50,7 @@
   </div>
 </div>
 
-<div class="bg-gray-800 flex fixed items-center justify-between text-sm py-4 px-safe-or-4 border-gray-300
+<footer class="bg-gray-800 flex fixed items-center justify-between text-sm py-4 px-safe-or-4 border-gray-300
      w-full bottom-0 z-10 sm:justify-center sm:gap-12 transition-all duration-500
      xl:h-full xl:w-30 xl:hover:w-50 xl:flex-col xl:justify-center xl:p-0
      group xl:[&_p]:opacity-0 xl:[&_p]:group-hover:opacity-100 xl:[&_p]:transition-opacity xl:[&_p]:duration-500
@@ -81,4 +79,4 @@
     <p>Mon profil</p>
   </div>
 
-</div>
+</footer>
