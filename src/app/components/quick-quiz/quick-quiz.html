@@ -1,85 +1,103 @@
-<header [hidden]="choiceSubmitted()"
-  class="qq-header relative text-white flex flex-col min-h-svh h-full w-svw overflow-hidden items-center justify-center gap-8"
->
-  <div class="bg-qq-h absolute z-0 inset-0 h-full pointer-events-none">
-    <img class="w-full h-full object-center object-cover" [src]="headerBackground">
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-  </div>
-
-  <div class="relative z-10 flex flex-col justify-center items-center h-full py-safe-offset-16 gap-8">
-    <p class="text-xl font-bold text-center py-4 [@media(min-width:750px)]:text-3xl">
-      Que souhaitez-vous adopter ?
-    </p>
-    <div class="species-selection flex flex-col items-center gap-2">
-      <p class="text-base sm:text-lg">Choisir une espèce</p>
-      <p-select class="w-48 sm:w-56 text-sm sm:text-base" [options]="species" [(ngModel)]="selectedSpecies"
-                [editable]="true" emptyMessage="Aucune espèce trouvée"
-                (ngModelChange)="selectedBreed.set(undefined)"
-      />
+  <header [hidden]="choiceSubmitted() || showResults()"
+    class="qq-header relative text-white flex flex-col min-h-svh h-full w-svw overflow-hidden items-center justify-center gap-8"
+  >
+    <div class="bg-qq-h absolute z-0 inset-0 h-full pointer-events-none">
+      <img class="w-full h-full object-center object-cover" [src]="headerBackground">
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
     </div>
-    <div class="race-selection flex flex-col items-center gap-2">
-      <p class="text-base sm:text-lg">Préciser une race</p>
-      <p-select class="w-48 sm:w-56 text-sm sm:text-base" [options]="breeds()" [(ngModel)]="selectedBreed"
-                [editable]="true" [showClear]="true" [placeholder]="'Peu importe'"
-                emptyMessage="Aucune race trouvée"
-      />
+
+    <div class="relative z-10 flex flex-col justify-center items-center h-full py-safe-offset-16 gap-8">
+      <p class="text-xl font-bold text-center py-4 [@media(min-width:750px)]:text-3xl">
+        Que souhaitez-vous adopter ?
+      </p>
+      <div class="species-selection flex flex-col items-center gap-2">
+        <p class="text-base sm:text-lg">Choisir une espèce</p>
+        <p-select class="w-48 sm:w-56 text-sm sm:text-base" [options]="species" [(ngModel)]="selectedSpecies"
+                  emptyMessage="Aucune espèce trouvée"
+                  (ngModelChange)="selectedBreed.set(undefined)"
+        />
+      </div>
+      <div class="race-selection flex flex-col items-center gap-2">
+        <p class="text-base sm:text-lg">Préciser une race</p>
+        <p-select class="w-48 sm:w-56 text-sm sm:text-base" [options]="breeds()" [(ngModel)]="selectedBreed"
+                  [filter]="true" [showClear]="true" [placeholder]="'Peu importe'"
+                  emptyMessage="Aucune race trouvée"
+        />
+      </div>
+      @if (hasSavedState()) {
+        <p-button (click)="resumeQuiz()"
+                  class="pt-8" [rounded]="true"
+                  styleClass="!text-white !text-xs lg:!text-base !font-bold !px-8 !py-3
+                  !bg-amber-700 !border-none hover:!bg-amber-600 hover:!scale-105
+                  !transition-all !duration-500"
+        >
+          Reprendre le quiz
+        </p-button>
+      } @else {
+        <p-button (click)="startQuiz()"
+                  class="pt-8" [rounded]="true"
+                  styleClass="!text-white !text-xs lg:!text-base !font-bold !px-8 !py-3
+                  !bg-sky-700 !border-none hover:!bg-sky-600 active:!bg-sky-600  hover:!scale-105
+                  !transition-all !duration-500"
+
+        >
+          Démarrer le quiz
+        </p-button>
+      }
     </div>
-    <p-button (click)="startQuiz()"
-              [disabled]="!validChoice()"
-              class="pt-8" [rounded]="true"
-              styleClass="!text-white !text-xs lg:!text-base !font-bold !px-8 !py-3
-              !bg-sky-700 !border-none hover:!bg-sky-600 active:!bg-sky-600 !transition-colors !duration-500"
-    >
-      Démarrer le quiz
-    </p-button>
-  </div>
-</header>
+  </header>
 
-<section [hidden]="!choiceSubmitted()"
-         class="quiz-card-container relative min-h-svh w-svw px-safe-or-8 py-safe-offset-16 flex flex-col justify-center"
->
-  <div class="bg-qc-c absolute z-0 inset-0 pointer-events-none">
-    <img class="w-full h-full object-cover" [src]="headerBackground">
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-  </div>
+  <section [hidden]="!choiceSubmitted() && !showResults()"
+           class="quiz-card-container relative min-h-svh w-svw px-safe-or-8 py-safe-offset-16 flex flex-col justify-center"
+  >
+    <div class="bg-qc-c absolute z-0 inset-0 pointer-events-none">
+      <img class="w-full h-full object-cover" [src]="headerBackground">
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    </div>
 
-  <div class="z-10 w-full h-full flex justify-center items-center text-white">
-    <app-quick-quiz-card [hidden]="isQuizDone()"
-      [data]="quizData()" (cardSubmitted)="submitSelectedAnswers($event)"
-      class="w-full flex justify-center items-center"
-    />
 
-    <div [hidden]="!isQuizDone()" class="flex flex-col items-center w-full">
-      <app-split-card [backgroundImage]="quizBackground()"
-                      [icon]="quizIcon()"
-      >
-        <div class="flex flex-col h-full pt-4 gap-4 text-black">
-          <p class="text-base md:text-lg text-green-900 font-bold">
-            {{ infoQuiz().title }}
-          </p>
-          <p class="text-sm md:text-base">{{ infoQuiz().infoScore }}</p>
-          <p class="text-sm md:text-base">{{ infoQuiz().outcome }}</p>
+
+
+    <div class="z-10 w-full h-full flex justify-center items-center text-white">
+      @if (choiceSubmitted() && !isQuizDone() && !showResults()) {
+        <app-quick-quiz-card
+          [data]="quizData()"
+          (cardSubmitted)="submitSelectedAnswers($event)"
+          class="w-full flex justify-center items-center"
+        />
+      }
+
+      <div [hidden]="!isQuizDone() && !showResults()" class="flex flex-col items-center w-full">
+        <app-split-card [backgroundImage]="quizBackground()"
+                        [icon]="quizIcon()"
+        >
+          <div class="flex flex-col h-full pt-4 gap-4 text-black">
+            <p class="text-base md:text-lg text-green-900 font-bold">
+              {{ infoQuiz().title }}
+            </p>
+            <p class="text-sm md:text-base">{{ infoQuiz().infoScore }}</p>
+            <p class="text-sm md:text-base">{{ infoQuiz().outcome }}</p>
+          </div>
+        </app-split-card>
+        <div class="flex justify-center items-center gap-8 pt-8 [@media(max-width:783px)]:flex-col">
+          <a [href]="quizDoneButtons().left.redirectLink" target="_blank" rel="noopener">
+            <p-button
+                      [label]="quizDoneButtons().left.label" [icon]="quizDoneButtons().left.icon"
+                      [severity]="'secondary'" [outlined]="true"
+                      styleClass="!text-sm md:!text-base !text-white hover:!text-black !border-2 !border-white hover:!border-black
+                      hover:!bg-white/50 active:!bg-white/50 !transition-colors !duration-500"
+            />
+          </a>
+          <a [href]="quizDoneButtons().right.redirectLink" target="_blank" rel="noopener">
+            <p-button [routerLink]="[quizDoneButtons().right.redirectLink]" target="_blank"
+                      [label]="quizDoneButtons().right.label" [icon]="quizDoneButtons().right.icon"
+                      [severity]="'secondary'" [outlined]="true"
+                      styleClass="!text-sm md:!text-base !text-black !bg-white/50 hover:!text-white !border-2 !border-black
+                    hover:!border-white hover:!bg-transparent active:!bg-transparent
+                    !transition-colors !duration-500"
+            />
+          </a>
         </div>
-      </app-split-card>
-      <div class="flex justify-center items-center gap-8 pt-8 [@media(max-width:783px)]:flex-col">
-        <a [href]="quizDoneButtons().left.redirectLink" target="_blank" rel="noopener">
-          <p-button
-                    [label]="quizDoneButtons().left.label" [icon]="quizDoneButtons().left.icon"
-                    [severity]="'secondary'" [outlined]="true"
-                    styleClass="!text-sm md:!text-base !text-white hover:!text-black !border-2 !border-white hover:!border-black
-                    hover:!bg-white/50 active:!bg-white/50 !transition-colors !duration-500"
-          />
-        </a>
-        <a [href]="quizDoneButtons().right.redirectLink" target="_blank" rel="noopener">
-          <p-button [routerLink]="[quizDoneButtons().right.redirectLink]" target="_blank"
-                    [label]="quizDoneButtons().right.label" [icon]="quizDoneButtons().right.icon"
-                    [severity]="'secondary'" [outlined]="true"
-                    styleClass="!text-sm md:!text-base !text-black !bg-white/50 hover:!text-white !border-2 !border-black
-                  hover:!border-white hover:!bg-transparent active:!bg-transparent
-                  !transition-colors !duration-500"
-          />
-        </a>
       </div>
     </div>
-  </div>
-</section>
+  </section>

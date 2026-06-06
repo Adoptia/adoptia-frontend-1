@@ -4,7 +4,9 @@ import {AuthService} from '../../services/auth-service';
 import {FormsModule} from '@angular/forms';
 import {UserProfile} from '../user-profile/user-profile';
 import {Button} from 'primeng/button';
-import {TrainingPaths} from '../training-paths/training-paths';
+import {TrainingPathsLauncher} from '../training-paths-launcher/training-paths-launcher';
+import {UserTrainingPaths} from '../user-training-paths/user-training-paths';
+import {QuickQuizService} from '../../services/quick-quiz-service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +14,8 @@ import {TrainingPaths} from '../training-paths/training-paths';
     FormsModule,
     UserProfile,
     Button,
-    TrainingPaths
+    TrainingPathsLauncher,
+    UserTrainingPaths
   ],
   templateUrl: './dashboard.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -22,6 +25,8 @@ export class Dashboard {
 
   private authService = inject(AuthService)
   private navBarService = inject(NavBarService)
+  private quickQuizService = inject(QuickQuizService)
+
   protected activeTab = signal<TabEnum>('parcours');
 
   protected user = this.authService.currentUser;

@@ -2,8 +2,15 @@
   class="relative flex flex-col items-center justify-between
   h-full w-full min-h-40 min-w-80 max-h-120 max-w-200 p-8
   rounded-3xl overflow-hidden">
-  <div class="bg-white/10 backdrop-blur-xl w-full h-full absolute inset-0 pointer-events-none">
-  </div>
+  <div class="bg-white/10 backdrop-blur-xl w-full h-full absolute inset-0 pointer-events-none"></div>
+  @if (timeLeft() !== null) {
+    <div class="absolute top-0 left-0 h-1.5 z-20 rounded-t-3xl transition-all duration-1000 ease-linear"
+         [style.width]="(timeLeft()! / data().timeLimitSeconds!) * 100 + '%'"
+         [class.bg-green-600]="timeLeft()! > data().timeLimitSeconds! * 0.5"
+         [class.bg-orange-400]="timeLeft()! <= data().timeLimitSeconds! * 0.5 && timeLeft()! > data().timeLimitSeconds! * 0.2"
+         [class.bg-red-500]="timeLeft()! <= data().timeLimitSeconds! * 0.2"
+    ></div>
+  }
   <div class="relative z-10 text-white text-sm lg:text-lg w-full pt-4 pb-8  text-center font-bold">
     {{ data().question }}
   </div>
@@ -23,7 +30,7 @@
          !isCardSubmitted() && !answerIsSelected(a)
          ? 'hover:bg-black/60' : '',
          isCardSubmitted() && answerIsSelected(a) && a.isCorrect
-         ? 'bg-green-800 text-shadow-white' : '',
+         ? 'bg-green-600 text-shadow-white' : '',
          (isCardSubmitted() && answerIsSelected(a) && !a.isCorrect)
          ? 'bg-red-400 text-shadow-white' : '',
          'mb-4 text-center text-sm lg:text-base rounded-4xl px-4 py-2 transition-colors duration-300'
@@ -36,9 +43,9 @@
     <p-button [disabled]="emptyAnswer() || isCardSubmitted()"
               (click)="submitCard()" [size]="'large'" [label]="'Valider'"
               [rounded]="true" [severity]="'contrast'" [raised]="true"
-              styleClass="!text-white !text-xs lg:!text-base !px-8 !py-3 !bg-black !transition-all !duration-500
-              hover:!text-black hover:!bg-white active:!bg-white active:!text-black
-              disabled:hover:!bg-black disabled:hover:!text-white !border-none active:!scale-90"
+              styleClass="!text-black !text-xs lg:!text-base !px-8 !py-3 !bg-white !transition-all !duration-500
+              hover:!text-white hover:!bg-black active:!bg-black active:!text-white
+              disabled:!bg-black disabled:!text-white !border-none active:!scale-90"
     />
   </div>
 </section>

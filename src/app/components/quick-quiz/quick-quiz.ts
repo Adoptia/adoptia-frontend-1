@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal, ChangeDetectionStrategy, effect} from '@angular/core';
+import {Component, computed, inject, signal, ChangeDetectionStrategy, effect, OnDestroy} from '@angular/core';
 import {Button} from 'primeng/button';
 import {Select} from 'primeng/select';
 import {FormsModule} from '@angular/forms';
@@ -22,71 +22,68 @@ import {Router, RouterLink} from '@angular/router';
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './quick-quiz.css',
 })
-export class QuickQuiz {
+export class QuickQuiz implements OnDestroy {
 
   private router = inject(Router)
   private navBarService = inject(NavBarService);
   private quickQuizService = inject(QuickQuizService);
 
-  protected quizData = this.quickQuizService.quizData;
+  private _quizPassedBackground = 'images/qq-passed-bg.jpg';
+  private  _quizFailedBackground = 'images/qq-failed-bg.jpg';
+
+  private _quizPassedIcon = 'pi pi-check-circle';
+  private _quizFailedIcon = 'pi pi-times-circle';
 
   protected headerBackground = 'images/qq-header-bg.jpg';
 
-  protected score = signal(100)
+
+  protected quizData = this.quickQuizService.quizData;
+
+  hasSavedState = computed(() =>
+    this.quickQuizService.hasSavedState(this.selectedSpecies(), this.selectedBreed())
+  )
+
+  protected score = this.quickQuizService.score;
+  protected isQuizDone = signal(false)
   protected isQuizPassed = computed(() => this.score() >= 80);
 
   protected quizDoneButtons = computed(() =>
     this.isQuizPassed() ? quizPassedButtons : quizFailedButtons
   );
 
-  private _quizPassedBackground = 'images/qq-passed-bg.jpg';
-  private  _quizFailedBackground = 'images/qq-failed-bg.jpg';
-
   protected quizBackground = computed(() =>
     this.isQuizPassed() ? this._quizPassedBackground : this._quizFailedBackground
   );
-
-  private _quizPassedIcon = 'pi pi-check-circle';
-  private _quizFailedIcon = 'pi pi-times-circle';
 
   protected quizIcon = computed(() =>
     this.isQuizPassed() ? this._quizPassedIcon : this._quizFailedIcon
   );
 
-  infoQuiz = signal<InfoQuiz>({ ...infoQuizFailed, infoScore: '' });
+  protected infoQuiz = signal<InfoQuiz>({ ...infoQuizFailed, infoScore: '' });
 
-  constructor() {
-  }
+  protected species: string[] = animals.map(a => a.species)
 
-  species: string[] = animals.map(a => a.species)
-
-  breeds = computed(() =>
+  protected breeds = computed(() =>
     animals.find(a => a.species === this.selectedSpecies())?.breeds ?? []
   );
 
   selectedSpecies = signal<string>(animals[0].species)
-
-  validChoice = computed(() =>
-    !(this.selectedSpecies() === null || !this.species.includes(this.selectedSpecies()))
-  )
-
   selectedBreed = signal<string | undefined>(undefined)
-
   choiceSubmitted = signal(false)
 
+  protected showResults = signal(false)
+
   startQuiz() {
+    this.quickQuizService.initQuiz(this.selectedSpecies(), this.selectedBreed())
     this.choiceSubmitted.set(true)
   }
 
-  isQuizDone = signal(false)
-
-  updateScore(isCorrect: boolean) {
-    if (!isCorrect)
-      this.score.update(s => s - 10);
-
-    if (this.score() < 0)
-      this.score.set(0);
-
+  resumeQuiz() {
+    const state = this.quickQuizService.resumeQuiz(this.selectedSpecies());
+    if (!state) return;
+    this.selectedSpecies.set(state.species);
+    this.selectedBreed.set(state.breed);
+    this.choiceSubmitted.set(true);
   }
 
   submitSelectedAnswers(selectedAnswers: Answer[]) {
@@ -98,19 +95,47 @@ export class QuickQuiz {
       .every(a => correctAnswers.includes(a))
       && selectedAnswers.length === correctAnswers.length;
 
-    this.updateScore(isCorrect)
+    this.quickQuizService.updateScore(isCorrect)
 
-    const hasNext = this.quickQuizService.getNextQuiz()
-
-    if (!hasNext) {
-      this.isQuizDone.set(true)
-
-      const infoQuizScore = `Votre score est de ${this.score()}%`
-
-      this.isQuizPassed() ? this.infoQuiz.set({ ...infoQuizPassed, infoScore: infoQuizScore })
-        : this.infoQuiz.set({ ...infoQuizFailed, infoScore: infoQuizScore })
+    if ( !this.quickQuizService.hasNext() ) {
+      const feedbackTime = 3000;
+      this.quickQuizService.endQuiz(this.selectedSpecies())
+      this.quickQuizService.persistResultView(
+        this.score(), this.selectedSpecies(), this.selectedBreed()
+      );
+      setTimeout(() => this.isQuizDone.set(true), feedbackTime);
+      this.getResults()
+      return
     }
 
+    this.quickQuizService.getNextQuiz(
+      this.selectedSpecies(), this.selectedBreed()
+    );
+
+  }
+
+  getResults() {
+    const infoQuizScore = `Votre score est de ${this.score()}%`;
+    this.isQuizPassed()
+      ? this.infoQuiz.set({ ...infoQuizPassed, infoScore: infoQuizScore })
+      : this.infoQuiz.set({ ...infoQuizFailed, infoScore: infoQuizScore });
+  }
+
+  constructor() {
+    const saved
+      = this.quickQuizService.restoreResultView();
+
+    if (saved) {
+      this.selectedSpecies.set(saved.species)
+      this.selectedBreed.set(saved.breed);
+
+      this.showResults.set(true);
+      this.getResults();
+    }
+  }
+
+  ngOnDestroy() {
+    this.quickQuizService.clearResultView();
   }
 
 }
