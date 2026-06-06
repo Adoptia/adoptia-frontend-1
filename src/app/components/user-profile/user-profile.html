@@ -19,22 +19,22 @@
     [&_label]:text-sm [&_p]:text-sm [&_p]:font-bold">
       <div>
         <label>Prénom et nom de famille</label>
-        <p>{{ user()!.base.firstName }} {{ user()!.base.lastName }}</p>
+        <p>{{ user()!.basics.firstName }} {{ user()!.basics.lastName }}</p>
       </div>
 
       <div>
         <label>Date de naissance</label>
-        <p>{{ user()!.base.birthDate ?? 'Information non fournie' }}</p>
+        <p>{{ user()!.basics.birthDate ?? 'Information non fournie' }}</p>
       </div>
 
       <div>
         <label>Adresse e-mail</label>
-        <p>{{ user()!.base.email }}</p>
+        <p>{{ user()!.basics.email }}</p>
       </div>
 
       <div>
         <label>Téléphone</label>
-        <p>{{ user()!.base.phoneNumber }}</p>
+        <p>{{ user()!.basics.phoneNumber }}</p>
       </div>
     </div>
 
@@ -105,7 +105,7 @@
         <label>Prénom et nom de famille</label>
         <input type="text" class="border border-gray-300 px-2 py-1 w-full"
                placeholder="Entrez votre prénom et nom"
-               [ngModel]="user()!.base.firstName + ' ' + user()!.base.lastName"
+               [ngModel]="user()!.basics.firstName + ' ' + user()!.basics.lastName"
         >
       </div>
 
@@ -120,16 +120,16 @@
         <label>Adresse e-mail</label>
         <input [hidden]="true" type="email" class="border border-gray-300 px-2 py-1 w-full"
                placeholder="Entrez votre adresse e-mail"
-               [ngModel]="user()!.base.email"
+               [ngModel]="user()!.basics.email"
         >
-        <p>{{ user()!.base.email }}</p>
+        <p>{{ user()!.basics.email }}</p>
       </div>
 
       <div>
         <label>Téléphone</label>
         <input type="tel" class="border border-gray-300 px-2 py-1 w-full"
                placeholder="Entrez votre numéro de téléphone"
-               [ngModel]="user()!.base.phoneNumber"
+               [ngModel]="user()!.basics.phoneNumber"
         >
       </div>
     </div>

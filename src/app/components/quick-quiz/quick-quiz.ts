@@ -4,9 +4,10 @@ import {Select} from 'primeng/select';
 import {FormsModule} from '@angular/forms';
 import {QuickQuizCard} from '../shared/quick-quiz-card/quick-quiz-card';
 import {NavBarService} from '../../services/nav-bar-service';
-import {Answer, QuickQuizService} from '../../services/quick-quiz-service';
+import {QuickQuizService} from '../../services/quick-quiz-service';
 import {SplitCard} from '../shared/split-card/split-card';
 import {Router, RouterLink} from '@angular/router';
+import {Answer} from '../../webservices/contract';
 
 @Component({
   selector: 'app-quick-quiz',
@@ -37,7 +38,7 @@ export class QuickQuiz implements OnDestroy {
   protected headerBackground = 'images/qq-header-bg.jpg';
 
 
-  protected quizData = this.quickQuizService.quizData;
+  protected quizCardData = this.quickQuizService.quizCardData;
 
   hasSavedState = computed(() =>
     this.quickQuizService.hasSavedState(this.selectedSpecies(), this.selectedBreed())
@@ -88,7 +89,7 @@ export class QuickQuiz implements OnDestroy {
 
   submitSelectedAnswers(selectedAnswers: Answer[]) {
 
-    const correctAnswers = this.quizData().answers
+    const correctAnswers = this.quizCardData().answers
       .filter(a => a.isCorrect);
 
     const isCorrect = selectedAnswers

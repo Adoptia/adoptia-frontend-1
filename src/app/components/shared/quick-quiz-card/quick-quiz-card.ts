@@ -1,7 +1,7 @@
 import {Component, computed, input, output, signal, ChangeDetectionStrategy, effect, OnDestroy} from '@angular/core';
-import {Answer, QuickQuizData} from '../../../services/quick-quiz-service';
 import {Button} from 'primeng/button';
 import {NgClass} from '@angular/common';
+import {Answer, QuizCardData} from '../../../webservices/contract';
 
 @Component({
   selector: 'app-quick-quiz-card',
@@ -18,7 +18,7 @@ export class QuickQuizCard implements OnDestroy {
   private _feedbackTime = 3000
   private _submitTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  data = input.required<QuickQuizData>()
+  data = input.required<QuizCardData>()
   cardSubmitted = output<Answer[]>()
   feedbackDone = output<void>()
 

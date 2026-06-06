@@ -5,7 +5,7 @@ import {BaseCard} from '../shared/base-card/base-card';
 import {Router, RouterLink} from '@angular/router';
 import {NavBarService} from '../../services/nav-bar-service';
 import {Location} from '@angular/common';
-import {TrainingPathsLauncher} from '../training-paths-launcher/training-paths-launcher';
+import {TrainingsLauncher} from '../trainings-launcher/trainings-launcher';
 import {AuthService} from '../../services/auth-service';
 
 @Component({
@@ -14,7 +14,7 @@ import {AuthService} from '../../services/auth-service';
     Button,
     BaseCard,
     RouterLink,
-    TrainingPathsLauncher,
+    TrainingsLauncher,
   ],
   templateUrl: './home.html',
   changeDetection: ChangeDetectionStrategy.Eager,

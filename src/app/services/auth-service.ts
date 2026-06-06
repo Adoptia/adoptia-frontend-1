@@ -1,6 +1,6 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
-import {LoginData, RegistrationData} from '../components/auth/auth';
 import {Router} from '@angular/router';
+import {Login, Register, User, UserBasics, UserTraining} from '../webservices/contract';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,8 @@ export class AuthService {
 
   private router = inject(Router)
 
-  private _currentUser = signal<UserData | undefined>(undefined);
+  private _currentUser = signal<User | undefined>(undefined);
+  currentUser = this._currentUser.asReadonly()
 
   duplicateUserError = signal<boolean>(false);
 
@@ -33,21 +34,19 @@ export class AuthService {
 
   isAuthenticated = computed(() => this._currentUser() !== undefined)
 
-  currentUser = this._currentUser.asReadonly()
-
-  users = signal<RegistrationData[]>([])
+  users = signal<User[]>([])
 
   logout() {
     this._currentUser.set(undefined);
     localStorage.removeItem('currentUser');
   }
 
-  login(userData: LoginData) {
-
+  login(userData: Login) {
     this.fetchUsersFromLocalStorage()
 
     const user = this.users().find(
-      user => user.email === userData.email && user.password === userData.password
+      user => user.basics.email === userData.email
+        && user.basics.password === userData.password
     );
 
     if (!user) {
@@ -56,13 +55,8 @@ export class AuthService {
       return
     }
 
-    const firstName = user.name.split(' ')[0];
-    const lastName = user.name.split(' ')[1];
 
-    this._currentUser.update( u => ({
-      ...u,
-      base: { firstName: firstName, lastName: lastName, email: user.email, phoneNumber: user.phoneNumber }
-    }))
+    this._currentUser.update( u => user)
 
     this.setCurrentUserInLocalStorage()
 
@@ -70,22 +64,30 @@ export class AuthService {
 
   }
 
-  register(user: RegistrationData) {
-    if (this.checkDuplicateUser(user)) {
+  register(userData: Register) {
+    if (this.checkExistingUser(userData)) {
       this.duplicateUserError.set(true)
       this.showDuplicateUserError()
       return;
     }
 
+    const { name, ...rest } = userData
+
+    const firstName = userData.name.split(' ')[0];
+    const lastName = userData.name.split(' ')[1];
+
+    const basics: UserBasics = { ...rest, firstName, lastName }
+    const user: User = { id: crypto.randomUUID(), basics, trainings: [] }
+
     this.users.update(users => [...users, user])
     this.saveUsersToLocalStorage()
-    this.login(user)
+    this.login(userData)
   }
 
-  checkDuplicateUser(user: RegistrationData): boolean {
+  checkExistingUser(user: Register): boolean {
     const email = user.email;
     this.fetchUsersFromLocalStorage()
-    return this.users().some(u => u.email === email);
+    return this.users().some(u => u.basics.email === email);
   }
 
   saveUsersToLocalStorage() {
@@ -100,13 +102,13 @@ export class AuthService {
     const value = localStorage.getItem('currentUser')
 
     if (value) {
-      const user: UserData = JSON.parse(value);
+      const user: User = JSON.parse(value);
       this._currentUser.set(user);
     }
   }
 
   fetchUsersFromLocalStorage() {
-    let users: RegistrationData[] = []
+    let users: User[] = []
     const value = localStorage.getItem('knownUsers')
 
     if (value) {
@@ -115,33 +117,32 @@ export class AuthService {
     }
   }
 
-}
-
-export interface UserData {
-  base: UserBasicData,
-  context?: UserContextData
-}
-
-export interface UserBasicData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  birthDate?: string;
-}
-
-export interface UserContextData {
-  residence: {
-    type: 'maison'
-      | 'appartement',
-    address: string,
-    surface: number,
-    garden: boolean,
-    balcony: boolean
-  },
-  household: {
-    hasPartner: boolean,
-    liveTogether: boolean,
-    childrenCount: number
+  createUserTraining(t: UserTraining) {
+    this._currentUser.update(user => ({ ...user!, trainings: [ ...user!.trainings, t ] }))
+    this.syncCurrentUserInUsers()
+    this.setCurrentUserInLocalStorage()
+    this.saveUsersToLocalStorage()
   }
+
+  updateUserTraining(t: UserTraining) {
+    this._currentUser.update(user => ({
+      ...user!, trainings: user!.trainings.map(existing =>
+        existing.type === t.type && existing.species === t.species && existing.breed === t.breed
+          ? t
+          : existing
+      )
+    }))
+    this.syncCurrentUserInUsers();
+    this.setCurrentUserInLocalStorage();
+    this.saveUsersToLocalStorage();
+  }
+
+  private syncCurrentUserInUsers() {
+    this.users.update(users =>
+      users.map(u => u.id === this._currentUser()!.id ? this._currentUser()! : u)
+    );
+  }
+
+
+
 }

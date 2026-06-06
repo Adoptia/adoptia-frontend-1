@@ -3,14 +3,14 @@ import {SplitCard} from "../shared/split-card/split-card";
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'training-paths-launcher',
+  selector: 'trainings-launcher',
     imports: [
         SplitCard
     ],
-  templateUrl: './training-paths-launcher.html',
-  styleUrl: './training-paths-launcher.css',
+  templateUrl: './trainings-launcher.html',
+  styleUrl: './trainings-launcher.css',
 })
-export class TrainingPathsLauncher {
+export class TrainingsLauncher {
 
   private router = inject(Router)
 

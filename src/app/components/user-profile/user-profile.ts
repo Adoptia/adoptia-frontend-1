@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, input, signal} from '@angular/core';
 import {RadioButton} from 'primeng/radiobutton';
 import {FormsModule} from '@angular/forms';
-import {UserData} from '../../services/auth-service';
 import {Button} from 'primeng/button';
+import {User} from '../../webservices/contract';
 
 @Component({
   selector: 'app-user-profile',
@@ -17,7 +17,7 @@ import {Button} from 'primeng/button';
 })
 export class UserProfile {
 
-  user = input.required<UserData | undefined>()
+  user = input.required<User | undefined>()
 
   protected avecBalcon = false;
   protected avecJardin = false;

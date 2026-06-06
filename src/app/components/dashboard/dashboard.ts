@@ -4,17 +4,17 @@ import {AuthService} from '../../services/auth-service';
 import {FormsModule} from '@angular/forms';
 import {UserProfile} from '../user-profile/user-profile';
 import {Button} from 'primeng/button';
-import {TrainingPathsLauncher} from '../training-paths-launcher/training-paths-launcher';
-import {UserTrainingPaths} from '../user-training-paths/user-training-paths';
+import {TrainingsLauncher} from '../trainings-launcher/trainings-launcher';
+import {UserTrainingPaths} from '../user-trainings/user-training-paths';
 import {QuickQuizService} from '../../services/quick-quiz-service';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'dashboard',
   imports: [
     FormsModule,
     UserProfile,
     Button,
-    TrainingPathsLauncher,
+    TrainingsLauncher,
     UserTrainingPaths
   ],
   templateUrl: './dashboard.html',
