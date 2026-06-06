@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {UserProfile} from '../user-profile/user-profile';
 import {Button} from 'primeng/button';
 import {TrainingsLauncher} from '../trainings-launcher/trainings-launcher';
-import {UserTrainingPaths} from '../user-trainings/user-training-paths';
+import {UserTrainings} from '../user-trainings/user-trainings';
 import {QuickQuizService} from '../../services/quick-quiz-service';
 
 @Component({
@@ -15,7 +15,7 @@ import {QuickQuizService} from '../../services/quick-quiz-service';
     UserProfile,
     Button,
     TrainingsLauncher,
-    UserTrainingPaths
+    UserTrainings
   ],
   templateUrl: './dashboard.html',
   changeDetection: ChangeDetectionStrategy.Eager,

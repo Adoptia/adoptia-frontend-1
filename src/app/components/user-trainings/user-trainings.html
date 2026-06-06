@@ -1,0 +1,75 @@
+<div class="flex justify-center px-6 md:px-24 h-full">
+  <p-accordion class="w-full"
+  >
+    <p-accordion-panel value="learn">
+      <p-accordion-header>
+        <i class="pi pi-book mr-2"></i>
+        Formation ({{ learnings().length }})
+      </p-accordion-header>
+      <p-accordion-content>
+        @if (learnings().length === 0) {
+          <p class="text-sm text-center py-4">Aucune formation en cours</p>
+        } @else {
+          <p-carousel [value]="learnings()" [numVisible]="1" [numScroll]="1">
+            <ng-template #item let-learn>
+              <div class="flex flex-col gap-2 p-4 border rounded-xl">
+                <p class="font-bold">{{ learn.species }} {{ learn.breed ? '— ' + learn.breed : '' }}</p>
+                <p class="text-sm">Progression : {{ learn.progression }}%</p>
+              </div>
+            </ng-template>
+          </p-carousel>
+        }
+      </p-accordion-content>
+    </p-accordion-panel>
+
+    <p-accordion-panel value="quick-quiz">
+      <p-accordion-header>
+        <i class="pi pi-bolt mr-2"></i>
+        Quiz rapide ({{ quickQuizzes().length }})
+      </p-accordion-header>
+      <p-accordion-content>
+        @if (quickQuizzes().length === 0) {
+          <p class="text-sm text-center py-4">Aucun quiz rapide en cours</p>
+        } @else {
+          <p-carousel [value]="quickQuizzes()" [numVisible]="1" [numScroll]="1"
+                      [responsiveOptions]="carouselResponsiveOptions"
+          >
+            <ng-template #item let-quiz>
+              <div class="flex flex-col gap-2 p-4 border rounded-xl
+                 hover:bg-gray-800 transition-all duration-500 my-4 mx-auto max-w-sm"
+              >
+                <p class="font-bold">{{ quiz.species }} {{ quiz.breed ? '— ' + quiz.breed : '' }}</p>
+                <p class="text-sm">Score : {{ quiz.score }}%</p>
+                <p class="text-sm self-end flex items-center gap-2">
+                  <i class="pi pi-spinner-dotted text-center"></i>
+                  <label>{{ !quiz.isDone ? 'En cours' : '' }}</label>
+                </p>
+              </div>
+            </ng-template>
+          </p-carousel>
+        }
+      </p-accordion-content>
+    </p-accordion-panel>
+
+    <p-accordion-panel value="choice-assist">
+      <p-accordion-header>
+        <i class="pi pi-question-circle mr-2"></i>
+        Aide au choix ({{ choiceAssists().length }})
+      </p-accordion-header>
+      <p-accordion-content>
+        @if (choiceAssists().length === 0) {
+          <p class="text-sm text-center py-4">Aucune aide au choix en cours</p>
+        } @else {
+          <p-carousel [value]="choiceAssists()" [numVisible]="1" [numScroll]="1">
+            <ng-template #item let-assist>
+              <div class="flex flex-col gap-2 p-4 border rounded-xl">
+                <p class="font-bold">{{ assist.species }} {{ assist.breed ? '— ' + assist.breed : '' }}</p>
+              </div>
+            </ng-template>
+          </p-carousel>
+        }
+      </p-accordion-content>
+    </p-accordion-panel>
+
+  </p-accordion>
+</div>

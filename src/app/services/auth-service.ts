@@ -1,6 +1,7 @@
 import {computed, inject, Injectable, signal, WritableSignal} from '@angular/core';
 import {Router} from '@angular/router';
 import {Login, Register, User, UserBasics, UserTraining} from '../webservices/contract';
+import {generateId} from '../utils/uuid.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -61,21 +62,21 @@ export class AuthService {
       return;
     }
 
-    const { name, ...rest } = userData;
+    const { name, ...rest } = userData
     const basics: UserBasics = { ...rest, firstName: name.split(' ')[0], lastName: name.split(' ')[1] };
-    const user: User = { id: crypto.randomUUID(), basics, trainings: [] };
+    const user: User = { id: generateId(), basics, trainings: [] }
 
-    this.users.update(users => [...users, user]);
-    localStorage.setItem('knownUsers', JSON.stringify(this.users()));
+    this.users.update(users => [...users, user])
+    localStorage.setItem('knownUsers', JSON.stringify(this.users()))
 
-    this.login({ email: userData.email, password: userData.password });
+    this.login({ email: userData.email, password: userData.password })
 
   }
 
   checkExistingUser(user: Register): boolean {
-    const email = user.email;
+    const email = user.email
     this.fetchUsersFromLocalStorage()
-    return this.users().some(u => u.basics.email === email);
+    return this.users().some(u => u.basics.email === email)
   }
 
   private persistUser() {
@@ -109,7 +110,7 @@ export class AuthService {
   createUserTraining(t: UserTraining) {
     this._currentUser.update(user => {
       const trainings = t.type === 'quick-quiz'
-        ? [...user!.trainings.filter(existing => existing.type !== 'quick-quiz' || existing.species !== t.species), t]
+        ? [...user!.trainings.filter(training => training.type !== 'quick-quiz' || training.species !== t.species), t]
         : [...user!.trainings, t];
       return { ...user!, trainings };
     });
@@ -119,13 +120,20 @@ export class AuthService {
 
   updateUserTraining(t: UserTraining) {
     this._currentUser.update(user => ({
-      ...user!, trainings: user!.trainings.map(existing =>
-        existing.type === t.type && existing.species === t.species && existing.breed === t.breed
-          ? t
-          : existing
+      ...user!, trainings: user!.trainings.map(training =>
+        training.id === t.id ? t : training
       )
     }))
+
     this.persistUser();
+  }
+
+  deleteUserTraining(t: UserTraining) {
+    this._currentUser.update(user =>({
+      ...user!, trainings: user!.trainings.filter(training => training.id !== t.id)
+    }))
+
+    this.persistUser()
   }
 
 

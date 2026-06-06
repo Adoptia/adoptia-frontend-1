@@ -4,7 +4,7 @@ import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'prim
 import {Carousel} from 'primeng/carousel';
 
 @Component({
-  selector: 'user-training-paths',
+  selector: 'user-trainings',
   imports: [
     Accordion,
     AccordionPanel,
@@ -12,10 +12,10 @@ import {Carousel} from 'primeng/carousel';
     AccordionContent,
     Carousel
   ],
-  templateUrl: './user-training-paths.html',
-  styleUrl: './user-training-paths.css',
+  templateUrl: './user-trainings.html',
+  styleUrl: './user-trainings.css',
 })
-export class UserTrainingPaths {
+export class UserTrainings {
 
   trainings = input<UserTraining[]>([])
 

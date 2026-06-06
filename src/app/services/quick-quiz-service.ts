@@ -2,6 +2,7 @@ import {computed, inject, Injectable, signal} from '@angular/core';
 import {QuizCardData, UserQuickQuizData} from '../webservices/contract';
 import {quickQuizDataMock} from '../webservices/quickQuizDataMock';
 import {AuthService} from './auth-service';
+import {generateId} from '../utils/uuid.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,8 @@ export class QuickQuizService {
   private _score = signal(0)
   score = this._score.asReadonly()
 
+  private _quizId = signal<string>('')
+
   private _currentIndex = signal(0);
 
   private _isQuizDone = signal<boolean>(false);
@@ -27,11 +30,12 @@ export class QuickQuizService {
 
   private _seenCardsIds = signal<string[]>([])
   private _species = signal<string | undefined>(undefined)
-  private _breed = signal<string | undefined>(undefined)
+  private _breed = signal<string | null>(null)
 
   userQuiz = computed<UserQuickQuizData>(() => ({
+    id: this._quizId(),
     type: "quick-quiz",
-    isPassed: this._score() >= 80,
+    isDone: this._isQuizDone(),
     score: this._score(),
     seenCardsIds : this._seenCardsIds(),
     species: this._species() ?? "",
@@ -55,7 +59,7 @@ export class QuickQuizService {
     }))
   }
 
-  restoreResultView(): { species: string, breed: string | undefined } | null {
+  restoreResultView(): { species: string, breed: string | null } | null {
     const restore = sessionStorage.getItem(this._UI_KEY);
 
     if (restore) {
@@ -71,17 +75,18 @@ export class QuickQuizService {
     sessionStorage.removeItem(this._UI_KEY);
   }
 
-  initQuiz(species: string, breed: string | undefined) {
+  initQuiz(species: string, breed: string | null) {
     this.initScore()
     this._breed.set(breed)
     this._species.set(species)
     this._currentIndex.set(0);
     this._quizCardData.set(this._mock[0]);
     this._seenCardsIds.set([this._quizCardData().id])
+    this._quizId.set(generateId())
 
     this.authService.createUserTraining(this.userQuiz())
 
-    this.saveState(species, breed);
+    this.saveState();
   }
 
   resumeQuiz(species: string): QuizState | null {
@@ -89,7 +94,10 @@ export class QuickQuizService {
     if (!raw) return null;
     const state: QuizState = JSON.parse(raw);
 
+    this._quizId.set(state.quizId)
     this._currentIndex.set(state.currentIndex);
+    this._species.set(state.species)
+    this._breed.set(state.breed)
     this._score.set(state.score);
     this._quizCardData.set(this._mock[state.currentIndex]);
 
@@ -98,21 +106,33 @@ export class QuickQuizService {
 
   endQuiz() {
     this.persistResultView();
-    setTimeout(() => this._isQuizDone.set(true), this.feedbackTime);
-    this.authService.updateUserTraining(this.userQuiz())
-    this.clearState(this._species()!);
+
+    setTimeout(() => {
+      this._isQuizDone.set(true)
+      this.authService.deleteUserTraining(this.userQuiz())
+    }, this.feedbackTime);
+
+    if (this._score() >= 80) this.getCertificate()
+
+    this.clearState();
   }
 
-  saveState(species: string, breed: string | undefined) {
-    const state: QuizState = { species, breed, currentIndex: this._currentIndex(), score: this._score() };
-    sessionStorage.setItem(this.getStateKey(species), JSON.stringify(state));
+  getCertificate() {
+    console.log('Vous avez reçu un certificat')
   }
 
-  clearState(species: string) {
-    sessionStorage.removeItem(this.getStateKey(species));
+  saveState() {
+    const state: QuizState = { score: this._score(), species: this._species()!,
+      breed: this._breed(), currentIndex: this._currentIndex(), quizId: this._quizId()
+    }
+    sessionStorage.setItem(this.getStateKey(this._species()!), JSON.stringify(state));
   }
 
-  hasSavedState(species: string, breed: string | undefined): boolean {
+  clearState() {
+    sessionStorage.removeItem(this.getStateKey(this._species()!));
+  }
+
+  hasSavedState(species: string, breed: string | null): boolean {
     const savedState = sessionStorage.getItem(this.getStateKey(species));
     if (!savedState) return false;
     const state: QuizState = JSON.parse(savedState);
@@ -136,16 +156,16 @@ export class QuickQuizService {
         this.authService.updateUserTraining(this.userQuiz())
       }, this.feedbackTime);
 
-      this.saveState(this._species()!, this._breed());
-
+      this.saveState();
     }
   }
 
 }
 
 export type QuizState = {
+  quizId: string;
   currentIndex: number;
   score: number;
   species: string;
-  breed: string | undefined;
+  breed: string | null;
 }

@@ -14,7 +14,7 @@
         <p class="text-base sm:text-lg">Choisir une espèce</p>
         <p-select class="w-48 sm:w-56 text-sm sm:text-base" [options]="species" [(ngModel)]="selectedSpecies"
                   emptyMessage="Aucune espèce trouvée"
-                  (ngModelChange)="selectedBreed.set(undefined)"
+                  (ngModelChange)="selectedBreed.set(null)"
         />
       </div>
       <div class="race-selection flex flex-col items-center gap-2">

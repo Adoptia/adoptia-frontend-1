@@ -57,16 +57,18 @@ export interface UserLearnData {
 }
 
 export interface UserQuickQuizData {
+  id: string,
   type: 'quick-quiz'
   score: number
-  isPassed: boolean
+  isDone: boolean
   certificateId?: string
   species: string
-  breed?: string
+  breed: string | null
   seenCardsIds: string[]
 }
 
 export interface UserChoiceAssistData {
+  id: string
   type: 'choice-assist'
   species: string
   breed?: string

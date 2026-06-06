@@ -69,7 +69,7 @@ export class QuickQuiz implements OnDestroy {
   );
 
   selectedSpecies = signal<string>(animals[0].species)
-  selectedBreed = signal<string | undefined>(undefined)
+  selectedBreed = signal<string | null>(null)
   choiceSubmitted = signal(false)
 
   protected showResults = signal(false)
