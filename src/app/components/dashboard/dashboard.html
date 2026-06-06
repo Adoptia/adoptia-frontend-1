@@ -7,7 +7,7 @@
     <div id="startedTrainings"
          [hidden]="showTrainingPaths()"
     >
-      <user-training-paths/>
+      <user-training-paths [trainings]="user()?.trainings ?? []"/>
     </div>
 
     <div class="flex justify-center p-8">
@@ -51,7 +51,7 @@
 
 <footer class="bg-gray-800 flex fixed items-center justify-between text-sm py-4 px-safe-or-4 border-gray-300
      w-full bottom-0 z-10 sm:justify-center sm:gap-12 transition-all duration-500
-     xl:h-full xl:w-30 xl:hover:w-50 xl:flex-col xl:justify-center xl:p-0
+     xl:h-full xl:w-30 xl:hover:w-50 xl:flex-col xl:justify-center xl:p-0 text-white
      group xl:[&_p]:opacity-0 xl:[&_p]:group-hover:opacity-100 xl:[&_p]:transition-opacity xl:[&_p]:duration-500
      [&_div]:cursor-pointer [&_div]:hover:text-amber-500 [&_div]:transition-colors [&_div]:duration-500
      "

@@ -2,6 +2,7 @@ import {QuizCardData} from './contract';
 
 export const quickQuizDataMock: QuizCardData[] = [
   {
+    id: 'a1b2c3d4',
     multipleCorrectAnswers: false,
     timeLimitSeconds: 20,
     question: "Quelle est la durée de vie moyenne d'un chat domestique ?",
@@ -13,6 +14,7 @@ export const quickQuizDataMock: QuizCardData[] = [
     ]
   },
   {
+    id: 'e5f6g7h8',
     multipleCorrectAnswers: true,
     timeLimitSeconds: 30,
     question: "Quels éléments sont indispensables avant d'adopter un chien ?",
@@ -24,6 +26,7 @@ export const quickQuizDataMock: QuizCardData[] = [
     ]
   },
   {
+    id: 'i9j0k1l2',
     multipleCorrectAnswers: false,
     timeLimitSeconds: 20,
     question: "À quelle fréquence un chien adulte doit-il être promené minimum ?",
@@ -35,6 +38,7 @@ export const quickQuizDataMock: QuizCardData[] = [
     ]
   },
   {
+    id: 'm3n4o5p6',
     multipleCorrectAnswers: false,
     timeLimitSeconds: 20,
     question: "Quel document est obligatoire pour identifier votre animal en France ?",
@@ -46,6 +50,7 @@ export const quickQuizDataMock: QuizCardData[] = [
     ]
   },
   {
+    id: 'q7r8s9t0',
     multipleCorrectAnswers: true,
     timeLimitSeconds: 30,
     question: "Quelles sont les causes les plus fréquentes d'abandon animal ?",
@@ -57,6 +62,7 @@ export const quickQuizDataMock: QuizCardData[] = [
     ]
   },
   {
+    id: 'u1v2w3x4',
     multipleCorrectAnswers: false,
     timeLimitSeconds: 20,
     question: "À quel âge un chaton peut-il être séparé de sa mère ?",
@@ -68,6 +74,7 @@ export const quickQuizDataMock: QuizCardData[] = [
     ]
   },
   {
+    id: 'y5z6a7b8',
     multipleCorrectAnswers: false,
     timeLimitSeconds: 20,
     question: "Qu'est-ce que la stérilisation apporte à votre animal ?",
@@ -79,6 +86,7 @@ export const quickQuizDataMock: QuizCardData[] = [
     ]
   },
   {
+    id: 'c9d0e1f2',
     multipleCorrectAnswers: true,
     timeLimitSeconds: 30,
     question: "Quels soins réguliers sont nécessaires pour un lapin domestique ?",
@@ -90,6 +98,7 @@ export const quickQuizDataMock: QuizCardData[] = [
     ]
   },
   {
+    id: 'g3h4i5j6',
     multipleCorrectAnswers: false,
     timeLimitSeconds: 20,
     question: "Quelle est la meilleure façon d'éduquer un chien ?",
@@ -101,6 +110,7 @@ export const quickQuizDataMock: QuizCardData[] = [
     ]
   },
   {
+    id: 'k7l8m9n0',
     multipleCorrectAnswers: false,
     timeLimitSeconds: 20,
     question: "Combien coûte en moyenne la première année avec un chien (hors achat) ?",

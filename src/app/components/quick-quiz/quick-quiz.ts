@@ -45,7 +45,7 @@ export class QuickQuiz implements OnDestroy {
   )
 
   protected score = this.quickQuizService.score;
-  protected isQuizDone = signal(false)
+  protected isQuizDone = this.quickQuizService.isQuizDone
   protected isQuizPassed = computed(() => this.score() >= 80);
 
   protected quizDoneButtons = computed(() =>
@@ -99,24 +99,17 @@ export class QuickQuiz implements OnDestroy {
     this.quickQuizService.updateScore(isCorrect)
 
     if ( !this.quickQuizService.hasNext() ) {
-      const feedbackTime = 3000;
-      this.quickQuizService.endQuiz(this.selectedSpecies())
-      this.quickQuizService.persistResultView(
-        this.score(), this.selectedSpecies(), this.selectedBreed()
-      );
-      setTimeout(() => this.isQuizDone.set(true), feedbackTime);
+      this.quickQuizService.endQuiz()
       this.getResults()
       return
     }
 
-    this.quickQuizService.getNextQuiz(
-      this.selectedSpecies(), this.selectedBreed()
-    );
+    this.quickQuizService.getNextQuiz();
 
   }
 
   getResults() {
-    const infoQuizScore = `Votre score est de ${this.score()}%`;
+    const infoQuizScore = `Votre score est de ${ this.score() }%`;
     this.isQuizPassed()
       ? this.infoQuiz.set({ ...infoQuizPassed, infoScore: infoQuizScore })
       : this.infoQuiz.set({ ...infoQuizFailed, infoScore: infoQuizScore });

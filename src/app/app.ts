@@ -1,10 +1,8 @@
-import {Component, signal, ChangeDetectionStrategy, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {NavBar} from './components/nav-bar/nav-bar';
-import {Home} from './components/home/home';
 import {filter} from 'rxjs';
 import {AuthService} from './services/auth-service';
-import {ScrollService} from './services/scroll-service';
 
 @Component({
   selector: 'app-root',

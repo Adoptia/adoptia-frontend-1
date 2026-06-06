@@ -30,8 +30,8 @@ export class Auth {
 
   protected mode = signal<'login' | 'register'>('login')
 
-  protected badCredentialsError = this.authService.badCredentialsError
-  protected duplicateUserError = this.authService.duplicateUserError
+  protected loginError = this.authService.loginError
+  protected registerError = this.authService.registerError
 
   private loginData = signal<Login>(initialLoginData)
   protected loginForm = form(this.loginData, loginSchema)

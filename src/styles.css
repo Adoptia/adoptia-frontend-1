@@ -16,4 +16,13 @@ body {
 
 }
 
+user-training-paths {
+  --p-accordion-header-background : #1e2939;
+  --p-accordion-header-hover-background: #233245;
+  --p-accordion-header-active-background: #233245;
+  --p-accordion-header-active-hover-background: #233245;
+  --p-accordion-content-background: #1c222e;
+  --p-accordion-panel-border-width: 0;
+}
+
 

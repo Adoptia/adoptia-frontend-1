@@ -40,9 +40,9 @@
             </p>
           </div>
           <div class="h-4">
-            @if (badCredentialsError()) {
+            @if (loginError().status) {
               <p class="text-red-500 text-sm transition-opacity duration-500"
-              >Identifiants incorrects</p>
+              >{{ loginError().message }}</p>
             }
           </div>
 
@@ -133,9 +133,9 @@
           </div>
 
           <div class="h-4">
-            @if (duplicateUserError()) {
+            @if (registerError().status) {
               <p class="text-red-500 text-sm transition-opacity delay-100 duration-500"
-              >Un compte avec cette adresse email existe !</p>
+              >{{ registerError().message }}</p>
             }
           </div>
 

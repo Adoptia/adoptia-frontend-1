@@ -63,7 +63,7 @@ export interface UserQuickQuizData {
   certificateId?: string
   species: string
   breed?: string
-  seenCards: QuizCardData[]
+  seenCardsIds: string[]
 }
 
 export interface UserChoiceAssistData {
@@ -85,6 +85,7 @@ export interface LearnCardData {
 }
 
 export interface QuizCardData {
+  id: string
   question: string;
   answers: Answer[];
   multipleCorrectAnswers: boolean;

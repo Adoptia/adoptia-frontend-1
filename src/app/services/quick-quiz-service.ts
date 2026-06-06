@@ -12,22 +12,28 @@ export class QuickQuizService {
 
   private authService = inject(AuthService)
 
-  private _score = signal(0)
-  private _currentIndex = signal(0);
-  private _quizCardData = signal<QuizCardData>(this._mock[0])
+  private feedbackTime = 1500
 
+  private _score = signal(0)
   score = this._score.asReadonly()
+
+  private _currentIndex = signal(0);
+
+  private _isQuizDone = signal<boolean>(false);
+  isQuizDone = this._isQuizDone.asReadonly()
+
+  private _quizCardData = signal<QuizCardData>(this._mock[0])
+  quizCardData = this._quizCardData.asReadonly()
+
+  private _seenCardsIds = signal<string[]>([])
   private _species = signal<string | undefined>(undefined)
   private _breed = signal<string | undefined>(undefined)
 
-
-  quizCardData = this._quizCardData.asReadonly();
-
   userQuiz = computed<UserQuickQuizData>(() => ({
     type: "quick-quiz",
-    isPassed: false,
+    isPassed: this._score() >= 80,
     score: this._score(),
-    seenCards : [],
+    seenCardsIds : this._seenCardsIds(),
     species: this._species() ?? "",
     breed: this._breed()
   }))
@@ -43,13 +49,21 @@ export class QuickQuizService {
       this._score.update(s => s + 10);
   }
 
-  persistResultView(score: number, species: string, breed: string | undefined) {
-    sessionStorage.setItem(this._UI_KEY, JSON.stringify({ score, species, breed}))
+  persistResultView() {
+    sessionStorage.setItem(this._UI_KEY, JSON.stringify({
+      score: this._score(), species: this._species(), breed: this._breed()
+    }))
   }
 
-  restoreResultView(): { score: number, species: string, breed: string | undefined } | null {
+  restoreResultView(): { species: string, breed: string | undefined } | null {
     const restore = sessionStorage.getItem(this._UI_KEY);
-    if (restore) return JSON.parse(restore);
+
+    if (restore) {
+      const { score, ...rest } = JSON.parse(restore)
+      this._score.set(score);
+      return { ...rest }
+    }
+
     return null;
   }
 
@@ -63,6 +77,7 @@ export class QuickQuizService {
     this._species.set(species)
     this._currentIndex.set(0);
     this._quizCardData.set(this._mock[0]);
+    this._seenCardsIds.set([this._quizCardData().id])
 
     this.authService.createUserTraining(this.userQuiz())
 
@@ -81,8 +96,11 @@ export class QuickQuizService {
     return state;
   }
 
-  endQuiz(species: string) {
-    this.clearState(species);
+  endQuiz() {
+    this.persistResultView();
+    setTimeout(() => this._isQuizDone.set(true), this.feedbackTime);
+    this.authService.updateUserTraining(this.userQuiz())
+    this.clearState(this._species()!);
   }
 
   saveState(species: string, breed: string | undefined) {
@@ -107,14 +125,19 @@ export class QuickQuizService {
 
   hasNext = computed(() => this._currentIndex() + 1 < this._mock.length)
 
-  getNextQuiz(species: string, breed: string | undefined) {
+  getNextQuiz() {
     if (this.hasNext()) {
       const nextIndex = this._currentIndex() + 1;
       this._currentIndex.set(nextIndex);
-      setTimeout(() => this._quizCardData.set(this._mock[nextIndex]), 3000);
 
-      this.authService.updateUserTraining(this.userQuiz())
-      this.saveState(species, breed);
+      setTimeout(() => {
+        this._quizCardData.set(this._mock[nextIndex])
+        this._seenCardsIds.update(ids => [...ids, this._quizCardData().id])
+        this.authService.updateUserTraining(this.userQuiz())
+      }, this.feedbackTime);
+
+      this.saveState(this._species()!, this._breed());
+
     }
   }
 

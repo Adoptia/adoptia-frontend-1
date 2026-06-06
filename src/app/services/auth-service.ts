@@ -1,4 +1,4 @@
-import {computed, inject, Injectable, signal} from '@angular/core';
+import {computed, inject, Injectable, signal, WritableSignal} from '@angular/core';
 import {Router} from '@angular/router';
 import {Login, Register, User, UserBasics, UserTraining} from '../webservices/contract';
 
@@ -12,24 +12,11 @@ export class AuthService {
   private _currentUser = signal<User | undefined>(undefined);
   currentUser = this._currentUser.asReadonly()
 
-  duplicateUserError = signal<boolean>(false);
+  registerError = signal<LoginOrRegisterError>({ status: false })
+  loginError = signal<LoginOrRegisterError>({ status: false })
 
-  showDuplicateUserError() {
-    if (this.duplicateUserError()) {
-      setTimeout(() => {
-        this.duplicateUserError.set(false)
-      }, 3000)
-    }
-  }
-
-  badCredentialsError = signal(false)
-
-  showBadCredentialsError() {
-    if (this.badCredentialsError()) {
-      setTimeout(() => {
-        this.badCredentialsError.set(false)
-      }, 3000)
-    }
+  private showErrorFor(error: WritableSignal<LoginOrRegisterError>) {
+    setTimeout(() => error.set({ status: false }), 3000)
   }
 
   isAuthenticated = computed(() => this._currentUser() !== undefined)
@@ -50,38 +37,39 @@ export class AuthService {
     );
 
     if (!user) {
-      this.badCredentialsError.set(true)
-      this.showBadCredentialsError()
+      this.loginError.set({
+        status: true,
+        message: 'Identifiants incorrects',
+      })
+      this.showErrorFor(this.loginError)
       return
     }
 
-
     this._currentUser.update( u => user)
-
-    this.setCurrentUserInLocalStorage()
-
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUser()))
     this.router.navigate(['/dashboard'])
 
   }
 
   register(userData: Register) {
     if (this.checkExistingUser(userData)) {
-      this.duplicateUserError.set(true)
-      this.showDuplicateUserError()
+      this.registerError.set({
+        status: true,
+        message: 'Un compte avec cette adresse email existe'
+      });
+      this.showErrorFor(this.registerError)
       return;
     }
 
-    const { name, ...rest } = userData
+    const { name, ...rest } = userData;
+    const basics: UserBasics = { ...rest, firstName: name.split(' ')[0], lastName: name.split(' ')[1] };
+    const user: User = { id: crypto.randomUUID(), basics, trainings: [] };
 
-    const firstName = userData.name.split(' ')[0];
-    const lastName = userData.name.split(' ')[1];
+    this.users.update(users => [...users, user]);
+    localStorage.setItem('knownUsers', JSON.stringify(this.users()));
 
-    const basics: UserBasics = { ...rest, firstName, lastName }
-    const user: User = { id: crypto.randomUUID(), basics, trainings: [] }
+    this.login({ email: userData.email, password: userData.password });
 
-    this.users.update(users => [...users, user])
-    this.saveUsersToLocalStorage()
-    this.login(userData)
   }
 
   checkExistingUser(user: Register): boolean {
@@ -90,12 +78,13 @@ export class AuthService {
     return this.users().some(u => u.basics.email === email);
   }
 
-  saveUsersToLocalStorage() {
-    localStorage.setItem('knownUsers', JSON.stringify(this.users()))
-  }
-
-  setCurrentUserInLocalStorage() {
-    localStorage.setItem('currentUser', JSON.stringify(this.currentUser()))
+  private persistUser() {
+    const user = this._currentUser()!;
+    this.fetchUsersFromLocalStorage();
+    this.users.update(users => users.map(u => u.id === user.id ? user : u));
+    const usersJson = JSON.stringify(this.users());
+    localStorage.setItem('knownUsers', usersJson);
+    localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
   getCurrentUserFromLocalStorage() {
@@ -118,10 +107,14 @@ export class AuthService {
   }
 
   createUserTraining(t: UserTraining) {
-    this._currentUser.update(user => ({ ...user!, trainings: [ ...user!.trainings, t ] }))
-    this.syncCurrentUserInUsers()
-    this.setCurrentUserInLocalStorage()
-    this.saveUsersToLocalStorage()
+    this._currentUser.update(user => {
+      const trainings = t.type === 'quick-quiz'
+        ? [...user!.trainings.filter(existing => existing.type !== 'quick-quiz' || existing.species !== t.species), t]
+        : [...user!.trainings, t];
+      return { ...user!, trainings };
+    });
+
+    this.persistUser();
   }
 
   updateUserTraining(t: UserTraining) {
@@ -132,17 +125,14 @@ export class AuthService {
           : existing
       )
     }))
-    this.syncCurrentUserInUsers();
-    this.setCurrentUserInLocalStorage();
-    this.saveUsersToLocalStorage();
-  }
-
-  private syncCurrentUserInUsers() {
-    this.users.update(users =>
-      users.map(u => u.id === this._currentUser()!.id ? this._currentUser()! : u)
-    );
+    this.persistUser();
   }
 
 
 
+}
+
+export type LoginOrRegisterError = {
+  status: boolean;
+  message?: string;
 }
