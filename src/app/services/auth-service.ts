@@ -1,30 +1,36 @@
-import {computed, inject, Injectable, signal, WritableSignal} from '@angular/core';
+import {computed, inject, Injectable, signal} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {Login, Register, User, UserBasics, UserTraining} from '../webservices/contract';
-import {generateId} from '../utils/uuid.utils';
 import {QuickQuizService} from './quick-quiz-service';
+
+interface BackendUserResponse {
+  id: string;
+  basics: { firstName: string; lastName: string; email: string; phoneNumber: string; birthDate?: string };
+  context?: User['context'];
+  trainings: UserTraining[];
+}
+
+const API = 'http://localhost:8000';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
 
-  private router = inject(Router)
-  private quickQuizService = inject(QuickQuizService)
+  private router = inject(Router);
+  private http = inject(HttpClient);
+  private quickQuizService = inject(QuickQuizService);
 
   private _currentUser = signal<User | undefined>(undefined);
-  currentUser = this._currentUser.asReadonly()
+  currentUser = this._currentUser.asReadonly();
 
-  registerError = signal<LoginOrRegisterError>({ status: false })
-  loginError = signal<LoginOrRegisterError>({ status: false })
+  registerError = signal<LoginOrRegisterError>({ status: false });
+  loginError    = signal<LoginOrRegisterError>({ status: false });
+  duplicateUserError = signal(false);
+  badCredentialsError = signal(false);
 
-  private showErrorFor(error: WritableSignal<LoginOrRegisterError>) {
-    setTimeout(() => error.set({ status: false }), 3000)
-  }
-
-  isAuthenticated = computed(() => this._currentUser() !== undefined)
-
-  users = signal<User[]>([])
+  isAuthenticated = computed(() => this._currentUser() !== undefined);
 
   logout() {
     this._currentUser.set(undefined);
@@ -33,118 +39,105 @@ export class AuthService {
   }
 
   login(userData: Login) {
-    this.fetchUsersFromLocalStorage()
-
-    const user = this.users().find(
-      user => user.basics.email === userData.email
-        && user.basics.password === userData.password
-    );
-
-    if (!user) {
-      this.loginError.set({
-        status: true,
-        message: 'Identifiants incorrects',
-      })
-      this.showErrorFor(this.loginError)
-      return
-    }
-
-    for (const quiz of user!.trainings.filter(t => t.type === 'quick-quiz')) {
-      this.quickQuizService.restoreState(quiz)
-    }
-
-    this._currentUser.update( u => user)
-    localStorage.setItem('currentUser', JSON.stringify(this.currentUser()))
-    this.router.navigate(['/dashboard'])
-
+    this.http.post<BackendUserResponse>(`${API}/auth/login`, userData).subscribe({
+      next: (resp) => {
+        const user = this._mapBackendUser(resp);
+        this._currentUser.set(user);
+        this.setCurrentUserInLocalStorage();
+        for (const quiz of user.trainings.filter(t => t.type === 'quick-quiz')) {
+          this.quickQuizService.restoreState(quiz);
+        }
+        this.router.navigate(['/dashboard']);
+      },
+      error: (_err: HttpErrorResponse) => {
+        this.badCredentialsError.set(true);
+        this.loginError.set({ status: true, message: 'Identifiants incorrects' });
+        this.showBadCredentialsError();
+      },
+    });
   }
 
   register(userData: Register) {
-    if (this.checkExistingUser(userData)) {
-      this.registerError.set({
-        status: true,
-        message: 'Un compte avec cette adresse email existe'
-      });
-      this.showErrorFor(this.registerError)
-      return;
-    }
-
-    const { name, ...rest } = userData
-    const basics: UserBasics = { ...rest, firstName: name.split(' ')[0], lastName: name.split(' ')[1] };
-    const user: User = { id: generateId(), basics, trainings: [] }
-
-    this.users.update(users => [...users, user])
-    localStorage.setItem('knownUsers', JSON.stringify(this.users()))
-
-    this.login({ email: userData.email, password: userData.password })
-
+    this.http.post<BackendUserResponse>(`${API}/auth/register`, userData).subscribe({
+      next: (resp) => {
+        const user = this._mapBackendUser(resp);
+        this._currentUser.set(user);
+        this.setCurrentUserInLocalStorage();
+        this.router.navigate(['/dashboard']);
+      },
+      error: (_err: HttpErrorResponse) => {
+        this.duplicateUserError.set(true);
+        this.registerError.set({ status: true, message: 'Un compte avec cette adresse email existe' });
+        this.showDuplicateUserError();
+      },
+    });
   }
 
-  checkExistingUser(user: Register): boolean {
-    const email = user.email
-    this.fetchUsersFromLocalStorage()
-    return this.users().some(u => u.basics.email === email)
+  showBadCredentialsError() {
+    setTimeout(() => {
+      this.badCredentialsError.set(false);
+      this.loginError.set({ status: false });
+    }, 3000);
   }
 
-  private persistUser() {
-    const user = this._currentUser()!;
-    this.fetchUsersFromLocalStorage();
-    this.users.update(users => users.map(u => u.id === user.id ? user : u));
-    const usersJson = JSON.stringify(this.users());
-    localStorage.setItem('knownUsers', usersJson);
-    localStorage.setItem('currentUser', JSON.stringify(user));
+  showDuplicateUserError() {
+    setTimeout(() => {
+      this.duplicateUserError.set(false);
+      this.registerError.set({ status: false });
+    }, 3000);
   }
 
   getCurrentUserFromLocalStorage() {
-    const value = localStorage.getItem('currentUser')
-
+    const value = localStorage.getItem('currentUser');
     if (value) {
-      const user: User = JSON.parse(value);
-      this._currentUser.set(user);
+      this._currentUser.set(JSON.parse(value) as User);
     }
   }
 
-  fetchUsersFromLocalStorage() {
-    let users: User[] = []
-    const value = localStorage.getItem('knownUsers')
-
-    if (value) {
-      users = JSON.parse(value);
-      this.users.set(users);
-    }
+  setCurrentUserInLocalStorage() {
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUser()));
   }
 
   createUserTraining(t: UserTraining) {
     this._currentUser.update(user => {
       const trainings = t.type === 'quick-quiz'
-        ? [...user!.trainings.filter(training => training.type !== 'quick-quiz' || training.species !== t.species), t]
+        ? [...user!.trainings.filter(tr => tr.type !== 'quick-quiz' || tr.species !== t.species), t]
         : [...user!.trainings, t];
       return { ...user!, trainings };
     });
-
-    this.persistUser();
+    this.setCurrentUserInLocalStorage();
   }
 
   updateUserTraining(t: UserTraining) {
     this._currentUser.update(user => ({
-      ...user!, trainings: user!.trainings.map(training =>
-        training.id === t.id ? t : training
-      )
-    }))
-
-    this.persistUser();
+      ...user!,
+      trainings: user!.trainings.map(existing =>
+        existing.type === t.type && existing.species === t.species && (existing as any).breed === (t as any).breed
+          ? t
+          : existing
+      ),
+    }));
+    this.setCurrentUserInLocalStorage();
   }
 
   deleteUserTraining(t: UserTraining) {
-    this._currentUser.update(user =>({
-      ...user!, trainings: user!.trainings.filter(training => training.id !== t.id)
-    }))
-
-    this.persistUser()
+    this._currentUser.update(user => ({
+      ...user!, trainings: user!.trainings.filter(tr => tr.id !== t.id)
+    }));
+    this.setCurrentUserInLocalStorage();
   }
 
-
-
+  private _mapBackendUser(resp: BackendUserResponse): User {
+    const basics: UserBasics = {
+      firstName:   resp.basics.firstName,
+      lastName:    resp.basics.lastName,
+      email:       resp.basics.email,
+      password:    '',
+      phoneNumber: resp.basics.phoneNumber,
+      birthDate:   resp.basics.birthDate,
+    };
+    return { id: resp.id, basics, context: resp.context, trainings: resp.trainings ?? [] };
+  }
 }
 
 export type LoginOrRegisterError = {

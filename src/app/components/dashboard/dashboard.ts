@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {Router} from '@angular/router';
 import {NavBarService} from "../../services/nav-bar-service";
 import {AuthService} from '../../services/auth-service';
 import {FormsModule} from '@angular/forms';
@@ -23,9 +24,10 @@ import {QuickQuizService} from '../../services/quick-quiz-service';
 })
 export class Dashboard {
 
-  private authService = inject(AuthService)
-  private navBarService = inject(NavBarService)
-  private quickQuizService = inject(QuickQuizService)
+  private authService = inject(AuthService);
+  private navBarService = inject(NavBarService);
+  private quickQuizService = inject(QuickQuizService);
+  private router = inject(Router);
 
   protected activeTab = signal<TabEnum>('parcours');
 
@@ -40,6 +42,11 @@ export class Dashboard {
 
   toggleShowTrainingPaths = () => {
     this.showTrainingPaths.update(v => !v);
+  }
+
+  protected logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 
 
