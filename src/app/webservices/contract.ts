@@ -72,7 +72,7 @@ export interface Recommendation {
 
 export interface RecommendationResponse {
   recommendations: Recommendation[];
-  total_analyses: number;
+  analysisCount: number;
   message?: string;
 }
 

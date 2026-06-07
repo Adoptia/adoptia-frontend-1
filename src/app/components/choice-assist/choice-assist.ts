@@ -92,7 +92,7 @@ export class ChoiceAssist {
     this.choiceAssistService.getRecommendations(this.context).subscribe({
       next: (res) => {
         this.recommendations.set(res.recommendations);
-        this.totalAnalyses.set(res.total_analyses);
+        this.totalAnalyses.set(res.analysisCount);
         this.messageApi.set(res.message ?? null);
         this.step.set('result');
       },
