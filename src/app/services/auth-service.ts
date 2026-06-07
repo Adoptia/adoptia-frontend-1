@@ -40,8 +40,10 @@ export class AuthService {
         && user.basics.password === userData.password
     );
 
-    for (const quiz of user!.trainings.filter(t => t.type === 'quick-quiz')) {
-      this.quickQuizService.restoreState(quiz)
+    if (user!.trainings) {
+      for (const quiz of user!.trainings.filter(t => t.type === 'quick-quiz')) {
+        this.quickQuizService.restoreState(quiz)
+      }
     }
 
     if (!user) {
