@@ -9,7 +9,7 @@ export class ChoiceAssistService {
   private readonly API = 'http://localhost:8000/choice-assist';
 
   getRecommandations(profil: ProfilAdoptant, userId?: string): Observable<RecommandationsResponse> {
-    const params = userId ? { user_id: userId } : {};
-    return this.http.post<RecommandationsResponse>(`${this.API}/recommandations`, profil, { params });
+    const url = userId ? `${this.API}/recommandations?user_id=${userId}` : `${this.API}/recommandations`;
+    return this.http.post<RecommandationsResponse>(url, profil);
   }
 }
