@@ -61,14 +61,14 @@
 
       <div class="flex items-center gap-4">
         <label>Avec balcon : </label>
-        <p>{{ user()!.context?.residence?.balcony === undefined ? '-'
-          : user()!.context!.residence.balcony ? 'Oui' : 'Non' }}</p>
+        <p>{{ user()!.context?.residence?.hasBalcony === undefined ? '-'
+          : user()!.context!.residence.hasBalcony ? 'Oui' : 'Non' }}</p>
       </div>
 
       <div class="flex items-center gap-4">
         <label>Avec jardin : </label>
-        <p>{{ user()!.context?.residence?.garden === undefined ? '-'
-          : user()!.context!.residence.garden ? 'Oui' : 'Non' }}</p>
+        <p>{{ user()!.context?.residence?.hasGarden === undefined ? '-'
+          : user()!.context!.residence.hasGarden ? 'Oui' : 'Non' }}</p>
       </div>
     </div>
 
