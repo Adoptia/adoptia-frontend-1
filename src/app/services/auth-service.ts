@@ -2,6 +2,7 @@ import {computed, inject, Injectable, signal, WritableSignal} from '@angular/cor
 import {Router} from '@angular/router';
 import {Login, Register, User, UserBasics, UserTraining} from '../webservices/contract';
 import {generateId} from '../utils/uuid.utils';
+import {QuickQuizService} from './quick-quiz-service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ import {generateId} from '../utils/uuid.utils';
 export class AuthService {
 
   private router = inject(Router)
+  private quickQuizService = inject(QuickQuizService)
 
   private _currentUser = signal<User | undefined>(undefined);
   currentUser = this._currentUser.asReadonly()
@@ -27,6 +29,7 @@ export class AuthService {
   logout() {
     this._currentUser.set(undefined);
     localStorage.removeItem('currentUser');
+    sessionStorage.clear();
   }
 
   login(userData: Login) {
@@ -36,6 +39,10 @@ export class AuthService {
       user => user.basics.email === userData.email
         && user.basics.password === userData.password
     );
+
+    for (const quiz of user!.trainings.filter(t => t.type === 'quick-quiz')) {
+      this.quickQuizService.restoreState(quiz)
+    }
 
     if (!user) {
       this.loginError.set({

@@ -1,21 +1,19 @@
-import {Component, computed, input} from '@angular/core';
+import {Component, computed, inject, input} from '@angular/core';
 import {UserTraining} from '../../webservices/contract';
-import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
 import {Carousel} from 'primeng/carousel';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'user-trainings',
   imports: [
-    Accordion,
-    AccordionPanel,
-    AccordionHeader,
-    AccordionContent,
     Carousel
   ],
   templateUrl: './user-trainings.html',
   styleUrl: './user-trainings.css',
 })
 export class UserTrainings {
+
+  private router = inject(Router)
 
   trainings = input<UserTraining[]>([])
 
@@ -25,9 +23,14 @@ export class UserTrainings {
 
 
   carouselResponsiveOptions = [
-    { breakpoint: '1920px', numVisible: 3, numScroll: 1 },
-    { breakpoint: '1280px', numVisible: 2, numScroll: 1 },
+    { breakpoint: '1920px', numVisible: 2, numScroll: 1 },
     { breakpoint: '768px', numVisible: 1, numScroll: 1 },
   ];
 
+
+  protected openQuickQuiz(species: string, breed: string | null = null) {
+    this.router.navigate(['/quick-quiz'], {
+      queryParams: { species, breed }
+    })
+  }
 }

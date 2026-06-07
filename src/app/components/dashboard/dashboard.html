@@ -4,18 +4,12 @@
   <div class="mes-parcours h-full w-full"
        [class.hidden]="activeTab() !== 'parcours'"
   >
-    <div id="startedTrainings"
-         [hidden]="showTrainingPaths()"
-    >
-      <user-trainings [trainings]="user()?.trainings ?? []"/>
-    </div>
-
     <div class="flex justify-center p-8">
       <p-button [hidden]="showTrainingPaths()" (click)="toggleShowTrainingPaths()"
-        styleClass="!text-sm md:!text-base !text-black hover:!text-white active:!text-white !border-2 !border-black
+                styleClass="!text-sm md:!text-base !text-black hover:!text-white active:!text-white !border-2 !border-black
         hover:!bg-black active:!bg-black !transition-colors !duration-500"
-        [icon]="'pi pi-plus'" [label]="'Nouveau parcours'"
-        [rounded]="false" [outlined]="true"
+                [icon]="'pi pi-plus'" [label]="'Nouveau parcours'"
+                [rounded]="false" [outlined]="true"
       />
 
       <p-button [hidden]="!showTrainingPaths()" (click)="toggleShowTrainingPaths()"
@@ -24,6 +18,12 @@
                 [icon]="'pi pi-arrow-left'" [label]="'Retour'"
                 [rounded]="false" [outlined]="true"
       />
+    </div>
+
+    <div id="startedTrainings"
+         [hidden]="showTrainingPaths()"
+    >
+      <user-trainings [trainings]="user()?.trainings ?? []"/>
     </div>
 
     <div class="z-0" [hidden]="!showTrainingPaths()">

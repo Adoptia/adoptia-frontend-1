@@ -1,8 +1,9 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
-import {QuizCardData, UserQuickQuizData} from '../webservices/contract';
+import {QuizCardData, UserQuickQuizData, UserTraining} from '../webservices/contract';
 import {quickQuizDataMock} from '../webservices/quickQuizDataMock';
 import {AuthService} from './auth-service';
 import {generateId} from '../utils/uuid.utils';
+import {QuickQuiz} from '../components/quick-quiz/quick-quiz';
 
 @Injectable({
   providedIn: 'root',
@@ -10,8 +11,6 @@ import {generateId} from '../utils/uuid.utils';
 export class QuickQuizService {
 
   private _mock = quickQuizDataMock
-
-  private authService = inject(AuthService)
 
   private feedbackTime = 1500
 
@@ -75,7 +74,7 @@ export class QuickQuizService {
     sessionStorage.removeItem(this._UI_KEY);
   }
 
-  initQuiz(species: string, breed: string | null) {
+  initQuiz(species: string, breed: string | null, onCreate: (t: UserTraining) => void) {
     this.initScore()
     this._breed.set(breed)
     this._species.set(species)
@@ -84,7 +83,7 @@ export class QuickQuizService {
     this._seenCardsIds.set([this._quizCardData().id])
     this._quizId.set(generateId())
 
-    this.authService.createUserTraining(this.userQuiz())
+    onCreate(this.userQuiz())
 
     this.saveState();
   }
@@ -104,12 +103,12 @@ export class QuickQuizService {
     return state;
   }
 
-  endQuiz() {
+  endQuiz(onDelete: (t: UserTraining) => void) {
     this.persistResultView();
 
     setTimeout(() => {
       this._isQuizDone.set(true)
-      this.authService.deleteUserTraining(this.userQuiz())
+      onDelete(this.userQuiz())
     }, this.feedbackTime);
 
     if (this._score() >= 80) this.getCertificate()
@@ -126,6 +125,13 @@ export class QuickQuizService {
       breed: this._breed(), currentIndex: this._currentIndex(), quizId: this._quizId()
     }
     sessionStorage.setItem(this.getStateKey(this._species()!), JSON.stringify(state));
+  }
+
+  restoreState(quiz: UserQuickQuizData) {
+    const state: QuizState = { quizId: quiz.id, score: quiz.score, species: quiz.species,
+      breed: quiz.breed, currentIndex: quiz.seenCardsIds.length - 1
+    }
+    sessionStorage.setItem(this.getStateKey(quiz.species), JSON.stringify(state));
   }
 
   clearState() {
@@ -145,7 +151,7 @@ export class QuickQuizService {
 
   hasNext = computed(() => this._currentIndex() + 1 < this._mock.length)
 
-  getNextQuiz() {
+  getNextQuiz(onUpdate: (t: UserTraining) => void) {
     if (this.hasNext()) {
       const nextIndex = this._currentIndex() + 1;
       this._currentIndex.set(nextIndex);
@@ -153,7 +159,7 @@ export class QuickQuizService {
       setTimeout(() => {
         this._quizCardData.set(this._mock[nextIndex])
         this._seenCardsIds.update(ids => [...ids, this._quizCardData().id])
-        this.authService.updateUserTraining(this.userQuiz())
+        onUpdate(this.userQuiz());
       }, this.feedbackTime);
 
       this.saveState();

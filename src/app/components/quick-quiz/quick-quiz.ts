@@ -6,8 +6,9 @@ import {QuickQuizCard} from '../shared/quick-quiz-card/quick-quiz-card';
 import {NavBarService} from '../../services/nav-bar-service';
 import {QuickQuizService} from '../../services/quick-quiz-service';
 import {SplitCard} from '../shared/split-card/split-card';
-import {Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {Answer} from '../../webservices/contract';
+import {AuthService} from '../../services/auth-service';
 
 @Component({
   selector: 'app-quick-quiz',
@@ -27,6 +28,7 @@ export class QuickQuiz implements OnDestroy {
 
   private router = inject(Router)
   private navBarService = inject(NavBarService);
+  private authService = inject(AuthService)
   private quickQuizService = inject(QuickQuizService);
 
   private _quizPassedBackground = 'images/qq-passed-bg.jpg';
@@ -75,7 +77,9 @@ export class QuickQuiz implements OnDestroy {
   protected showResults = signal(false)
 
   startQuiz() {
-    this.quickQuizService.initQuiz(this.selectedSpecies(), this.selectedBreed())
+    this.quickQuizService.initQuiz(
+      this.selectedSpecies(), this.selectedBreed(),
+      (t) => this.authService.createUserTraining(t))
     this.choiceSubmitted.set(true)
   }
 
@@ -99,12 +103,12 @@ export class QuickQuiz implements OnDestroy {
     this.quickQuizService.updateScore(isCorrect)
 
     if ( !this.quickQuizService.hasNext() ) {
-      this.quickQuizService.endQuiz()
+      this.quickQuizService.endQuiz((t) => this.authService.deleteUserTraining(t))
       this.getResults()
       return
     }
 
-    this.quickQuizService.getNextQuiz();
+    this.quickQuizService.getNextQuiz((t) => this.authService.updateUserTraining(t));
 
   }
 
@@ -116,15 +120,20 @@ export class QuickQuiz implements OnDestroy {
   }
 
   constructor() {
-    const saved
-      = this.quickQuizService.restoreResultView();
+    const queryParams = inject(ActivatedRoute).snapshot.queryParams;
 
-    if (saved) {
-      this.selectedSpecies.set(saved.species)
-      this.selectedBreed.set(saved.breed);
+    if (queryParams['species']) {
+      this.selectedSpecies.set(queryParams['species']);
+      this.selectedBreed.set(queryParams['breed']);
+    } else {
+      const saved = this.quickQuizService.restoreResultView();
 
-      this.showResults.set(true);
-      this.getResults();
+      if (saved) {
+        this.selectedSpecies.set(saved.species)
+        this.selectedBreed.set(saved.breed);
+        this.showResults.set(true);
+        this.getResults();
+      }
     }
   }
 
