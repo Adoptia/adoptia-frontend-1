@@ -19,6 +19,9 @@ export class App implements OnInit {
   private authService = inject(AuthService);
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+
+    localStorage.clear(); sessionStorage.clear();
+
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe(() => {
