@@ -32,14 +32,48 @@ export interface UserContext {
       | 'appartement',
     address: string,
     surface: number,
-    garden: boolean,
-    balcony: boolean
+    hasGarden: boolean,
+    hasBalcony: boolean
   },
   household: {
     hasPartner: boolean,
     liveTogether: boolean,
     childrenCount: number
   }
+}
+
+export interface ChoiceAssistContext {
+  isOnFloor?: boolean
+  hasLift?: boolean
+  petBudget?: number
+  otherSpecies?: string
+  childrenAges: number[]
+  speciesPreference?: 'chat' | 'chien'
+  activityLevel?: 'sedentaire' | 'modere' | 'actif'
+  spareTime?: number
+  petExperience?: 'aucune' | 'debutant' | 'experimente'
+  petSizePreference?: 'petite' | 'moyenne' | 'grande'
+
+}
+
+export interface Recommendation {
+  adId: number;
+  petId: number;
+  name: string;
+  species: string;
+  breed: string | null;
+  sex?: 'M' | 'F';
+  photos?: string;
+  score: number;
+  reason: string;
+  confidence: 'haute' | 'moyenne' | 'faible';
+  description?: string;
+}
+
+export interface RecommendationResponse {
+  recommendations: Recommendation[];
+  total_analyses: number;
+  message?: string;
 }
 
 export type UserTraining = UserLearnData |

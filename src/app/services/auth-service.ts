@@ -40,12 +40,6 @@ export class AuthService {
         && user.basics.password === userData.password
     );
 
-    if (user!.trainings) {
-      for (const quiz of user!.trainings.filter(t => t.type === 'quick-quiz')) {
-        this.quickQuizService.restoreState(quiz)
-      }
-    }
-
     if (!user) {
       this.loginError.set({
         status: true,
@@ -53,6 +47,10 @@ export class AuthService {
       })
       this.showErrorFor(this.loginError)
       return
+    }
+
+    for (const quiz of user!.trainings.filter(t => t.type === 'quick-quiz')) {
+      this.quickQuizService.restoreState(quiz)
     }
 
     this._currentUser.update( u => user)

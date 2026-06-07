@@ -76,7 +76,17 @@ const routeConfigs: Partial<Record<string, NavBarConfig>> = {
     showDashboardButton: false,
     showLogoutButton: true,
     links: ['join-us']
+  },
+  '/choice-assist': {
+    ...defaultConfig,
+    onNotScrolled: 'bg-gray-800',
+    onScrolled: 'bg-gray-800',
+    onScrolling: 'bg-gray-800',
+    showDashboardButton: false,
+    showLogoutButton: true,
+    links: ['join-us']
   }
+
 };
 
 const navBarLinks: Partial<Record<NavBarKey, NavBarLink>> = {
