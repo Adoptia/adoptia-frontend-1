@@ -1,2 +1,197 @@
-<app-unavailable
-></app-unavailable>
+<!-- ── ÉTAPE 1 : Choix de l'espèce ─────────────────────────────── -->
+@if (step() === 'espece') {
+  <section class="ca-page">
+    <div class="ca-header">
+      <h1>Aide au choix</h1>
+      <p>Répondez à quelques questions pour trouver l'animal qui vous correspond.</p>
+    </div>
+    <div class="ca-espece-cards">
+      @for (opt of especeOptions; track opt.value) {
+        <button class="ca-espece-card" (click)="choisirEspece(opt.value === 'chien' ? 'chien' : 'chat')">
+          <span class="ca-espece-icon">{{ opt.icon }}</span>
+          <span class="ca-espece-label">{{ opt.label }}</span>
+        </button>
+      }
+    </div>
+  </section>
+}
+
+<!-- ── ÉTAPE 2 : Profil adoptant ──────────────────────────────── -->
+@if (step() === 'profil') {
+  <section class="ca-page">
+    <div class="ca-header">
+      <h1>Votre profil</h1>
+      <p>Plus vous renseignez, meilleure est la recommandation. Les champs sont optionnels.</p>
+    </div>
+
+    @if (erreur()) {
+      <div class="ca-erreur">{{ erreur() }}</div>
+    }
+
+    <div class="ca-form">
+
+      <!-- Logement -->
+      <div class="ca-section">
+        <h2>Logement</h2>
+        <div class="ca-row">
+          <label>Type de logement</label>
+          <p-select [(ngModel)]="profil.type_habitat" [options]="habitatOptions"
+            optionLabel="label" optionValue="value" placeholder="Sélectionner" />
+        </div>
+        <div class="ca-row">
+          <label>Jardin</label>
+          <div class="ca-toggle-group">
+            <button [class.active]="profil.has_jardin === true" (click)="profil.has_jardin = true">Oui</button>
+            <button [class.active]="profil.has_jardin === false" (click)="profil.has_jardin = false">Non</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foyer -->
+      <div class="ca-section">
+        <h2>Foyer</h2>
+        <div class="ca-row">
+          <label>Enfants au foyer</label>
+          <div class="ca-toggle-group">
+            <button [class.active]="profil.has_enfants === true" (click)="profil.has_enfants = true">Oui</button>
+            <button [class.active]="profil.has_enfants === false" (click)="profil.has_enfants = false">Non</button>
+          </div>
+        </div>
+        @if (profil.has_enfants) {
+          <div class="ca-row">
+            <label>Âge des enfants</label>
+            <p-select [(ngModel)]="profil.age_enfants" [options]="ageEnfantsOptions"
+              optionLabel="label" optionValue="value" placeholder="Sélectionner" />
+          </div>
+        }
+        <div class="ca-row">
+          <label>Autres animaux</label>
+          <input pInputText [(ngModel)]="profil.autres_animaux" placeholder="Ex : un chat adulte" />
+        </div>
+      </div>
+
+      <!-- Mode de vie -->
+      <div class="ca-section">
+        <h2>Mode de vie</h2>
+        <div class="ca-row">
+          <label>Niveau d'activité</label>
+          <p-select [(ngModel)]="profil.niveau_activite" [options]="activiteOptions"
+            optionLabel="label" optionValue="value" placeholder="Sélectionner" />
+        </div>
+        <div class="ca-row">
+          <label>Heures seul par jour</label>
+          <input pInputText type="number" [(ngModel)]="profil.heures_seul" min="0" max="24" placeholder="Ex : 6" />
+        </div>
+        <div class="ca-row">
+          <label>Expérience avec les animaux</label>
+          <p-select [(ngModel)]="profil.experience" [options]="experienceOptions"
+            optionLabel="label" optionValue="value" placeholder="Sélectionner" />
+        </div>
+      </div>
+
+      <!-- Préférences -->
+      <div class="ca-section">
+        <h2>Préférences</h2>
+        <div class="ca-row">
+          <label>Taille préférée</label>
+          <p-select [(ngModel)]="profil.taille_preferee" [options]="tailleOptions"
+            optionLabel="label" optionValue="value" placeholder="Pas de préférence" />
+        </div>
+        <div class="ca-row">
+          <label>Tolérance aux poils</label>
+          <div class="ca-toggle-group">
+            <button [class.active]="profil.tolerance_poils === true" (click)="profil.tolerance_poils = true">Oui</button>
+            <button [class.active]="profil.tolerance_poils === false" (click)="profil.tolerance_poils = false">Non</button>
+          </div>
+        </div>
+        <div class="ca-row">
+          <label>Allergie aux animaux</label>
+          <div class="ca-toggle-group">
+            <button [class.active]="profil.allergie === true" (click)="profil.allergie = true">Oui</button>
+            <button [class.active]="profil.allergie === false" (click)="profil.allergie = false">Non</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question ouverte -->
+      <div class="ca-section">
+        <h2>En quelques mots</h2>
+        <p class="ca-hint">Décrivez librement votre situation, vos attentes ou contraintes particulières.</p>
+        <textarea pTextarea [(ngModel)]="profil.situation_libre"
+          rows="4" placeholder="Ex : Je vis seul, je travaille depuis chez moi, je cherche un chien calme qui s'entend bien avec les chats...">
+        </textarea>
+      </div>
+
+    </div>
+
+    <div class="ca-actions">
+      <p-button label="Retour" icon="pi pi-arrow-left" severity="secondary" (onClick)="retourEspece()" />
+      <p-button label="Trouver mon animal" icon="pi pi-search" (onClick)="lancerRecherche()" />
+    </div>
+  </section>
+}
+
+<!-- ── ÉTAPE 3 : Chargement ────────────────────────────────────── -->
+@if (step() === 'chargement') {
+  <section class="ca-page ca-loading">
+    <p-progressSpinner strokeWidth="4" />
+    <p>Analyse en cours avec l'IA...</p>
+    <span class="ca-loading-sub">Nous comparons votre profil avec les animaux disponibles.</span>
+  </section>
+}
+
+<!-- ── ÉTAPE 4 : Résultats ─────────────────────────────────────── -->
+@if (step() === 'resultats') {
+  <section class="ca-page">
+    <div class="ca-header">
+      <h1>Vos recommandations</h1>
+      <p>{{ totalAnalyses() }} animal(s) analysé(s) pour vous.</p>
+      @if (messageApi()) {
+        <div class="ca-warning">{{ messageApi() }}</div>
+      }
+    </div>
+
+    @if (recommandations().length === 0) {
+      <div class="ca-empty">
+        <i class="pi pi-info-circle"></i>
+        <p>Aucun animal correspondant à votre profil n'a été trouvé pour le moment.</p>
+      </div>
+    }
+
+    <div class="ca-results-list">
+      @for (r of recommandations(); track r.id_annonce) {
+        <div class="ca-result-card">
+          <div class="ca-result-left">
+            @if (r.photos) {
+              <img [src]="r.photos" [alt]="r.nom" class="ca-animal-photo" />
+            } @else {
+              <div class="ca-photo-placeholder"><i class="pi pi-image"></i></div>
+            }
+          </div>
+          <div class="ca-result-body">
+            <div class="ca-result-top">
+              <h3>{{ r.nom }}</h3>
+              <span class="ca-badge" [class]="scoreClass(r.score)">
+                {{ r.score }}% — {{ scoreLabel(r.score) }}
+              </span>
+            </div>
+            <p class="ca-animal-meta">{{ r.race || 'Race mixte' }} · {{ r.sexe || '' }} · {{ r.espece }}</p>
+            <p class="ca-raison">{{ r.raison }}</p>
+            <p class="ca-confiance">{{ confianceLabel(r.confiance) }}</p>
+            <button class="ca-toggle-desc" (click)="toggleDescription(r.id_annonce)">
+              {{ animalExpanded() === r.id_annonce ? 'Masquer la description' : 'Voir la description complète' }}
+              <i [class]="animalExpanded() === r.id_annonce ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"></i>
+            </button>
+            @if (animalExpanded() === r.id_annonce && r.description) {
+              <p class="ca-description">{{ r.description }}</p>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="ca-actions">
+      <p-button label="Recommencer" icon="pi pi-refresh" severity="secondary" (onClick)="recommencer()" />
+    </div>
+  </section>
+}

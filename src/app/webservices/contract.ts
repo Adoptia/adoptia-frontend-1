@@ -74,6 +74,44 @@ export interface UserChoiceAssistData {
   breed?: string
 }
 
+export interface ProfilAdoptant {
+  espece: 'chien' | 'chat';
+  type_habitat?: 'appartement' | 'maison';
+  has_jardin?: boolean;
+  has_enfants?: boolean;
+  age_enfants?: 'jeunes' | 'grands';
+  nb_enfants?: number;
+  niveau_activite?: 'sedentaire' | 'modere' | 'sportif';
+  heures_seul?: number;
+  experience?: 'aucune' | 'debutant' | 'experimente';
+  autres_animaux?: string;
+  taille_preferee?: 'petite' | 'moyenne' | 'grande';
+  tolerance_poils?: boolean;
+  allergie?: boolean;
+  budget?: number;
+  situation_libre?: string;
+}
+
+export interface Recommandation {
+  id_annonce: number;
+  id_animal: number;
+  nom: string;
+  espece: string;
+  race?: string;
+  sexe?: string;
+  photos?: string;
+  score: number;
+  raison: string;
+  confiance: 'haute' | 'moyenne' | 'faible';
+  description?: string;
+}
+
+export interface RecommandationsResponse {
+  recommandations: Recommandation[];
+  total_analyses: number;
+  message?: string;
+}
+
 export interface LearnModuleData {
   isDone: boolean
   progression: number
