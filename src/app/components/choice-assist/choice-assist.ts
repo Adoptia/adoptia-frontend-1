@@ -7,6 +7,7 @@ import { Textarea } from 'primeng/textarea';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { NavBarService } from '../../services/nav-bar-service';
 import { ChoiceAssistService } from '../../services/choice-assist-service';
+import { AuthService } from '../../services/auth-service';
 import { ProfilAdoptant, Recommandation } from '../../webservices/contract';
 
 type Step = 'espece' | 'profil' | 'chargement' | 'resultats';
@@ -21,6 +22,7 @@ type Step = 'espece' | 'profil' | 'chargement' | 'resultats';
 export class ChoiceAssist {
   private navBarService = inject(NavBarService);
   private choiceAssistService = inject(ChoiceAssistService);
+  private authService = inject(AuthService);
 
   protected step = signal<Step>('espece');
   protected erreur = signal<string | null>(null);
@@ -82,7 +84,8 @@ export class ChoiceAssist {
       Object.entries(this.profil).filter(([, v]) => v !== null && v !== undefined && v !== '')
     ) as ProfilAdoptant;
 
-    this.choiceAssistService.getRecommandations(profilNettoye).subscribe({
+    const userId = this.authService.currentUser()?.id;
+    this.choiceAssistService.getRecommandations(profilNettoye, userId).subscribe({
       next: (res) => {
         this.recommandations.set(res.recommandations);
         this.totalAnalyses.set(res.total_analyses);
