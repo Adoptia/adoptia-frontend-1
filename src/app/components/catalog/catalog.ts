@@ -44,9 +44,9 @@ export class Catalog implements OnInit, OnDestroy {
   ];
 
   protected sexeTabs = [
-    { label: 'Tous',    value: undefined  },
-    { label: 'Mâle',   value: 'Mâle'     },
-    { label: 'Femelle', value: 'Femelle'  },
+    { label: 'Tous',    value: undefined   },
+    { label: 'Mâle',   value: 'male'      },
+    { label: 'Femelle', value: 'femelle'  },
   ];
 
   protected sourceTabs = [
