@@ -28,17 +28,17 @@ export interface UserBasics {
 
 export interface UserContext {
   residence: {
-    type: 'maison'
+    type?: 'maison'
       | 'appartement',
-    address: string,
-    surface: number,
-    hasGarden: boolean,
-    hasBalcony: boolean
+    address?: string,
+    surface?: number,
+    hasGarden?: boolean,
+    hasBalcony?: boolean
   },
   household: {
-    hasPartner: boolean,
-    liveTogether: boolean,
-    childrenCount: number
+    hasPartner?: boolean,
+    liveTogether?: boolean,
+    childrenCount?: number
   }
 }
 

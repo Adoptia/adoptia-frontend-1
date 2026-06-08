@@ -102,7 +102,7 @@
       <h1 class="text-xl">Mode édition</h1>
     </div>
 
-    <div class="border rounded-xl border-gray-300 bg-white/60 p-4 mb-4
+    <div class="border rounded-xl border-gray-300 bg-white/60 p-4 mb-4 overflow-x-hidden
     [&>div]:flex [&>div]:flex-col [&>div]:gap-3 [&>div]:border [&>div]:border-gray-300
     [&>div]:rounded-xl [&>div]:bg-white/80 [&>div]:p-4 [&>div]:pb-4 [&>div]:mb-8 [&>div]:mt-2
     [&>label]:text-gray-500 [&>label]:font-bold [&>label]:uppercase [&>label]:text-xs
@@ -114,15 +114,18 @@
       <div>
         <div>
           <label>Prénom et nom de famille</label>
-          <input type="text" placeholder="Entrez votre prénom et nom"
+          <input type="text" placeholder="Entrez votre prénom et nom" [hidden]="true"
                  [ngModel]="user()!.basics.firstName + ' ' + user()!.basics.lastName"
           >
+          <p>{{ firstName }} {{ lastName }}</p>
         </div>
 
         <div>
           <label>Date de naissance</label>
           <div class="border border-gray-300 rounded-xl w-full flex">
-            <input type="date" class="w-full border-none">
+            <input type="date" class="w-full border-none"
+                   [(ngModel)]="birthDate"
+            >
           </div>
         </div>
 
@@ -131,26 +134,32 @@
           <input [hidden]="true" type="email" placeholder="Entrez votre adresse e-mail"
                  [ngModel]="user()!.basics.email"
           >
-          <p>{{ user()!.basics.email }}</p>
+          <p>{{ email }}</p>
         </div>
 
         <div>
           <label>Téléphone</label>
-          <input type="tel" placeholder="Entrez votre numéro de téléphone"
-                 [ngModel]="user()!.basics.phoneNumber"
+          <input type="text" placeholder="Entrez votre numéro de téléphone"
+                 [(ngModel)]="phoneNumber"
+                 [minLength]="10" [maxLength]="10"
           >
         </div>
       </div>
 
       <label>Informations sur votre domicile</label>
       <div>
-        <div>
+        <div class="flex flex-col gap-2">
           <label>Type de logement</label>
+          <p-select placeholder="Sélectionner"
+                    [options]="residenceTypeOptions"
+                    [(ngModel)]="residenceType"
+                    class="w-48 rounded-xl!"/>
         </div>
 
         <div>
           <label>Superficie totale</label>
           <input type="number" class="border border-gray-300 px-2 py-1 w-full"
+                 [(ngModel)]="residenceSurface"
                  placeholder="Entrez la superficie en m²"
           >
         </div>
@@ -159,17 +168,18 @@
           <label>Adresse postale</label>
           <input type="text" class="border border-gray-300 px-2 py-1 w-full"
                  placeholder="Entrez votre adresse postale"
+                 [(ngModel)]="residenceAddress"
           >
         </div>
 
         <div class="flex items-center gap-4">
           <label>Avec balcon</label>
           <div class="flex items-center gap-2">
-            <p-radio-button name="balcon" [value]="true" [(ngModel)]="avecBalcon"/>
+            <p-radio-button name="balcon" [value]="true" [(ngModel)]="hasBalcony"/>
             <label>Oui</label>
           </div>
           <div class="flex items-center gap-2">
-            <p-radio-button name="balcon" [value]="false" [(ngModel)]="avecBalcon"/>
+            <p-radio-button name="balcon" [value]="false" [(ngModel)]="hasBalcony"/>
             <label>Non</label>
           </div>
         </div>
@@ -177,11 +187,11 @@
         <div class="flex items-center gap-4">
           <label>Avec jardin</label>
           <div class="flex items-center gap-2">
-            <p-radio-button name="jardin" [value]="true" [(ngModel)]="avecJardin"/>
+            <p-radio-button name="jardin" [value]="true" [(ngModel)]="hasGarden"/>
             <label>Oui</label>
           </div>
           <div class="flex items-center gap-2">
-            <p-radio-button name="jardin" [value]="false" [(ngModel)]="avecJardin"/>
+            <p-radio-button name="jardin" [value]="false" [(ngModel)]="hasGarden"/>
             <label>Non</label>
           </div>
         </div>
@@ -192,11 +202,11 @@
         <div class="flex items-center gap-4">
           <label>En couple</label>
           <div class="flex items-center gap-2">
-            <p-radio-button name="couple" [value]="true" [(ngModel)]="enCouple"/>
+            <p-radio-button name="couple" [value]="true" [(ngModel)]="hasPartner"/>
             <label>Oui</label>
           </div>
           <div class="flex items-center gap-2">
-            <p-radio-button name="couple" [value]="false" [(ngModel)]="enCouple"/>
+            <p-radio-button name="couple" [value]="false" [(ngModel)]="hasPartner"/>
             <label>Non</label>
           </div>
         </div>
@@ -204,11 +214,11 @@
         <div class="flex items-center gap-4">
           <label>Vous habitez ensemble</label>
           <div class="flex items-center gap-2">
-            <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="true" [(ngModel)]="habitantEnsemble"/>
+            <p-radio-button name="habEnsemble" [disabled]="!hasPartner" [value]="true" [(ngModel)]="liveTogether"/>
             <label>Oui</label>
           </div>
           <div class="flex items-center gap-2">
-            <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="false" [(ngModel)]="habitantEnsemble"/>
+            <p-radio-button name="habEnsemble" [disabled]="!hasPartner" [value]="false" [(ngModel)]="liveTogether"/>
             <label>Non</label>
           </div>
         </div>
@@ -217,6 +227,7 @@
           <label>Enfants dans votre foyer</label>
           <input type="number" class="border border-gray-300 px-2 py-1 w-full mb-2"
                  placeholder="Nombre d'enfants"
+                 [(ngModel)]="childrenCount"
           >
         </div>
       </div>
@@ -224,7 +235,7 @@
 
     <div class="flex justify-center gap-8 w-full">
       <p-button
-        (click)="toggleMode()"
+        (click)="updateUserProfile(); toggleMode()"
         styleClass="!text-black hover:!text-white active:!text-white !border-2 !border-black
         hover:!bg-black active:!bg-black !transition-colors !duration-500"
         [icon]="'pi pi-check'" [label]="'Valider'"

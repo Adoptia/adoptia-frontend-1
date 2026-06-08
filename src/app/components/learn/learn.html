@@ -1,5 +1,5 @@
 <header [hidden]="choiceSubmitted()"
-         class="learn-header relative h-dvh w-dvw text-white flex flex-col items-center justify-center gap-8"
+         class="learn-header relative min-h-svh w-dvw text-white flex flex-col items-center justify-center gap-8"
 >
   <div class="bg-l-h absolute z-0 inset-0 h-full w-full">
     <img class="w-full h-full object-center object-cover"
@@ -40,8 +40,8 @@
 
 
 <section [hidden]="!choiceSubmitted()"
-  class="relative flex flex-col justify-between items-center
-bg-amber-50 h-full pt-46 py-18 gap-12">
+  class="relative text-white flex flex-col justify-between items-center
+bg-amber-50 min-h-svh h-full pt-36 py-18 gap-12">
 
   <div class="absolute inset-0 z-0 bg-linear-to-b from-black/90 from-0% to-transparent to-80%">
   </div>
@@ -67,8 +67,10 @@ bg-amber-50 h-full pt-46 py-18 gap-12">
       <app-split-card [backgroundImage]="t.background"
                       [icon]="t.icon"
       >
-        <div class="flex flex-col justify-center gap-4">
-          <p class="text-green-900 font-bold">{{ t.name }}</p>
+        <div class="flex h-full flex-col gap-4">
+          <p class="text-green-900 font-bold pt-4">{{ t.name }}</p>
+
+          <p class="text-sm md:text-base"> Contenu bientôt disponible</p>
         </div>
       </app-split-card>
     }
