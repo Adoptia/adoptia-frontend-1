@@ -13,7 +13,10 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay(), withNoIncrementalHydration()),
     providePrimeNG({
       theme: {
-        preset: Aura
+        preset: Aura,
+        options: {
+          darkModeSelector: false
+        }
       }
     }),
   ]

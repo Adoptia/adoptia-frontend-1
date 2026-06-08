@@ -73,7 +73,7 @@ items-center w-full gap-8
             [@media(max-width:783px)]:h-10
             [@media(max-width:783px)]:w-10"
               >
-              <p class="font-bold text-3xl
+              <p class="font-bold text-yellow-50 text-3xl
             [@media(max-width:783px)]:text-2xl"
               >{{ s.figure }}</p>
               <p class="text-yellow-50 text-xs
@@ -121,7 +121,7 @@ items-center w-full gap-8
 </section>
 
 <section id="partners"
-         class="relative flex w-full">
+         class="relative flex w-full text-white">
   <div class="bg-prtn absolute z-0 h-full w-full pointer-events-none">
     <img [src]="partnersBackground"
          class="h-full w-full object-cover"
@@ -246,9 +246,9 @@ items-center w-full gap-8
     </div>
 
     <div class="w-full">
-      <p-button styleClass="!text-xs sm:!text-base"
+      <p-button styleClass="!text-xs sm:!text-base !text-white hover:text-black!"
                 [label]="'Rejoindre notre réseau'"
-                [variant]="'outlined'" [severity]="'contrast'"
+                [variant]="'outlined'" [severity]="'secondary'"
                 [routerLink]="['/join-us']"
       />
     </div>
@@ -266,7 +266,7 @@ items-center w-full gap-8
     >
       <div class="absolute inset-0 z-0 bg-black/30 backdrop-blur-xs pointer-events-none"></div>
 
-      <div class="relative h-full flex flex-col gap-8 px-4 py-8 items-center z-10">
+      <div class="relative h-full flex flex-col gap-8 px-4 py-8 items-center z-10 text-white">
         <div class="icon-container rounded-4xl bg-amber-500 flex justify-center items-center w-15 h-15"
         ><i class="pi pi-heart" style="font-size: 2rem"></i>
         </div>

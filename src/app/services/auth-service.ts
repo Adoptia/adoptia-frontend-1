@@ -135,6 +135,34 @@ export class AuthService {
     this.persistUser();
   }
 
+  updateUser(user: User) {
+    this._currentUser.update(
+      u => ({
+        ...u!,
+        basics: {
+          ...u!.basics,
+          phoneNumber: user.basics.phoneNumber!,
+          birthDate: user.basics.birthDate,
+        },
+        context: {
+          residence: {
+            type: user.context?.residence.type,
+            hasGarden: user.context?.residence.hasGarden,
+            hasBalcony: user.context?.residence.hasBalcony,
+            address: user.context?.residence.address,
+            surface: user.context?.residence.surface,
+          },
+          household: {
+            hasPartner: user.context?.household.hasPartner,
+            childrenCount: user.context?.household.childrenCount,
+            liveTogether: user.context?.household.liveTogether,
+          }
+        }
+      })
+    )
+    this.persistUser();
+  }
+
   deleteUserTraining(t: UserTraining) {
     this._currentUser.update(user =>({
       ...user!, trainings: user!.trainings.filter(training => training.id !== t.id)
