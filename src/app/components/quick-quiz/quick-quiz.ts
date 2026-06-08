@@ -39,12 +39,16 @@ export class QuickQuiz implements OnDestroy {
 
   protected headerBackground = 'images/qq-header-bg.jpg';
 
-
   protected quizCardData = this.quickQuizService.quizCardData;
 
-  hasSavedState = computed(() =>
-    this.quickQuizService.hasSavedState(this.selectedSpecies(), this.selectedBreed())
+  hasSavedState = computed(() => {
+      return this.quickQuizService.hasSavedState(this.selectedSpecies(), this.selectedBreed())
+    }
   )
+
+  eff = effect(() => {
+    if (this.selectedBreed() === undefined) this.selectedBreed.set(null)
+  })
 
   protected score = this.quickQuizService.score;
   protected isQuizDone = this.quickQuizService.isQuizDone
@@ -76,15 +80,15 @@ export class QuickQuiz implements OnDestroy {
 
   protected showResults = signal(false)
 
-  startQuiz() {
-    this.quickQuizService.initQuiz(
+  async startQuiz() {
+    await this.quickQuizService.initQuiz(
       this.selectedSpecies(), this.selectedBreed(),
       (t) => this.authService.createUserTraining(t))
     this.choiceSubmitted.set(true)
   }
 
-  resumeQuiz() {
-    const state = this.quickQuizService.resumeQuiz(this.selectedSpecies());
+  async resumeQuiz() {
+    const state = await this.quickQuizService.resumeQuiz(this.selectedSpecies());
     if (!state) return;
     this.selectedSpecies.set(state.species);
     this.selectedBreed.set(state.breed);

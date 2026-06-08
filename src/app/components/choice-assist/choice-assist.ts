@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, effect, inject, signal} from '@angular/core';
 import {NavBarService} from '../../services/nav-bar-service';
-import {ChoiceAssistService} from '../../webservices/choice-assist-service';
+import {ChoiceAssistWebservice} from '../../webservices/choice-assist-webservice';
 import {ChoiceAssistContext, Recommendation, UserContext} from '../../webservices/contract';
 import {FormsModule} from '@angular/forms';
 import {Select} from 'primeng/select';
@@ -30,7 +30,7 @@ export class ChoiceAssist {
 
   private authService = inject(AuthService);
   private navBarService = inject(NavBarService);
-  private choiceAssistService = inject(ChoiceAssistService)
+  private choiceAssistService = inject(ChoiceAssistWebservice)
 
   protected step = signal<Step>('start');
 

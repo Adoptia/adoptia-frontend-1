@@ -6,7 +6,7 @@ import {Observable} from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class ChoiceAssistService {
+export class ChoiceAssistWebservice {
   private http = inject(HttpClient);
   private readonly api =
     'https://adoptia-backend-1.onrender.com/choice-assist';

@@ -4,13 +4,17 @@ import {quickQuizDataMock} from '../webservices/quickQuizDataMock';
 import {AuthService} from './auth-service';
 import {generateId} from '../utils/uuid.utils';
 import {QuickQuiz} from '../components/quick-quiz/quick-quiz';
+import {QuickQuizWebservice} from '../webservices/quick-quiz-webservice';
+import {firstValueFrom} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QuickQuizService {
 
-  private _mock = quickQuizDataMock
+  private quizzes = signal<QuizCardData[]>(quickQuizDataMock)
+
+  private quickQuizWebservice = inject(QuickQuizWebservice)
 
   private feedbackTime = 1500
 
@@ -24,7 +28,7 @@ export class QuickQuizService {
   private _isQuizDone = signal<boolean>(false);
   isQuizDone = this._isQuizDone.asReadonly()
 
-  private _quizCardData = signal<QuizCardData>(this._mock[0])
+  private _quizCardData = signal<QuizCardData>(this.quizzes()[0])
   quizCardData = this._quizCardData.asReadonly()
 
   private _seenCardsIds = signal<string[]>([])
@@ -49,7 +53,7 @@ export class QuickQuizService {
 
   updateScore(isCorrect: boolean) {
     if (isCorrect)
-      this._score.update(s => s + 10);
+      this._score.update(s => Math.round(s + (100 / this.quizzes().length)))
   }
 
   persistResultView() {
@@ -74,21 +78,28 @@ export class QuickQuizService {
     sessionStorage.removeItem(this._UI_KEY);
   }
 
-  initQuiz(species: string, breed: string | null, onCreate: (t: UserTraining) => void) {
+  async initQuiz(species: string, breed: string | null, onCreate: (t: UserTraining) => void) {
     this.initScore()
     this._breed.set(breed)
     this._species.set(species)
-    this._currentIndex.set(0);
-    this._quizCardData.set(this._mock[0]);
-    this._seenCardsIds.set([this._quizCardData().id])
-    this._quizId.set(generateId())
 
-    onCreate(this.userQuiz())
+    const q = await this.quickQuizWebservice.getQuickQuizzes(species);
+    this.quizzes.set(q);
+
+    this._currentIndex.set(0);
+    this._quizCardData.set(this.quizzes()[0]);
+    this._seenCardsIds.set([this._quizCardData().id]);
+    this._quizId.set(generateId());
+    onCreate(this.userQuiz());
 
     this.saveState();
+
   }
 
-  resumeQuiz(species: string): QuizState | null {
+  async resumeQuiz(species: string): Promise<QuizState | null> {
+    const q = await this.quickQuizWebservice.getQuickQuizzes(species);
+    this.quizzes.set(q);
+
     const raw = sessionStorage.getItem(this.getStateKey(species));
     if (!raw) return null;
     const state: QuizState = JSON.parse(raw);
@@ -98,7 +109,7 @@ export class QuickQuizService {
     this._species.set(state.species)
     this._breed.set(state.breed)
     this._score.set(state.score);
-    this._quizCardData.set(this._mock[state.currentIndex]);
+    this._quizCardData.set(this.quizzes()[state.currentIndex]);
 
     return state;
   }
@@ -124,6 +135,7 @@ export class QuickQuizService {
     const state: QuizState = { score: this._score(), species: this._species()!,
       breed: this._breed(), currentIndex: this._currentIndex(), quizId: this._quizId()
     }
+    console.log('saved state ', state)
     sessionStorage.setItem(this.getStateKey(this._species()!), JSON.stringify(state));
   }
 
@@ -142,6 +154,7 @@ export class QuickQuizService {
     const savedState = sessionStorage.getItem(this.getStateKey(species));
     if (!savedState) return false;
     const state: QuizState = JSON.parse(savedState);
+    console.log('found state ', state);
     return state.breed === breed;
   }
 
@@ -149,7 +162,7 @@ export class QuickQuizService {
     return `quizState_${species}`;
   }
 
-  hasNext = computed(() => this._currentIndex() + 1 < this._mock.length)
+  hasNext = computed(() => this._currentIndex() + 1 < this.quizzes().length)
 
   getNextQuiz(onUpdate: (t: UserTraining) => void) {
     if (this.hasNext()) {
@@ -157,7 +170,7 @@ export class QuickQuizService {
       this._currentIndex.set(nextIndex);
 
       setTimeout(() => {
-        this._quizCardData.set(this._mock[nextIndex])
+        this._quizCardData.set(this.quizzes()[nextIndex])
         this._seenCardsIds.update(ids => [...ids, this._quizCardData().id])
         onUpdate(this.userQuiz());
       }, this.feedbackTime);
