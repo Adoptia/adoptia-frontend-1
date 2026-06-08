@@ -154,7 +154,6 @@ export class QuickQuizService {
     const savedState = sessionStorage.getItem(this.getStateKey(species));
     if (!savedState) return false;
     const state: QuizState = JSON.parse(savedState);
-    console.log('found state ', state);
     return state.breed === breed;
   }
 
