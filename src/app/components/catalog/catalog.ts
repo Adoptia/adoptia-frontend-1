@@ -60,7 +60,7 @@ export class Catalog implements OnInit, OnDestroy {
   protected activeBadges = computed(() => {
     const b: { key: string; label: string }[] = [];
     if (this.activeEspece())    b.push({ key: 'espece',    label: this.activeEspece()! });
-    if (this.activeSexe())      b.push({ key: 'sexe',      label: this.activeSexe() === 'male' ? 'Mâle' : 'Femelle' });
+    if (this.activeSexe())      b.push({ key: 'sexe',      label: this.activeSexe()! });
     if (this.activeUrgent())    b.push({ key: 'urgent',    label: 'Urgent' });
     if (this.activeSterilise()) b.push({ key: 'sterilise', label: 'Stérilisé' });
     if (this.activeVaccine())   b.push({ key: 'vaccine',   label: 'Vacciné' });
