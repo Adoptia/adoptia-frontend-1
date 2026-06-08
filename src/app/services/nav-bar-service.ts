@@ -16,7 +16,10 @@ export class NavBarService {
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
     ).subscribe((e: NavigationEnd) => {
-      const config = routeConfigs[e.urlAfterRedirects] ?? defaultConfig;
+      const url = e.urlAfterRedirects;
+      const config = routeConfigs[url]
+        ?? Object.entries(routeConfigs).find(([k]) => url.startsWith(k + '/'))?.[1]
+        ?? defaultConfig;
       this._activeConfig.set(config);
     });
   }
@@ -85,8 +88,16 @@ const routeConfigs: Partial<Record<string, NavBarConfig>> = {
     showDashboardButton: false,
     showLogoutButton: true,
     links: ['join-us']
-  }
-
+  },
+  '/catalog': {
+    ...defaultConfig,
+    onNotScrolled: 'bg-gray-800',
+    onScrolled: 'bg-gray-800',
+    onScrolling: 'bg-gray-800',
+    showDashboardButton: true,
+    showLogoutButton: false,
+    links: ['contact', 'goals', 'join-us', 'catalog'],
+  },
 };
 
 const navBarLinks: Partial<Record<NavBarKey, NavBarLink>> = {

@@ -34,6 +34,7 @@ export class CatalogService {
     for (const [key, val] of Object.entries(filters)) {
       url += `&${key}=${encodeURIComponent(String(val))}`;
     }
+    console.log('[CatalogService] Fetching:', url);
 
     this.http.get<AnnoncesPage>(url).subscribe({
       next: data => {
