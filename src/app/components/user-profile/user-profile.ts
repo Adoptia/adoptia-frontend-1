@@ -20,7 +20,7 @@ import {AuthService} from '../../services/auth-service';
 })
 export class UserProfile implements OnInit {
 
-  user = model.required<User>()
+  user = model<User>()
 
   protected missingFieldPlaceholder = 'non fourni(e)'
 
@@ -67,9 +67,9 @@ export class UserProfile implements OnInit {
   updateUserProfile() {
     this.user.update(
       u => ({
-        ...u,
+        ...u!,
         basics: {
-          ...u.basics,
+          ...u!.basics,
           phoneNumber: this.phoneNumber!,
           birthDate: this.birthDate,
         },
@@ -90,7 +90,7 @@ export class UserProfile implements OnInit {
       })
     )
 
-    this.authService.updateUser(this.user())
+    this.authService.updateUser(this.user()!)
 
   }
 
