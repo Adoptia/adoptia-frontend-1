@@ -56,6 +56,12 @@ export const routes: Routes = [
       import('./components/catalog/catalog').then(m => m.Catalog),
   },
   {
+    path: 'catalog/:id',
+    title: 'Détail annonce',
+    loadComponent: () =>
+      import('./components/catalog/animal-detail/animal-detail').then(m => m.AnimalDetail),
+  },
+  {
     path:'**',
     redirectTo: ''
   }
