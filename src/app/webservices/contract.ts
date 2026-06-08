@@ -1,3 +1,12 @@
+export interface Annonce {
+  id: number;
+  animal: { nom: string; espece: string; race: string; sexe: string; photos: string };
+  refuge: { nom: string; ville: string };
+  titre: string;
+  urgent: boolean;
+  description: string;
+}
+
 export interface User {
   id: string
   basics: UserBasics

@@ -1,2 +1,76 @@
-<app-unavailable
-></app-unavailable>
+<div class="min-h-dvh pt-20 pb-10 px-4 max-w-6xl mx-auto">
+
+  <!-- Titre -->
+  <h1 class="text-2xl font-bold mb-6 text-center">Catalogue des animaux</h1>
+
+  <!-- Filtres espèce -->
+  <div class="flex gap-2 justify-center flex-wrap mb-8">
+    @for (tab of speciesTabs; track tab.value) {
+      <button
+        (click)="selectEspece(tab.value)"
+        [ngClass]="activeEspece() === tab.value
+          ? 'bg-black text-white border-black'
+          : 'bg-white text-black border-gray-300 hover:border-black'"
+        class="px-4 py-2 rounded-full border-2 text-sm font-medium transition-colors duration-200">
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Loading -->
+  @if (catalog.loading()) {
+    <div class="flex justify-center items-center py-20">
+      <span class="text-gray-500 text-lg">Chargement...</span>
+    </div>
+  }
+
+  <!-- Erreur -->
+  @if (catalog.error()) {
+    <div class="text-center text-red-500 py-10">{{ catalog.error() }}</div>
+  }
+
+  <!-- Grille d'annonces -->
+  @if (!catalog.loading() && !catalog.error()) {
+    @if (catalog.annonces().length === 0) {
+      <div class="text-center text-gray-400 py-20">Aucune annonce disponible.</div>
+    } @else {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        @for (annonce of catalog.annonces(); track annonce.id) {
+          <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-200">
+            <!-- Photo -->
+            <div class="h-48 bg-gray-100 overflow-hidden">
+              <img
+                [src]="photoUrl(annonce)"
+                [alt]="annonce.animal.nom"
+                class="w-full h-full object-cover"
+                onerror="this.src='https://placehold.co/400x300?text=Photo+indisponible'"
+              />
+            </div>
+
+            <!-- Infos -->
+            <div class="p-4 flex flex-col gap-1 flex-1">
+              <div class="flex items-center justify-between">
+                <h2 class="font-bold text-lg capitalize">{{ annonce.animal.nom }}</h2>
+                @if (annonce.urgent) {
+                  <span class="text-xs bg-red-100 text-red-600 font-semibold px-2 py-0.5 rounded-full">Urgent</span>
+                }
+              </div>
+              <p class="text-sm text-gray-600 capitalize">{{ annonce.animal.espece }}
+                @if (annonce.animal.race) { · {{ annonce.animal.race }} }
+              </p>
+              @if (annonce.animal.sexe) {
+                <p class="text-xs text-gray-400 capitalize">{{ annonce.animal.sexe }}</p>
+              }
+              <p class="text-xs text-gray-400 mt-auto pt-2">📍 {{ annonce.refuge.nom }}</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Pagination info -->
+      <p class="text-center text-sm text-gray-400 mt-8">
+        {{ catalog.total() }} annonce(s) · page 1 / {{ catalog.pages() }}
+      </p>
+    }
+  }
+</div>

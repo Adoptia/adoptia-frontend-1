@@ -45,7 +45,7 @@ export class NavBarService {
 
 export type NavBarLink = { label: string, pathURL?: string, fragmentId?: string }
 
-type NavBarKey = 'quick-quiz' | 'learn' | 'choice-assist' | 'contact' | 'goals' | 'join-us';
+type NavBarKey = 'quick-quiz' | 'learn' | 'choice-assist' | 'contact' | 'goals' | 'join-us' | 'catalog';
 
 export type NavBarConfig = {
   links?: NavBarKey[];
@@ -64,7 +64,7 @@ const defaultConfig: NavBarConfig = {
   onNotScrolled: 'bg-transparent',
   onScrolling: 'bg-gray-700/50 backdrop-blur-sm',
   onScrolled: 'bg-gray-800/50 backdrop-blur-xl',
-  links: ['contact', 'goals', 'join-us'],
+  links: ['catalog', 'contact', 'goals', 'join-us'],
 };
 
 const routeConfigs: Partial<Record<string, NavBarConfig>> = {
@@ -90,6 +90,7 @@ const routeConfigs: Partial<Record<string, NavBarConfig>> = {
 };
 
 const navBarLinks: Partial<Record<NavBarKey, NavBarLink>> = {
+  'catalog': { label: 'Adopter', pathURL: 'catalog' },
   'learn': { label: 'Se former', pathURL: 'learn' },
   'quick-quiz': { label: 'Quiz rapide', pathURL: 'quick-quiz' },
   'choice-assist': { label: 'Aide au choix', pathURL: 'choice-assist' },

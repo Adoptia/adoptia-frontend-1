@@ -50,6 +50,12 @@ export const routes: Routes = [
       import('./components/auth/auth').then(m => m.Auth)
   },
   {
+    path: 'catalog',
+    title: 'Catalogue des animaux',
+    loadComponent: () =>
+      import('./components/catalog/catalog').then(m => m.Catalog),
+  },
+  {
     path:'**',
     redirectTo: ''
   }
