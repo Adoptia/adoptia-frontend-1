@@ -8,6 +8,7 @@ import {AuthService} from '../../services/auth-service';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {Button} from 'primeng/button';
 import {InputText} from 'primeng/inputtext';
+import {Textarea} from 'primeng/textarea';
 
 type Step = 'start' | 'speciesChoice' | 'context' | 'loading' | 'result';
 
@@ -18,7 +19,8 @@ type Step = 'start' | 'speciesChoice' | 'context' | 'loading' | 'result';
     Select,
     ProgressSpinner,
     Button,
-    InputText
+    InputText,
+    Textarea
   ],
   templateUrl: './choice-assist.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -34,9 +36,9 @@ export class ChoiceAssist {
 
   protected error = signal<string | null>(null);
   protected recommendations = signal<Recommendation[]>([]);
-  protected totalAnalyses = signal(0);
-  protected messageApi = signal<string | null>(null);
-  protected petExpanded = signal<number | null>(null);
+  protected analysisCount = signal(0);
+  protected apiMessage = signal<string | null>(null);
+  protected expandedPet = signal<number | null>(null);
 
   protected userContext?: UserContext = this.authService.currentUser()!.context
 
@@ -66,7 +68,7 @@ export class ChoiceAssist {
     { label: 'Grande (> 25 kg)', value: 'grande' },
   ];
 
-  protected childrenAgeOptions = [
+  protected childrenAgeRangeOptions = [
     { label: 'Jeunes (< 6 ans)', value: 'jeunes' },
     { label: 'Grands (≥ 6 ans)', value: 'grands' },
   ];
@@ -89,11 +91,18 @@ export class ChoiceAssist {
     this.step.set('loading');
     this.error.set(null);
 
+    console.log(this.context)
+
     this.choiceAssistService.getRecommendations(this.context).subscribe({
       next: (res) => {
-        this.recommendations.set(res.recommendations);
-        this.totalAnalyses.set(res.analysisCount);
-        this.messageApi.set(res.message ?? null);
+
+        const recommendations: Recommendation[] = res.recommendations.map(
+          r => ({ ...r, name: r.name = (r.reason as string).split(' ')[0] })
+        )
+
+        this.recommendations.set(recommendations);
+        this.analysisCount.set(res.analysisCount);
+        this.apiMessage.set(res.message ?? null);
         this.step.set('result');
       },
       error: () => {
@@ -108,11 +117,11 @@ export class ChoiceAssist {
     this.context = initialChoiceAssistContext
     this.recommendations.set([]);
     this.error.set(null);
-    this.petExpanded.set(null);
+    this.expandedPet.set(null);
   }
 
   togglePetDescription(id: number) {
-    this.petExpanded.update(current => current === id ? null : id);
+    this.expandedPet.update(current => current === id ? null : id);
   }
 
   scoreClass(score: number): string {
@@ -139,5 +148,4 @@ export class ChoiceAssist {
 }
 
 const initialChoiceAssistContext = {
-  childrenAges: []
 }

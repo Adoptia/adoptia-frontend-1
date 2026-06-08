@@ -8,7 +8,8 @@ import {Observable} from 'rxjs';
 })
 export class ChoiceAssistService {
   private http = inject(HttpClient);
-  private readonly api = 'http://localhost:8000/choice-assist';
+  private readonly api =
+    'https://adoptia-backend-1.onrender.com/choice-assist';
 
   getRecommendations(context: ChoiceAssistContext): Observable<RecommendationResponse> {
     return this.http.post<RecommendationResponse>(`${this.api}/recommandations`, context);

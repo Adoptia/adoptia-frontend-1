@@ -45,15 +45,15 @@ export interface UserContext {
 export interface ChoiceAssistContext {
   isOnFloor?: boolean
   hasLift?: boolean
+  speciesPreference?: 'chat' | 'chien'
   petBudget?: number
   otherSpecies?: string
-  childrenAges: number[]
-  speciesPreference?: 'chat' | 'chien'
+  childrenAgeRange?: string
   activityLevel?: 'sedentaire' | 'modere' | 'actif'
   spareTime?: number
   petExperience?: 'aucune' | 'debutant' | 'experimente'
   petSizePreference?: 'petite' | 'moyenne' | 'grande'
-
+  userFreeTextInput?: string
 }
 
 export interface Recommendation {

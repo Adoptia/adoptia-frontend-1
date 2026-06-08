@@ -13,83 +13,86 @@
       </div>
     </div>
 
-
-    <label class="text-xs text-gray-500 italic mb-2">Informations personnelles</label>
-    <div class="flex flex-col gap-3 border border-gray-300 p-2 pb-4 mb-8
-    [&_label]:text-sm [&_p]:text-sm [&_p]:font-bold">
+    <div class="border rounded-xl border-gray-300 bg-white/60 p-4
+    [&>div]:flex [&>div]:flex-col [&>div]:gap-3 [&>div]:border [&>div]:border-gray-300
+    [&>div]:rounded-xl [&>div]:bg-white/80 [&>div]:p-4 [&>div]:pb-4 [&>div]:mb-8 [&>div]:mt-2
+    [&>label]:text-gray-500 [&>label]:font-bold [&>label]:uppercase [&>label]:text-xs
+    [&>div]:[&_label]:text-sm [&>div]:[&_label]:text-gray-500 [&>div]:[&_p]:text-sm [&>div]:[&_p]:font-semibold"
+    >
+      <label>Informations personnelles</label>
       <div>
-        <label>Prénom et nom de famille</label>
-        <p>{{ user()!.basics.firstName }} {{ user()!.basics.lastName }}</p>
+        <div>
+          <label>Prénom et nom de famille</label>
+          <p>{{ user()!.basics.firstName }} {{ user()!.basics.lastName }}</p>
+        </div>
+
+        <div>
+          <label>Date de naissance</label>
+          <p>{{ user()!.basics.birthDate ?? missingFieldPlaceholder }}</p>
+        </div>
+
+        <div>
+          <label>Adresse e-mail</label>
+          <p>{{ user()!.basics.email }}</p>
+        </div>
+
+        <div>
+          <label>Téléphone</label>
+          <p>{{ user()!.basics.phoneNumber }}</p>
+        </div>
       </div>
 
+      <label>Informations sur votre domicile</label>
       <div>
-        <label>Date de naissance</label>
-        <p>{{ user()!.basics.birthDate ?? 'Information non fournie' }}</p>
+        <div>
+          <label>Type de logement</label>
+          <p>{{ user()!.context?.residence?.type ?? missingFieldPlaceholder }}</p>
+        </div>
+
+        <div>
+          <label>Superficie totale</label>
+          <p>{{ user()!.context?.residence?.surface
+            ? user()!.context!.residence.surface + ' m²'
+            : missingFieldPlaceholder }}
+          </p>
+        </div>
+
+        <div>
+          <label>Adresse postale</label>
+          <p>{{ user()!.context?.residence?.address ?? missingFieldPlaceholder }}</p>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <label>Avec balcon : </label>
+          <p>{{ user()!.context?.residence?.hasBalcony === undefined ? missingFieldPlaceholder
+            : user()!.context!.residence.hasBalcony ? 'Oui' : 'Non' }}</p>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <label>Avec jardin : </label>
+          <p>{{ user()!.context?.residence?.hasGarden === undefined ? missingFieldPlaceholder
+            : user()!.context!.residence.hasGarden ? 'Oui' : 'Non' }}</p>
+        </div>
       </div>
 
+      <label>Informations sur votre foyer</label>
       <div>
-        <label>Adresse e-mail</label>
-        <p>{{ user()!.basics.email }}</p>
-      </div>
+        <div class="flex items-center gap-4">
+          <label>En couple : </label>
+          <p>{{ user()!.context?.household?.hasPartner === undefined ? missingFieldPlaceholder
+            : user()!.context!.household.hasPartner ? 'Oui' : 'Non' }}</p>
+        </div>
 
-      <div>
-        <label>Téléphone</label>
-        <p>{{ user()!.basics.phoneNumber }}</p>
-      </div>
-    </div>
+        <div class="flex items-center gap-4">
+          <label>Vous habitez ensemble : </label>
+          <p>{{ user()!.context?.household?.liveTogether === undefined ? missingFieldPlaceholder
+            : user()!.context!.household.liveTogether ? 'Oui' : 'Non' }}</p>
+        </div>
 
-    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre domicile</label>
-    <div class="flex flex-col gap-3 border border-gray-300 p-2 pb-4 mb-8
-    [&_p]:text-sm [&_label]:text-sm [&_p]:font-bold">
-      <div>
-        <label>Type de logement</label>
-        <p>{{ user()!.context?.residence?.type ?? 'Information non fournie' }}</p>
-      </div>
-
-      <div>
-        <label>Superficie totale</label>
-        <p>{{ user()!.context?.residence?.surface ?
-          user()!.context!.residence.surface + ' m²'
-          : 'Information non fournie' }}
-        </p>
-      </div>
-
-      <div>
-        <label>Adresse postale</label>
-        <p>{{ user()!.context?.residence?.address ?? 'Information non fournie' }}</p>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <label>Avec balcon : </label>
-        <p>{{ user()!.context?.residence?.hasBalcony === undefined ? '-'
-          : user()!.context!.residence.hasBalcony ? 'Oui' : 'Non' }}</p>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <label>Avec jardin : </label>
-        <p>{{ user()!.context?.residence?.hasGarden === undefined ? '-'
-          : user()!.context!.residence.hasGarden ? 'Oui' : 'Non' }}</p>
-      </div>
-    </div>
-
-    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre foyer</label>
-    <div class="flex flex-col gap-3 border border-gray-300 p-2 pb-4
-    [&_p]:text-sm [&_label]:text-sm [&_p]:font-bold">
-      <div class="flex items-center gap-4">
-        <label>En couple : </label>
-        <p>{{ user()!.context?.household?.hasPartner === undefined ? '-'
-          : user()!.context!.household.hasPartner ? 'Oui' : 'Non' }}</p>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <label>Vous habitez ensemble : </label>
-        <p>{{ user()!.context?.household?.liveTogether === undefined ? '-'
-          : user()!.context!.household.liveTogether ? 'Oui' : 'Non' }}</p>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <label>Enfants dans votre foyer : </label>
-        <p>{{  user()!.context?.household?.childrenCount ?? 0 }}</p>
+        <div class="flex items-center gap-4">
+          <label>Enfants dans votre foyer : </label>
+          <p>{{  user()!.context?.household?.childrenCount ?? 0 }}</p>
+        </div>
       </div>
     </div>
 
@@ -99,121 +102,127 @@
       <h1 class="text-xl">Mode édition</h1>
     </div>
 
-    <label class="text-xs text-gray-500 italic mb-2">Informations personnelles</label>
-    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
+    <div class="border rounded-xl border-gray-300 bg-white/60 p-4 mb-4
+    [&>div]:flex [&>div]:flex-col [&>div]:gap-3 [&>div]:border [&>div]:border-gray-300
+    [&>div]:rounded-xl [&>div]:bg-white/80 [&>div]:p-4 [&>div]:pb-4 [&>div]:mb-8 [&>div]:mt-2
+    [&>label]:text-gray-500 [&>label]:font-bold [&>label]:uppercase [&>label]:text-xs
+    [&>div]:[&_label]:text-sm [&>div]:[&_label]:text-gray-500 [&>div]:[&_p]:text-sm [&>div]:[&_p]:font-semibold
+    [&_input]:border [&_input]:border-gray-300 [&_input]:rounded-xl [&_input]:p-2 [&_input]:w-full
+    [&_input]:focus:border-white"
+    >
+      <label>Informations personnelles</label>
       <div>
-        <label>Prénom et nom de famille</label>
-        <input type="text" class="border border-gray-300 px-2 py-1 w-full"
-               placeholder="Entrez votre prénom et nom"
-               [ngModel]="user()!.basics.firstName + ' ' + user()!.basics.lastName"
-        >
-      </div>
+        <div>
+          <label>Prénom et nom de famille</label>
+          <input type="text" placeholder="Entrez votre prénom et nom"
+                 [ngModel]="user()!.basics.firstName + ' ' + user()!.basics.lastName"
+          >
+        </div>
 
-      <div>
-        <label>Date de naissance</label>
-        <div class="border border-gray-300 px-2 w-full flex">
-          <input type="date" class="w-full outline-none bg-transparent">
+        <div>
+          <label>Date de naissance</label>
+          <div class="border border-gray-300 rounded-xl w-full flex">
+            <input type="date" class="w-full border-none">
+          </div>
+        </div>
+
+        <div>
+          <label>Adresse e-mail</label>
+          <input [hidden]="true" type="email" placeholder="Entrez votre adresse e-mail"
+                 [ngModel]="user()!.basics.email"
+          >
+          <p>{{ user()!.basics.email }}</p>
+        </div>
+
+        <div>
+          <label>Téléphone</label>
+          <input type="tel" placeholder="Entrez votre numéro de téléphone"
+                 [ngModel]="user()!.basics.phoneNumber"
+          >
         </div>
       </div>
 
+      <label>Informations sur votre domicile</label>
       <div>
-        <label>Adresse e-mail</label>
-        <input [hidden]="true" type="email" class="border border-gray-300 px-2 py-1 w-full"
-               placeholder="Entrez votre adresse e-mail"
-               [ngModel]="user()!.basics.email"
-        >
-        <p>{{ user()!.basics.email }}</p>
+        <div>
+          <label>Type de logement</label>
+        </div>
+
+        <div>
+          <label>Superficie totale</label>
+          <input type="number" class="border border-gray-300 px-2 py-1 w-full"
+                 placeholder="Entrez la superficie en m²"
+          >
+        </div>
+
+        <div>
+          <label>Adresse postale</label>
+          <input type="text" class="border border-gray-300 px-2 py-1 w-full"
+                 placeholder="Entrez votre adresse postale"
+          >
+        </div>
+
+        <div class="flex items-center gap-4">
+          <label>Avec balcon</label>
+          <div class="flex items-center gap-2">
+            <p-radio-button name="balcon" [value]="true" [(ngModel)]="avecBalcon"/>
+            <label>Oui</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <p-radio-button name="balcon" [value]="false" [(ngModel)]="avecBalcon"/>
+            <label>Non</label>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <label>Avec jardin</label>
+          <div class="flex items-center gap-2">
+            <p-radio-button name="jardin" [value]="true" [(ngModel)]="avecJardin"/>
+            <label>Oui</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <p-radio-button name="jardin" [value]="false" [(ngModel)]="avecJardin"/>
+            <label>Non</label>
+          </div>
+        </div>
       </div>
 
+      <label>Informations sur votre foyer</label>
       <div>
-        <label>Téléphone</label>
-        <input type="tel" class="border border-gray-300 px-2 py-1 w-full"
-               placeholder="Entrez votre numéro de téléphone"
-               [ngModel]="user()!.basics.phoneNumber"
-        >
+        <div class="flex items-center gap-4">
+          <label>En couple</label>
+          <div class="flex items-center gap-2">
+            <p-radio-button name="couple" [value]="true" [(ngModel)]="enCouple"/>
+            <label>Oui</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <p-radio-button name="couple" [value]="false" [(ngModel)]="enCouple"/>
+            <label>Non</label>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <label>Vous habitez ensemble</label>
+          <div class="flex items-center gap-2">
+            <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="true" [(ngModel)]="habitantEnsemble"/>
+            <label>Oui</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="false" [(ngModel)]="habitantEnsemble"/>
+            <label>Non</label>
+          </div>
+        </div>
+
+        <div>
+          <label>Enfants dans votre foyer</label>
+          <input type="number" class="border border-gray-300 px-2 py-1 w-full mb-2"
+                 placeholder="Nombre d'enfants"
+          >
+        </div>
       </div>
     </div>
 
-    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre domicile</label>
-    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
-      <div>
-        <label>Type de logement</label>
-      </div>
-
-      <div>
-        <label>Superficie totale</label>
-        <input type="number" class="border border-gray-300 px-2 py-1 w-full"
-               placeholder="Entrez la superficie en m²"
-        >
-      </div>
-
-      <div>
-        <label>Adresse postale</label>
-        <input type="text" class="border border-gray-300 px-2 py-1 w-full"
-               placeholder="Entrez votre adresse postale"
-        >
-      </div>
-
-      <div class="flex items-center gap-4">
-        <label>Avec balcon</label>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="balcon" [value]="true" [(ngModel)]="avecBalcon"/>
-          <label>Oui</label>
-        </div>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="balcon" [value]="false" [(ngModel)]="avecBalcon"/>
-          <label>Non</label>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <label>Avec jardin</label>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="jardin" [value]="true" [(ngModel)]="avecJardin"/>
-          <label>Oui</label>
-        </div>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="jardin" [value]="false" [(ngModel)]="avecJardin"/>
-          <label>Non</label>
-        </div>
-      </div>
-    </div>
-
-    <label class="text-xs italic text-gray-500 mb-2">Informations sur votre foyer</label>
-    <div class="flex flex-col gap-3 border border-gray-300 [&_label]:text-sm p-2 pb-4 mb-8">
-      <div class="flex items-center gap-4">
-        <label>En couple</label>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="couple" [value]="true" [(ngModel)]="enCouple"/>
-          <label>Oui</label>
-        </div>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="couple" [value]="false" [(ngModel)]="enCouple"/>
-          <label>Non</label>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <label>Vous habitez ensemble</label>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="true" [(ngModel)]="habitantEnsemble"/>
-          <label>Oui</label>
-        </div>
-        <div class="flex items-center gap-2">
-          <p-radio-button name="habEnsemble" [disabled]="!enCouple" [value]="false" [(ngModel)]="habitantEnsemble"/>
-          <label>Non</label>
-        </div>
-      </div>
-
-      <div>
-        <label>Enfants dans votre foyer</label>
-        <input type="number" class="border border-gray-300 px-2 py-1 w-full mb-2"
-               placeholder="Nombre d'enfants"
-        >
-      </div>
-    </div>
-
-    <div class="flex justify-evenly w-full">
+    <div class="flex justify-center gap-8 w-full">
       <p-button
         (click)="toggleMode()"
         styleClass="!text-black hover:!text-white active:!text-white !border-2 !border-black

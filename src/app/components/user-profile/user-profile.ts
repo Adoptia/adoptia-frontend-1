@@ -19,6 +19,8 @@ export class UserProfile {
 
   user = input.required<User | undefined>()
 
+  missingFieldPlaceholder = 'non fourni(e)'
+
   protected avecBalcon = false;
   protected avecJardin = false;
 

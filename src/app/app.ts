@@ -12,7 +12,7 @@ import {AuthService} from './services/auth-service';
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  protected readonly title = signal('adoptia-frontend');
+  protected readonly title = signal("Prêt'Adopte");
 
   protected showNavBar = signal(true);
 

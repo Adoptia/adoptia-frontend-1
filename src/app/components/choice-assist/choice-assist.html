@@ -9,7 +9,7 @@
     <p-button (click)="start()"
               class="pt-8" [rounded]="true"
               styleClass="!text-white !text-xs lg:!text-base !font-bold !px-8 !py-3
-                  !bg-amber-700 !border-none hover:!bg-amber-600 hover:!scale-105
+                  !bg-amber-600 !border-none active:!scale-95 hover:!scale-105
                   !transition-all !duration-500"
     >
       Commencer
@@ -73,7 +73,7 @@
                     [class.border-primary-500]="context.isOnFloor === false"
                     [class.text-white]="context.isOnFloor === false"
                     [class.border-gray-200]="context.isOnFloor !== false"
-                    (click)="context.isOnFloor = false">A l'étage
+                    (click)="context.isOnFloor = false">À l'étage
             </button>
           </div>
         </div>
@@ -104,15 +104,15 @@
           <div class="flex items-center justify-between gap-4 py-2 border-b border-gray-100">
             <label class="text-sm text-gray-700 flex-1">Âge des enfants</label>
                         <p-select class="w-42 md:w-48"
-                      [(ngModel)]="context.childrenAges" [options]="childrenAgeOptions"
-                      optionLabel="label" optionValue="value" placeholder="Sélectionner"
+                                  [(ngModel)]="context.childrenAgeRange" [options]="childrenAgeRangeOptions"
+                                  optionLabel="label" optionValue="value" placeholder="Sélectionner"
             />
           </div>
         }
         <div class="flex flex-col items-center justify-between gap-4 py-2">
           <label class="text-sm w-full text-gray-700 ">Autres animaux dans votre logement</label>
           <input pInputText [(ngModel)]="context.otherSpecies"
-                 placeholder="Ex : un chat adulte"
+                 placeholder="Par exemple : un chat adulte"
                  class="w-full" />
         </div>
       </div>
@@ -127,13 +127,13 @@
           />
         </div>
         <div class="flex items-center justify-between gap-4 py-2 border-b border-gray-100">
-          <label class="text-sm text-gray-700 flex-1">Heures seul par jour</label>
+          <label class="text-sm text-gray-700">Temps libre</label>
           <input pInputText type="number" [(ngModel)]="context.spareTime"
-                 min="0" max="24" placeholder="0"
-                 class="flex-1 max-w-18" />
+                 min="0" max="24" placeholder="Par ex : 4h/jour"
+                 class="w-36 md:w-48"/>
         </div>
         <div class="flex items-center justify-between gap-4 py-2">
-          <label class="text-sm text-gray-700">Expérience avec les animaux</label>
+          <label class="text-sm text-gray-700 flex-1">Expérience d'adoption</label>
           <p-select class="w-36 md:w-48"
                     [(ngModel)]="context.petExperience" [options]="petExperienceOptions"
                     optionLabel="label" optionValue="value" placeholder="Sélectionner"
@@ -149,6 +149,19 @@
                     [(ngModel)]="context.petSizePreference" [options]="petSizeOptions"
                     optionLabel="label" optionValue="value" placeholder="Pas de préférence"
           />
+        </div>
+      </div>
+
+      <div id="expression" class="bg-white border border-gray-200 rounded-xl p-6">
+        <h2 class="text-xs font-semibold uppercase tracking-widest text-primary-500 mb-5">Ouverture</h2>
+        <div class="flex flex-col justify-between gap-4 py-2 border-b border-gray-100">
+          <label class="text-sm text-left text-gray-700">Informations complémentaires</label>
+          <textarea pTextarea [(ngModel)]="context.userFreeTextInput"
+                    [autoResize]="true"
+                    placeholder="Exprimez ici toute information qui vous semble utile pour améliorer la recommandation"
+                    class="w-full"
+                    rows="3"
+          ></textarea>
         </div>
       </div>
 
@@ -172,66 +185,69 @@
 
 
 @if (step() === 'result') {
-  <section class="max-w-2xl mx-auto px-6 py-16">
-    <div class="text-center mb-10">
-      <h1 class="text-3xl font-bold mb-3">Vos recommandations</h1>
-      <p class="text-gray-500">{{ totalAnalyses() }} animal(s) analysé(s) pour vous.</p>
-      @if (messageApi()) {
-        <div class="bg-yellow-50 text-yellow-800 border border-yellow-300 rounded-lg px-4 py-2 mt-3 text-sm">
-          {{ messageApi() }}
-        </div>
-      }
-    </div>
-
+  <section class="max-w-2xl mx-auto px-6 py-24 md:py-28 xl:py-36 text-black min-h-svh justify-center items-center flex">
     @if (recommendations().length === 0) {
-      <div class="text-center py-12 text-gray-400">
-        <i class="pi pi-info-circle text-4xl mb-4 block"></i>
-        <p>Aucun animal correspondant à votre moreContext n'a été trouvé pour le moment.</p>
+      <div class="text-center py-12 text-black h-full flex flex-col items-center">
+        <i class="pi pi-info-circle text-gray-400 text-2xl! mb-4 block "></i>
+        <p>Aucun animal correspondant à votre profil</p>
+        <div class="mt-8">
+          <p-button label="Recommencer" icon="pi pi-refresh" severity="secondary" (onClick)="restart()" />
+        </div>
+      </div>
+    } @else {
+      <div>
+        <div class="text-center mb-10">
+          <h1 class="text-3xl font-bold mb-3">Vos recommandations</h1>
+          <p class="text-gray-500">{{ analysisCount() }} animaux choisis pour vous.</p>
+        </div>
+
+        <div class="flex flex-col gap-5">
+          @for (rec of recommendations(); track rec.adId) {
+            <div class="flex flex-col gap-4 bg-white border border-gray-200 rounded-xl p-5 transition-shadow duration-200 hover:shadow-md">
+              <div class="flex gap-4">
+                <div>
+                  @if (rec.photos) {
+                    <img [src]="rec.photos" [alt]="rec.name" class="w-24 h-24 object-cover rounded-lg" />
+                  } @else {
+                    <div class="w-24 h-24 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300 text-3xl">
+                      <i class="pi pi-image"></i>
+                    </div>
+                  }
+                </div>
+                <div class="flex flex-col gap-2">
+                  <h3 class="text-lg font-bold">{{ rec.name }}</h3>
+                  <p class="rounded-full text-xs font-semibold whitespace-nowrap"
+                     [class]="scoreClass(rec.score)">
+                    {{ rec.score }}% — {{ scoreLabel(rec.score) }}
+                  </p>
+                  <p class="text-xs text-gray-400 mb-2">{{ rec.breed || 'Race mixte' }} · {{ rec.sex || '' }}</p>
+                </div>
+              </div>
+
+              <div class="flex-1 min-w-0">
+
+                <p class="text-sm leading-relaxed mb-2 text-justify hyphens-auto" lang="fr">{{ rec.reason }}</p>
+                <p class="text-xs text-gray-400 italic mb-2">{{ confidenceLabel(rec.confidence) }}</p>
+                <button class="flex items-center gap-1 text-sm text-primary-500 hover:text-primary-600 transition-colors"
+                        (click)="togglePetDescription(rec.adId)">
+                  {{ expandedPet() === rec.adId ? 'Masquer la description' : 'Voir la description complète' }}
+                  <i [class]="expandedPet() === rec.adId ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"></i>
+                </button>
+                @if (expandedPet() === rec.adId && rec.description) {
+                  <p class="mt-3 pt-3 text-gray-500 text-justify hyphens-auto border-t border-gray-100 text-sm leading-relaxed " lang="fr">
+                    {{ rec.description }}
+                  </p>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="flex justify-end mt-8">
+          <p-button label="Recommencer" icon="pi pi-refresh" severity="secondary" (onClick)="restart()" />
+        </div>
       </div>
     }
-
-    <div class="flex flex-col gap-5">
-      @for (r of recommendations(); track r.adId) {
-        <div class="flex gap-5 bg-white border border-gray-200 rounded-xl p-5 transition-shadow duration-200 hover:shadow-md">
-          <div class="flex-shrink-0">
-            @if (r.photos) {
-              <img [src]="r.photos" [alt]="r.name" class="w-24 h-24 object-cover rounded-lg" />
-            } @else {
-              <div class="w-24 h-24 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300 text-3xl">
-                <i class="pi pi-image"></i>
-              </div>
-            }
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between gap-3 mb-1">
-              <h3 class="text-lg font-bold">{{ r.name }}</h3>
-              <span class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
-                    [class]="scoreClass(r.score)">
-                {{ r.score }}% — {{ scoreLabel(r.score) }}
-              </span>
-            </div>
-            <p class="text-xs text-gray-400 mb-2">{{ r.breed || 'Race mixte' }} · {{ r.sex || '' }} · {{ r.species }}</p>
-            <p class="text-sm leading-relaxed mb-1">{{ r.reason }}</p>
-            <p class="text-xs text-gray-400 italic mb-2">{{ confidenceLabel(r.confidence) }}</p>
-            <button class="flex items-center gap-1 text-sm text-primary-500 hover:text-primary-600 transition-colors"
-                    (click)="togglePetDescription(r.adId)">
-              {{ petExpanded() === r.adId ? 'Masquer la description' : 'Voir la description complète' }}
-              {{ petExpanded() === r.adId ? 'Masquer la description' : 'Voir la description complète' }}
-              <i [class]="petExpanded() === r.adId ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"></i>
-            </button>
-            @if (petExpanded() === r.adId && r.description) {
-              <p class="mt-3 pt-3 border-t border-gray-100 text-sm leading-relaxed text-gray-500">
-                {{ r.description }}
-              </p>
-            }
-          </div>
-        </div>
-      }
-    </div>
-
-    <div class="flex justify-end mt-8">
-      <p-button label="Recommencer" icon="pi pi-refresh" severity="secondary" (onClick)="restart()" />
-    </div>
   </section>
 }
 
