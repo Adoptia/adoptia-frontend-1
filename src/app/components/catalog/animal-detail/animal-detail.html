@@ -71,15 +71,23 @@
 
         <!-- Actions -->
         <div class="flex flex-col sm:flex-row gap-3 pt-2">
-          <button
-            class="flex-1 bg-black text-white py-3 rounded-xl font-semibold text-sm
-                   hover:bg-gray-800 active:bg-gray-900 transition-colors">
-            Contacter le refuge
-          </button>
+          @if (a.animal.url_source) {
+            <a [href]="a.animal.url_source" target="_blank" rel="noopener noreferrer"
+               class="flex-1 text-center bg-amber-500 text-white py-3 rounded-xl font-semibold text-sm
+                      hover:bg-amber-600 active:bg-amber-700 transition-colors">
+              Voir l'annonce originale ↗
+            </a>
+          } @else {
+            <button
+              class="flex-1 bg-gray-800 text-white py-3 rounded-xl font-semibold text-sm
+                     hover:bg-gray-700 transition-colors">
+              Contacter le refuge
+            </button>
+          }
           <a routerLink="/catalog"
-             class="flex-1 text-center border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-semibold text-sm
-                    hover:border-black hover:text-black transition-colors">
-            Retour au catalogue
+             class="flex-1 text-center border-2 border-gray-200 text-gray-600 py-3 rounded-xl font-semibold text-sm
+                    hover:border-gray-400 hover:text-gray-800 transition-colors">
+            ← Retour au catalogue
           </a>
         </div>
 

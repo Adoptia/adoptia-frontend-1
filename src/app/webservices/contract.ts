@@ -1,6 +1,6 @@
 export interface Annonce {
   id: number;
-  animal: { nom: string; espece: string; race: string; sexe: string; photos: string };
+  animal: { nom: string; espece: string; race: string; sexe: string; photos: string; url_source?: string | null };
   refuge: { nom: string; ville: string };
   titre: string;
   urgent: boolean;
