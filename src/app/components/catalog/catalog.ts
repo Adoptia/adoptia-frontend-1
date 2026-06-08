@@ -24,13 +24,17 @@ export class Catalog implements OnInit, OnDestroy {
   protected activeVaccine   = signal(false);
   protected activeSource    = signal<string | undefined>(undefined);
   protected activeQ         = signal('');
+  protected activeVille     = signal('');
   protected currentPage     = signal(1);
   protected activeLimit     = signal(20);
   protected showFilters     = signal(false);
 
   private searchSubject = new Subject<string>();
+  private villeSubject  = new Subject<string>();
   private sub = this.searchSubject.pipe(debounceTime(300), distinctUntilChanged())
     .subscribe(q => { this.activeQ.set(q); this.reload(1); });
+  private subVille = this.villeSubject.pipe(debounceTime(300), distinctUntilChanged())
+    .subscribe(v => { this.activeVille.set(v); this.reload(1); });
 
   protected speciesTabs = [
     { label: 'Tous',   value: undefined },
@@ -62,6 +66,7 @@ export class Catalog implements OnInit, OnDestroy {
     if (this.activeVaccine())   b.push({ key: 'vaccine',   label: 'Vacciné' });
     if (this.activeSource())    b.push({ key: 'source',    label: this.activeSource()! });
     if (this.activeQ())         b.push({ key: 'q',         label: `"${this.activeQ()}"` });
+    if (this.activeVille())     b.push({ key: 'ville',     label: `📍 ${this.activeVille()}` });
     return b;
   });
 
@@ -78,9 +83,10 @@ export class Catalog implements OnInit, OnDestroy {
   });
 
   ngOnInit()    { this.reload(1); }
-  ngOnDestroy() { this.sub.unsubscribe(); }
+  ngOnDestroy() { this.sub.unsubscribe(); this.subVille.unsubscribe(); }
 
   protected onSearch(q: string)           { this.searchSubject.next(q); }
+  protected onVilleInput(v: string)       { this.villeSubject.next(v); }
   protected selectEspece(v: string | undefined) { this.activeEspece.set(v); this.reload(1); }
   protected selectSexe(v: string | undefined)   { this.activeSexe.set(v);   this.reload(1); }
   protected selectSource(v: string | undefined) { this.activeSource.set(v); this.reload(1); }
@@ -99,6 +105,7 @@ export class Catalog implements OnInit, OnDestroy {
       vaccine:   () => this.activeVaccine.set(false),
       source:    () => this.activeSource.set(undefined),
       q:         () => this.activeQ.set(''),
+      ville:     () => this.activeVille.set(''),
     };
     map[key]?.();
     this.reload(1);
@@ -112,6 +119,7 @@ export class Catalog implements OnInit, OnDestroy {
     this.activeVaccine.set(false);
     this.activeSource.set(undefined);
     this.activeQ.set('');
+    this.activeVille.set('');
     this.reload(1);
   }
 
@@ -131,6 +139,7 @@ export class Catalog implements OnInit, OnDestroy {
     if (this.activeVaccine())   filters['vaccine']      = true;
     if (this.activeSource())    filters['source_site']  = this.activeSource()!;
     if (this.activeQ())         filters['q']            = this.activeQ();
+    if (this.activeVille())     filters['ville']        = this.activeVille();
     this.catalog.load(this.activeEspece(), page, this.activeLimit(), filters);
   }
 
